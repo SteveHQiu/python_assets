@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{2A86A485-9285-0244-07DA-8556CD1607E3}{1}{E1947337257607614009521957827261829892141411}" name="Test document" dateTime="2021-09-23T05:17:26.000Z" lastModifiedTime="2022-06-30T06:59:05.000Z" pageLevel="1" lang="en-CA">
+  <one:TagDef index="0" type="1" symbol="13" fontColor="automatic" highlightColor="none" name="Important" />
+  <one:QuickStyleDef index="0" name="PageTitle" fontColor="automatic" highlightColor="automatic" font="Calibri Light" fontSize="20.0" spaceBefore="0.0" spaceAfter="0.0" />
+  <one:QuickStyleDef index="1" name="h1" fontColor="#1E4E79" highlightColor="automatic" font="Calibri" fontSize="16.0" spaceBefore="0.0" spaceAfter="0.0" />
+  <one:QuickStyleDef index="2" name="p" fontColor="automatic" highlightColor="automatic" font="Calibri" fontSize="11.0" spaceBefore="0.0" spaceAfter="0.0" />
+  <one:PageSettings RTL="false" color="automatic">
+    <one:PageSize>
+      <one:Automatic />
+    </one:PageSize>
+    <one:RuleLines visible="false" />
+  </one:PageSettings>
+  <one:Title lang="en-CA">
+    <one:OE author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" creationTime="2021-09-23T05:17:27.000Z" lastModifiedTime="2021-09-23T05:17:29.000Z" objectID="{7DF845F8-7A0D-4CFE-9599-3F3AD412ED32}{17}{B0}" alignment="left" quickStyleIndex="0">
+      <one:T><![CDATA[Test document]]></one:T>
+    </one:OE>
+  </one:Title>
+  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-06-30T06:59:05.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{50}{B0}">
+    <one:Position x="36.0" y="86.4000015258789" z="0" />
+    <one:Size width="468.0" height="245.793701171875" />
+    <one:OEChildren>
+      <one:OE creationTime="2021-10-24T23:09:22.000Z" lastModifiedTime="2021-10-24T23:09:27.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{51}{B0}" alignment="left" quickStyleIndex="1">
+        <one:T><![CDATA[General ]]></one:T>
+        <one:OEChildren>
+          <one:OE creationTime="2021-10-24T23:41:13.000Z" lastModifiedTime="2021-10-24T23:42:14.000Z" objectID="{E9D20160-A334-4FE7-8960-7618058D5F9A}{17}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T style="font-family:'Microsoft YaHei';font-size:11.0pt"><![CDATA[<span
+style='font-weight:bold' lang=zh-CN>王</span><span lang=en-CA>: Pinyin </span>]]></one:T>
+            <one:OEChildren>
+              <one:OE creationTime="2021-10-24T23:41:37.000Z" lastModifiedTime="2021-10-24T23:41:37.000Z" objectID="{E9D20160-A334-4FE7-8960-7618058D5F9A}{27}{B0}" alignment="left" quickStyleIndex="2" style="font-family:'Microsoft YaHei';font-size:11.0pt">
+                <one:T><![CDATA[]]></one:T>
+              </one:OE>
+            </one:OEChildren>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+      <one:OE creationTime="2021-10-24T23:09:35.000Z" lastModifiedTime="2021-10-24T23:09:36.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{61}{B0}" alignment="left" quickStyleIndex="1">
+        <one:T><![CDATA[Section 1]]></one:T>
+        <one:OEChildren>
+          <one:OE creationTime="2021-10-24T23:09:38.000Z" lastModifiedTime="2021-10-24T23:12:05.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{65}{B0}" alignment="left" quickStyleIndex="2">
+            <one:Tag index="0" completed="true" disabled="false" creationDate="2021-10-24T23:12:05.000Z" completionDate="2021-10-24T23:12:05.000Z" />
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T><![CDATA[<span
+style='font-weight:bold'>Concept 1</span>: sdfsadf]]></one:T>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+      <one:OE creationTime="2021-10-24T23:09:35.000Z" lastModifiedTime="2021-10-24T23:09:49.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{72}{B0}" alignment="left" quickStyleIndex="1">
+        <one:T><![CDATA[Section 2]]></one:T>
+        <one:OEChildren>
+          <one:OE creationTime="2021-10-24T23:09:38.000Z" lastModifiedTime="2021-11-04T05:33:30.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{74}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T><![CDATA[<span
+style='text-decoration:underline'>Concept 2</span>: sdfsadf]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2021-10-24T23:10:06.000Z" lastModifiedTime="2021-11-04T05:34:10.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{98}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T><![CDATA[Concept 4:]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2021-10-24T23:10:57.000Z" lastModifiedTime="2021-11-04T05:33:30.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{111}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T><![CDATA[asdfadsf: ]]></one:T>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+      <one:OE creationTime="2021-10-24T23:09:35.000Z" lastModifiedTime="2021-10-24T23:09:57.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{89}{B0}" alignment="left" quickStyleIndex="1">
+        <one:T><![CDATA[Section 1]]></one:T>
+        <one:OEChildren>
+          <one:OE creationTime="2021-10-24T23:09:38.000Z" lastModifiedTime="2021-10-24T23:10:00.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{91}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T><![CDATA[<span
+style='font-weight:bold'>Concept 3</span>: sdfsadf]]></one:T>
+            <one:OEChildren>
+              <one:OE creationTime="2021-10-24T23:09:56.000Z" lastModifiedTime="2021-10-24T23:09:56.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{84}{B0}" alignment="left" quickStyleIndex="2">
+                <one:T><![CDATA[]]></one:T>
+              </one:OE>
+            </one:OEChildren>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+      <one:OE creationTime="2021-10-24T23:15:27.000Z" lastModifiedTime="2021-10-24T23:15:46.000Z" objectID="{F5413555-C96F-486A-B06D-71D0F0052900}{21}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[Stochastic (from <span
+style='background:yellow;mso-highlight:yellow'>Greek</span> στόχος (stókhos) 'aim, guess') refers to the <span
+style='background:yellow;mso-highlight:yellow'>property</span> of being well described by a random probability distribution. Although ...]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2021-11-04T04:43:42.000Z" lastModifiedTime="2021-11-04T04:43:42.000Z" objectID="{B08CC9FA-FBFE-49CC-AAC5-8CB200073434}{13}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2021-11-04T04:43:42.000Z" lastModifiedTime="2021-11-04T04:43:42.000Z" objectID="{B08CC9FA-FBFE-49CC-AAC5-8CB200073434}{16}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+    </one:OEChildren>
+  </one:Outline>
+</one:Page>

@@ -11,14 +11,21 @@ Changelog
 """
 
 #%% Constants
-PROFILE_HOME = os.path.expanduser(r"~\AppData\Roaming\Anki2\User 1")
-cpath = os.path.join(PROFILE_HOME, "collection.anki2")
-mpath = os.path.join(PROFILE_HOME, "collection.media")
-namespace = {"one": r"http://schemas.microsoft.com/office/onenote/2013/onenote"} # Namespace to prefix tags
-root_path = os.path.expanduser(r"~\OneDrive - ualberta.ca\Coding\OneNote2AnkiPython")
-file_name = sys.argv[1] # Command line arguments come in list, 0 = name of script, 1 = 1rst argument passed, 2 = 2nd argument passed
-file_path = os.path.join(root_path, file_name)
+DEV = True # Change to False before running via program
 
+ROOT_PATH = os.path.abspath(__file__)
+os.chdir(os.path.dirname(ROOT_PATH))
+PROFILE_HOME = os.path.expanduser(R"~\AppData\Roaming\Anki2\User 1")
+CPATH = os.path.join(PROFILE_HOME, "collection.anki2")
+MPATH = os.path.join(PROFILE_HOME, "collection.media")
+NAMESPACES = {"one": R"http://schemas.microsoft.com/office/onenote/2013/onenote"} # Namespace to prefix tags, may change if API changes
+
+if DEV:
+    XML_PATH = R"export.xml"
+else:
+    # Command line arguments come in list, 0 = name of script, 1 = 1rst argument passed, 2 = 2nd argument passed
+    ARG_FILENAME = sys.argv[1] # Contains filename of exported XML file
+    XML_PATH = os.path.join(ROOT_PATH, ARG_FILENAME)
 
 # Note that elements with children nodes are iterable with the children notes being items of the container
 # Findall returns list format, even if single item, hence need to specify item
@@ -28,18 +35,18 @@ file_path = os.path.join(root_path, file_name)
 def getHeaders(xml_input) -> list:
     """
     Returns list of XML items of non-empty headers from XML
-    \n xml_input: path to XML file from OneNote
+    xml_input: path to XML file from OneNote
     """
     xml_content = ElementTree.parse(xml_input)
-    list_OE_headers = xml_content.findall("one:Outline/one:OEChildren", namespace) # Is actually the XML element of OEChildren containing OE headers
+    list_OE_headers = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Is actually the XML element of OEChildren containing OE headers
     header_list = []
     for headers in list_OE_headers:
         for OE_header in headers:
-            OE_content = OE_header.find("one:T", namespace)
+            OE_content = OE_header.find("one:T", NAMESPACES)
             if OE_content != None and OE_content.text != None: # Need to screen out empty lines
-                header_text = OE_header.find("one:T", namespace).text
+                header_text = OE_header.find("one:T", NAMESPACES).text
                 print("Header:", header_text)
-                if OE_header.find("one:OEChildren", namespace) != None: # Only for headers that have children
+                if OE_header.find("one:OEChildren", NAMESPACES) != None: # Only for headers that have children
                     header_list.append(OE_header)
     return header_list
 
@@ -48,8 +55,8 @@ def getTitle(xml_input) -> str:
     Returns string of title of page being parsed 
     """
     xml_content = ElementTree.parse(xml_input)
-    if xml_content.find("one:Title/one:OE/one:T", namespace) != None:
-        xml_title = xml_content.find("one:Title/one:OE/one:T", namespace).text
+    if xml_content.find("one:Title/one:OE/one:T", NAMESPACES) != None:
+        xml_title = xml_content.find("one:Title/one:OE/one:T", NAMESPACES).text
     else: 
         xml_title = "Untitled"
     return xml_title
@@ -63,22 +70,22 @@ class OENodePoint:
     def __init__(self, oenode, card_forward = True, card_reverse = False):
         self.id = oenode.get("objectID") # ID is an attribute of the XML node
         # Text is stored under a separate tag
-        if oenode.find("one:T", namespace) != None and oenode.find("one:T", namespace).text != None:
-            self.text = oenode.find("one:T", namespace).text
+        if oenode.find("one:T", NAMESPACES) != None and oenode.find("one:T", NAMESPACES).text != None:
+            self.text = oenode.find("one:T", NAMESPACES).text
         else: 
             self.text = False
         # Image is stored under a separate tag
-        if oenode.find("one:Image/one:Data", namespace) != None and oenode.find("one:Image/one:Data", namespace).text != None:
-            self.image = oenode.find("one:Image/one:Data", namespace).text
+        if oenode.find("one:Image/one:Data", NAMESPACES) != None and oenode.find("one:Image/one:Data", NAMESPACES).text != None:
+            self.image = oenode.find("one:Image/one:Data", NAMESPACES).text
         else: 
             self.image = False
         # Only assign children if they exist
-        if oenode.find("one:OEChildren", namespace) != None:
-            self.children = oenode.find("one:OEChildren", namespace)
+        if oenode.find("one:OEChildren", NAMESPACES) != None:
+            self.children = oenode.find("one:OEChildren", NAMESPACES)
         else: 
             self.children = False
         # Is the field to replace the style in the bullet of lists
-        if oenode.find("one:List/one:Number", namespace) != None:
+        if oenode.find("one:List/one:Number", NAMESPACES) != None:
             self.ordered = "style='list-style-type: decimal'"
         else: # Otherwise assumed to be an unordered item
             self.ordered = ""
@@ -181,7 +188,7 @@ class OENodePoint:
                 else: # Assume parent is a grouping instead
                     front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underlinecolor:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
         front_html = "".join(("<span style='color:#e8e8e8'>%s</span>\n\n" % oeheader.text, front_html))
-        front_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(file_path), front_html))
+        front_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(XML_PATH), front_html))
         print(front_html)
         return front_html
 
@@ -253,7 +260,7 @@ class OENodePoint:
                                 subpoints = "".join((subpoints, "</li>\n")) # End sub-list item
                             if oesubpoint.image: # Process subpoints containing image
                                 img_name = "%s.png" % (img_stem + str(subnode_img_count)) # FIXME Might need to link more contexts in the future so that same concepts don't have overlapping picture names
-                                img_path = os.path.join(mpath, img_name)
+                                img_path = os.path.join(MPATH, img_name)
                                 img_str = oesubpoint.image
                                 img_bytes = img_str.encode("utf-8")
                                 with open(img_path, "wb") as img_file: # Write image to media directory
@@ -273,7 +280,7 @@ class OENodePoint:
                 img_pattern = re.compile('[\W_]+') # To remove punctuation from filename
                 img_stem = img_pattern.sub('', oenode.text)[0:75] # oenode refers to the calling outer node passed into this method, also have to truncate to account for filename size
                 img_name = "%s.png" % (img_stem + str(img_count)) # FIXME might need to add more context relative to the title  
-                img_path = os.path.join(mpath, img_name)
+                img_path = os.path.join(MPATH, img_name)
                 img_str = oepoint.image
                 img_bytes = img_str.encode("utf-8")
                 with open(img_path, "wb") as img_file: # Write image to media directory
@@ -290,7 +297,7 @@ class OENodePoint:
             else:
                 back_html = "".join(("<ul>\n<li %s><span style='color:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.text), back_html, "\n</li>\n</ul>"))
         back_html = "".join(("<span style='color:#e8e8e8'>%s</span>\n\n" % oeheader.text, back_html))
-        back_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(file_path), back_html))
+        back_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(XML_PATH), back_html))
         print(back_html)
         return back_html
     
@@ -303,13 +310,13 @@ class OENodeHeader:
     def __init__(self, oenode):
         self.id = oenode.get("objectID") # ID is an attribute of the XML node
         # Text is stored under a separate tag
-        if oenode.find("one:T", namespace) != None and oenode.find("one:T", namespace).text != None:
-            self.text = oenode.find("one:T", namespace).text
+        if oenode.find("one:T", NAMESPACES) != None and oenode.find("one:T", NAMESPACES).text != None:
+            self.text = oenode.find("one:T", NAMESPACES).text
         else: 
             self.text = False
         # Only assign children if they exist
-        if oenode.find("one:OEChildren", namespace) != None:
-            self.children = oenode.find("one:OEChildren", namespace)
+        if oenode.find("one:OEChildren", NAMESPACES) != None:
+            self.children = oenode.find("one:OEChildren", NAMESPACES)
         else: 
             self.children = False
         self.context_tracker = [] # Acts as the top-level tracker for all subpoints under the header
@@ -374,7 +381,7 @@ def iterHeaders(header_list):
     # Uncomment when ready to generate cards
     try:
         # Initialize model
-        col = Collection(cpath, log=True) # NOTE that this changes the directory
+        col = Collection(CPATH, log=True) # NOTE that this changes the directory
         card_model = col.models.by_name("Basic") # Search for card model
         deck = col.decks.by_name("ZExport") # Set current deck
     
@@ -391,6 +398,6 @@ def iterHeaders(header_list):
         
 #%% 
 # file_path = os.path.join(root_path, "Export.xml") # For debugging when required to manually set file path instead of from CLI arguments
-header_list = getHeaders(file_path)
+header_list = getHeaders(XML_PATH)
 iterHeaders(header_list)
 
