@@ -91,7 +91,7 @@ class OENodePoint:
             self.ordered = ""
         # Instantiate parent attribute which will be modified in outer scope
         self.parents = []
-        # Instantiate context attribute to take OEChildren container from previous items, modified in outer scope
+        # Contains all nodes at same level - is OEChildren container from previous items, modified in outer scope
         self.context = False 
             
     def getGroupingStem(self) -> str:
@@ -171,9 +171,9 @@ class OENodePoint:
                 # Render other concept/grouping OE nodes that are not the calling object and 
                 elif oepoint.getGeneralStem():
                     if oepoint.getConceptStem():
-                        front_html = "".join((front_html,"<li %s><span style='font-weight:boldcolor:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
+                        front_html = "".join((front_html,"<li %s><span style='font-weight:bold;color:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
                     if oepoint.getGroupingStem():
-                        front_html = "".join((front_html,"<li %s><span style='text-decoration:underlinecolor:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
+                        front_html = "".join((front_html,"<li %s><span style='text-decoration:underline;color:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
         # Wrap UL tags around main body, add parents and header - this part should not be a part of the body loop
         front_html = "".join(("<ul>\n",front_html,"</ul>"))
         for parent in oeheader.context_tracker: # Wraps info of parent nodes around returned HTML list 
@@ -184,9 +184,9 @@ class OENodePoint:
                     front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underline'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
             else: # For when current node is a concept and for distant parents
                 if parent.getConceptStem():
-                    front_html = "".join(("<ul>\n<li %s><span style='font-weight:boldcolor:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getConceptStem()), front_html, "\n</li>\n</ul>"))
+                    front_html = "".join(("<ul>\n<li %s><span style='font-weight:bold;color:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getConceptStem()), front_html, "\n</li>\n</ul>"))
                 else: # Assume parent is a grouping instead
-                    front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underlinecolor:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
+                    front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underline;color:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
         front_html = "".join(("<span style='color:#e8e8e8'>%s</span>\n\n" % oeheader.text, front_html))
         front_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(XML_PATH), front_html))
         print(front_html)
@@ -347,11 +347,12 @@ def iterHeaders(header_list):
         for oepoint in oenode.children:
             oepoint = OENodePoint(oepoint) # Convert item to class instance
             if oepoint.text and oepoint.getGeneralStem(): # Will only consider concepts/groupings for card generation
-                oepoint.context = oenode.children # Set context
+                oepoint.context = oenode.children # Set context by adding all children at same level
                 # Fill front and back
                 OE1_front = oepoint.getFront(oeheader)
                 OE1_back = oepoint.getBack(oeheader, oenode)
                 # Generate card
+                
                 ## Instantiate new note
                 note = col.new_note(card_model) # New new_note() method requires a card model to be passed as a parameter
                 note.note_type()['did'] = deck['id'] # Need to set deck ID since it doesn't come with the model
