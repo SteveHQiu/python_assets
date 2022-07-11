@@ -346,39 +346,34 @@ class OENodeHeader:
 class NodeIterator:
     def __init__(self, header_list: List[Element]):
         self.header_list = header_list # Input header list
-        self.header = None # Placeholder for current header being iterated over
+        self.parent_node_tracker = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints
         self.cards = [] # Container for generated cards, format of Tuple[front, back]
-        
+
+    
     def genCards(self):
         """
         Note that this will still copy media into anki media directory if there are images
         """
-        def iterNodes(cur_node: Union[OENodeHeader, Element], parent: bool = False):
-            if parent: # parent variable is re-instantiated each nested loop, hence uppmost loop (belonging to headers, looping over 1rst order OENodePoints) will always have parent = False, any loops beyond that (for 2nd order OENodePoints) 
-                # FIXME - Better way to track this?
-                header.context_tracker.insert(0, cur_node) # Insert most recent oenode at front of list             
-            for child_node in cur_node.children_nodes: # Starting point for nodes directly under header (or Element if in nested loop)
-                child_node = OENodePoint(child_node) # Convert item to class instance
+        def iterNodes(cur_node: Union[OENodeHeader, Element]):
+            for child_xml_node in cur_node.children_nodes: # Starting point for nodes directly under header (or Element if in nested loop)
+                child_node = OENodePoint(child_xml_node) # Convert item to class instance
                 if child_node.type in ["concept", "grouping",]: # Only certain types of nodes will trigger card generation
-                    child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process
-                    
+                    child_node.parent_nodes = self.parent_node_tracker # Copy parent_node_tracker information into current node's parent_nodes, should only be relevant when this function is recursively called
+                    child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process                    
                     
                     # Fill front and back 
-                    # FIXME - Better way to track headers?
                     renderer = StandardRenderer(child_node)
                     renderer.renderHtml()
                     self.cards.append((renderer.fronthtml, renderer.backhtml)) # Append rendered HTMLs
 
-                    # Recursive flow for nodes below level of headers with children, will set parent attribute for these nodes
                     if child_node.children_nodes: # Recursively search for children 
-                        iterNodes(child_node, parent = True)
                         # Only becomes relevant after OENodeHeader loop
-            if parent:
-                header.context_tracker.pop(0) # Pop off most recent parent after leaving local scope
+                        self.parent_node_tracker.insert(0, child_xml_node) # Add a parent node before going into nested loop
+                        iterNodes(child_node) 
+                        self.parent_node_tracker.pop(0) # Pop off parent node after leaving nested loop
             return None
 
         for header in self.header_list:
-            self.header = header
             # FIXME Can parse header levels at this scope and add to oeheader attribute which can be accessed later
             header = OENodeHeader(header) # Convert item to class instance
             iterNodes(header)
@@ -389,8 +384,10 @@ class NodeIterator:
         Display generated card in HTML format, for debuggging purposes
         """
         html = ""
+        card_num = 1
         for card in self.cards:
-            html += card[0] + "<hr>" + card[1] + "<hr><hr><br><br>" # Add front and back with spacing between both and next set of cards
+            html += F"<br>Card no. {card_num}:<br>" + card[0] + "<hr>" + card[1] + "<hr><hr><br>" # Add front and back with spacing between both and next set of cards
+            card_num += 1
         with open("displayCards_output.html", "w") as file:
             file.write(html)
         return self

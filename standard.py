@@ -39,7 +39,7 @@ class StandardRenderer:
     """
     # FIXME - Move this portion to main so that you can type without circular import
     def __init__(self, node):        
-        self.node = node
+        self.node = node # Is an instance of OENodePoint
         self.funcmap = {
             "concept": renderConcept,
             "grouping": renderGrouping,
@@ -53,6 +53,7 @@ class StandardRenderer:
         
     def renderHtml(self):
         # Add parent node rendering here or in a separate function
+        
         self.fronthtml = "FRONTHTML"
         self.backhtml = "BACKHTML"
         return 
