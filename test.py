@@ -2,6 +2,10 @@
 import sys
 import base64
 
+#%% Additional test cell
+"""
+Additional test lines
+"""
 
 #%% System arguments
 output = sys.argv[1]
