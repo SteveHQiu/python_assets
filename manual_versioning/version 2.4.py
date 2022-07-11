@@ -341,7 +341,7 @@ def iterHeaders(header_list):
         """
         nonlocal oeheader # Refer to out scope's oeheader objects
         # Will only run during recursive loops, not during initial loop which is for header
-        if parent:
+        if parent: # parent variable is re-instantiated each nested loop, hence uppmost loop (belonging to headers, looping over 1rst order OENodePoints) will always have parent = False, any loops beyond that (for 2nd order OENodePoints)
             oeheader.context_tracker.insert(0, oenode) # Insert most recent oenode at front of list 
         # Main logic using functions defined in OENodePoint class
         for oepoint in oenode.children:
