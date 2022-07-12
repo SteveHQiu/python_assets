@@ -101,18 +101,19 @@ def getNodeTypeAndData(node: Element) -> Tuple[str, str]:
         Tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
     """
     
-    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None: # Text-based types
+    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None : # Must have text
         text = node.find("one:T", NAMESPACES).text # Remember that text is stored under text property, the object itself is an instance of Element (XML)
         soup = BeautifulSoup(text, features="html.parser")
-        # Note that select() methods can search via styling while find() methods seem to capture the whole element that matches search
-        if soup.select_one('span[style*="font-weight:bold"]') != None:
-            return ("concept", text)
-        elif soup.select_one('span[style*="text-decoration:underline"]') != None:
-            return ("grouping", text)
-        elif "http://www.w3.org/1998/Math/MathML" in text: # Might not give correct rendering
-            return ("equation", text)
-        else: 
-            return ("standard", text)
+        if soup.text.strip() != "": # Only assign text type if rendering text is not just whitespace
+            # Note that select() methods can search via styling while find() methods seem to capture the whole element that matches search
+            if soup.select_one('span[style*="font-weight:bold"]') != None:
+                return ("concept", text)
+            elif soup.select_one('span[style*="text-decoration:underline"]') != None:
+                return ("grouping", text)
+            elif "http://www.w3.org/1998/Math/MathML" in text: # Might not give correct rendering
+                return ("equation", text)
+            else: 
+                return ("standard", text)
         
         
     elif node.find("one:Image/one:Data", NAMESPACES) != None and node.find("one:Image/one:Data", NAMESPACES).text != None: # Image nodes
