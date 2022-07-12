@@ -4,6 +4,18 @@ import base64
 from anki.storage import Collection
 import inspect
 
+#%% Getting attributes via string
+
+class tempClass:
+    def __init__(self):
+        self.data1 = 'data1 info'
+        self.data2 = 'data2 info'
+
+a = tempClass()
+print(a.__getattribute__("data1"))
+print(a.__getattribute__("data2"))
+print(a.__getattribute__("data3")) # Throws error if it doesn't exist
+
 #%% Substring search and insert
 
 text = "value=20; style='list-style-type: decimal'"

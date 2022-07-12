@@ -1,7 +1,7 @@
 #%% Imports
 # Built-ins
 from cgitb import html
-from typing import Union, Tuple, List
+from typing import Union, Tuple, List, Callable
 from collections.abc import Iterable
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
@@ -31,9 +31,8 @@ def renderHeaders(node: Element) -> str:
 def genHtmlElement(content: str, 
                 style: List[str] = [],
                 color: str = "",
-                start: bool = False,
+                list: bool = False,
                 bullet: str = "",
-                close: bool = False,
                 ) -> str:
     """
     Generates HTML element with a variety of styling options
@@ -41,20 +40,23 @@ def genHtmlElement(content: str,
 
     Args:
         content (str): Actual str text data to render
-        bullet_data (str, optional): Styling for list item if rendering a list item. Defaults to "".
         color (str, optional): Str for hex code of color. Defaults to "".
         style (List[str], optional): List of str for styling options (bold, underline, italic). Defaults to [].
-        start (bool, optional): Whether to add <li> tag at the beginning for list items. Defaults to True.
-        close (bool, optional): Whether to add </li> tag closure at end. Defaults to False. If start is True, closure is AUTOMATICALLY ADDED
+        list (bool, optional): Whether to render the element as a list item, adds <li> and </li> at beginning and end of HTML string. Defaults to False.
+        bullet (str, optional): Styling for list item if rendering a list item. Defaults to "". Will have no effect if list=False
 
     Returns:
         str: Final generated HTML element
     """
     html_item = "" # Initialize HTML container 
-    if start:
+    if list:
         html_item += F"<li {bullet}>"
         if color: # Change color of bullet if there is a color argument passed
-            html_item = insertSubstring(html_item, "'", F"; color:{color}")
+            if "style" in html_item: # If there is a styling element already
+                html_item = insertSubstring(html_item, "'", F"; color:{color}") # Insert color property in styling element
+            else:
+                html_item = insertSubstring(html_item, ">", F"style='color:{color}'") # Create and insert new styling element with color
+                
         
     if style or color: # If style or color arguments not empty, add all applicable options below:
         html_item += "<span style='" # Open style attribute and span tag
@@ -72,8 +74,40 @@ def genHtmlElement(content: str,
     
     if style or color: # Have to close styling span 
         html_item += "</span>"
-    if start or close: # Will close automatically if there is a starting point 
-        html_item += "</li>"
+        
+    if list: # Will close automatically if there is a starting point 
+        html_item += "</li>\n"
+    return html_item
+
+def genHtmlRecursively(node: OENodePoint, 
+                       fx_genHtml: Callable,
+                       data_atr: str = "data",
+                       bul_atr: str = "bullet_data",
+                       **kwargs) -> str:
+    """Generates the HTML rendering of a node and all of its children recursively 
+    using a HTML generating function and styling arguments
+
+    Args:
+        node (OENodePoint): Root node to render
+        fx_genHtml: Function for generating the HTML string, kwargs will be fed into this function 
+        data_atr: String that specifies where the content within the node lies (e.g., node.data, node.stem), defaults to node.data
+        bul_atr: String that specifies where bullet styling lies defaults to node.bullet_data
+
+
+    Returns:
+        str: HTML str containing rendered root node and its children
+    """
+    # Main rendering logic (will be repeated during recursion)
+    html_item = fx_genHtml(node.__getattribute__(data_atr),
+                           bullet=node.__getattribute__(bul_atr),
+                           **kwargs) # Defaults to rendering node.data and node.bullet_data        
+    # Recursive logic
+    if node.children_nodes:
+        html_children = "\n<ul>\n" # Open list
+        for child_node in (OENodePoint(cnode) for cnode in node.children_nodes): # Convert each child node into OENodePoint
+            html_children += genHtmlRecursively(child_node, fx_genHtml, **kwargs) # Use same func and arguments as root since same type and same context 
+        html_children += "</ul>\n" # Close list
+        html_item = insertSubstring(html_item, "</li>", html_children) # Insert children into last item 
     return html_item
 
 ## Special rendering functions
@@ -84,20 +118,21 @@ def renderCloze(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
             indicators = "".join(node.indicators)            
-            return genHtmlElement(F"{indicators} |____:", ["underline"], start=True, bullet=node.bullet_data) # Add colon for prompting
+            return genHtmlElement(F"{indicators} |____:", ["underline"], list=True, bullet=node.bullet_data) # Add colon for prompting
         elif level == "sibling":
             return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            text_styled = genHtmlElement(node.stem, ["underline"], "") + genHtmlElement(node.body, [], GRAY)
+            return genHtmlElement(node.stem, [], GRAY, list=True, bullet=node.bullet_data) # Create a greyed list item using styled text
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderListed(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
@@ -105,20 +140,20 @@ def renderListed(node: OENodePoint, front: bool, level: str, root: bool = True) 
             return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
             return renderGrouping(node, front, "entry", root=False) # Run as if it was an entry-level node, root=False to avoid re-running renderOptions()
-            return genHtmlElement(node.stem + ":", ["underline"], start=True, bullet=node.bullet_data) # Actual code from renderGrouping
+            return genHtmlElement(node.stem + ":", ["underline"], list=True, bullet=node.bullet_data) # Actual code from renderGrouping
         elif level == "sibling":
             return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderOptions(node: OENodePoint, front: bool, level: str) -> str:
     if {"C", "L"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
@@ -144,23 +179,23 @@ def renderConcept(node: OENodePoint, front: bool, level: str, root: bool = True)
         return renderOptions(node, front, level) # Use output from renderOptions() instead if applicable, otherwise go through default
     elif front:
         if level == "entry":
-            return genHtmlElement(node.stem + ":", ["bold"], start=True, bullet=node.bullet_data) # Add unformatted colon for prompting
+            return genHtmlElement(node.stem + ":", ["bold"], list=True, bullet=node.bullet_data) # Add unformatted colon for prompting
         elif level == "direct_child":
-            return genHtmlElement("____:", ["bold"], start=True, bullet=node.bullet_data) # Add unformatted colon for prompting
+            return genHtmlElement("____:", ["bold"], list=True, bullet=node.bullet_data) # Add unformatted colon for prompting
         elif level == "sibling":
-            return genHtmlElement(node.stem, ["bold"], GRAY, start=True, bullet=node.bullet_data) 
+            return genHtmlElement(node.stem, ["bold"], GRAY, list=True, bullet=node.bullet_data) 
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
-            return genHtmlElement(node.data, start=True, bullet=node.bullet_data) # Convert to list item but keep raw data
+            return genHtmlElement(node.data, list=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
-            return genHtmlElement(text, [], GRAY, start=True, bullet=node.bullet_data) 
+            return genHtmlElement(text, [], GRAY, list=True, bullet=node.bullet_data) 
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderGrouping(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if root and renderOptions(node, front, level): # Will only return true if node.indicators contain rendering options
@@ -168,104 +203,104 @@ def renderGrouping(node: OENodePoint, front: bool, level: str, root: bool = True
         return renderOptions(node, front, level) # Use output from renderOptions() instead if applicable, otherwise go through default
     if front:
         if level == "entry":
-            return genHtmlElement(node.stem + ":", ["underline"], start=True, bullet=node.bullet_data) # Add colon for prompting
+            return genHtmlElement(node.stem + ":", ["underline"], list=True, bullet=node.bullet_data) # Add colon for prompting
         elif level == "direct_child":
             return "" # Ignore regular Grouping-type nodes
         elif level == "sibling":
-            return genHtmlElement(node.stem, ["underline"], GRAY, start=True, bullet=node.bullet_data) 
+            return genHtmlElement(node.stem, ["underline"], GRAY, list=True, bullet=node.bullet_data) 
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
-            return genHtmlElement(node.data, start=True, bullet=node.bullet_data) # Convert to list item but keep raw data
+            return genHtmlElement(node.data, list=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
+            return genHtmlElement(text, [], GRAY, list=True, bullet=node.bullet_data) 
         elif level == "sibling":
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
-            return genHtmlElement(text, [], GRAY, start=True, bullet=node.bullet_data) 
+            return genHtmlElement(text, [], GRAY, list=True, bullet=node.bullet_data) 
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderNormalText(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
         if level == "entry":
             return "" # Shouldn't have normal text as entry point
         elif level == "direct_child":
-            return genHtmlElement("Subpoint", ["italic"], start=True, bullet=node.bullet_data) # Italicized placeholder
+            return genHtmlElement("Subpoint", ["italic"], list=True, bullet=node.bullet_data) # Italicized placeholder
         elif level == "sibling":
             return "" # Ignore
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
             return "" # Shouldn't have normal text as entry point
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return genHtmlRecursively(node, genHtmlElement, style=[], color="", start=True) # Render node and children with original format
         elif level == "sibling":
-            text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
-            return genHtmlElement(text, [], GRAY, start=True, bullet=node.bullet_data) 
+            return genHtmlRecursively(node, genHtmlElement, style=[], color=GRAY, start=True)
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderImage(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
         if level == "entry":
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
-            return genHtmlElement("Image", ["italic"], start=True, bullet=node.bullet_data) # Italicized placeholder
+            return genHtmlElement("Image", ["italic"], list=True, bullet=node.bullet_data) # Italicized placeholder
         elif level == "sibling":
             return "" # Ignore
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderEquation(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
         if level == "entry":
             return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
-            return genHtmlElement("Equation", ["italic"], start=True, bullet=node.bullet_data) # Italicized placeholder
+            return genHtmlElement("Equation", ["italic"], list=True, bullet=node.bullet_data) # Italicized placeholder
         elif level == "sibling":
             return "" # Ignore
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
             return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderTable(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
         if level == "entry":
             return "" # Shouldn't have table as entry point in standard renderer
         elif level == "direct_child":
-            return genHtmlElement("Table", ["italic"], start=True, bullet=node.bullet_data) # Italicized placeholder
+            return genHtmlElement("Table", ["italic"], list=True, bullet=node.bullet_data) # Italicized placeholder
         elif level == "sibling":
             return "" # Ignore
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
             return "" # Shouldn't have table as entry point in standard renderer
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>"
+            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
 def ignoreNode(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
@@ -276,7 +311,7 @@ def ignoreNode(node: OENodePoint, front: bool, level: str, root: bool = True) ->
         elif level == "sibling":
             return ""
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
     else: # Functions for rendering backside
         if level == "entry":
             return ""
@@ -285,9 +320,17 @@ def ignoreNode(node: OENodePoint, front: bool, level: str, root: bool = True) ->
         elif level == "sibling":
             return ""
         else: # Insert error message
-            return "<li>ERROR: Unable to parse node level"
+            return "<li>ERROR: Unable to parse node level</li>\n"
 
-
+FUNCMAP = {
+            "concept": renderConcept,
+            "grouping": renderGrouping,
+            "standard": renderNormalText,
+            "image": renderImage,
+            "equation": renderEquation,
+            "table": renderTable,
+            "": ignoreNode,
+        } # Mapping of node type label to corresponding function 
 
 
 #%% Classes
@@ -298,15 +341,6 @@ class StandardRenderer:
     # FIXME - Move this portion to main so that you can type without circular import
     def __init__(self, node: OENodePoint):        
         self.node = node # Is an instance of OENodePoint, the entry point node
-        self.funcmap = {
-            "concept": renderConcept,
-            "grouping": renderGrouping,
-            "standard": renderNormalText,
-            "image": renderImage,
-            "equation": renderEquation,
-            "table": renderTable,
-            "": ignoreNode,
-        } # Mapping of node type label to corresponding function 
         self.fronthtml = ""
         self.backhtml = ""
         self.img_count = 0 # Image counter for each card to assign each image a unique identifier 
@@ -328,19 +362,21 @@ class StandardRenderer:
         front = "<ul>\n" # Open list for sibling nodes
         back = "<ul>\n" # Open list for sibling nodes
         for node in (OENodePoint(node) for node in self.node.sibling_nodes): # Convert to OENodePoint within generator expression
-            func = self.funcmap[node.type] # Retrieve relevant function based on node type
+            func = FUNCMAP[node.type] # Retrieve relevant function based on node type
             if self.node.id == node.id: # Node reponsible for entrypoint and called StandardRenderer
                 front += func(node, True, "entry") 
                 back += func(node, False, "entry") 
                 if node.children_nodes: # Render direct children nodes
-                    front += "<ul>\n" # Open list for direct children nodes
-                    back += "<ul>\n" # Open list for direct children nodes
+                    child_front = "\n<ul>\n" # Open list for direct children nodes
+                    child_back = "\n<ul>\n" # Open list for direct children nodes
                     for child_node in (OENodePoint(cnode) for cnode in node.children_nodes): # Convert each child node into OENodePoint
-                        cfunc = self.funcmap[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
-                        front = insertSubstring(front, "</li>", cfunc(child_node, True, "direct_child")) 
-                        back = insertSubstring(back, "</li>", cfunc(child_node, False, "direct_child"))
-                    front += "</ul>\n" # Close list for direct children nodes
-                    back += "</ul>\n" # Close list for direct children nodes
+                        cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
+                        child_front += cfunc(child_node, True, "direct_child") 
+                        child_back += cfunc(child_node, False, "direct_child")
+                    child_front += "</ul>\n" # Close list for direct children nodes
+                    child_back += "</ul>\n" # Close list for direct children nodes
+                    front = insertSubstring(front, "</li>", child_front) 
+                    back = insertSubstring(back, "</li>", child_back)
                 # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
             else: # Assume it is an sibling/adjacent node
                 front += func(node, True, "sibling") 
@@ -348,7 +384,6 @@ class StandardRenderer:
                 # No need for children parsing for sibling nodes 
         front += "</ul>\n" # Close list for sibling nodes
         back += "</ul>\n" # Close list for sibling nodes
-        # Note that even without branchless closure, extra </li> tag won't affect rendering when node is ignored by the renderer function
         
         self.fronthtml += front
         self.backhtml += back

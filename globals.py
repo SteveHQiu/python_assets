@@ -39,7 +39,7 @@ def insertSubstring(text: str, substr: str, ins: str, end = True) -> str:
 
     Args:
         text (str): String to insert into
-        sub (str): Substring to search
+        substr (str): Substring to search
         ins (str): String to insert
         end (bool, optional): Search from end. Defaults to True.
 

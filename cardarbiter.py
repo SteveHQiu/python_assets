@@ -63,9 +63,9 @@ class CardArbiter:
         html = ""
         card_num = 1
         for card in self.cards:
-            html += F"<br>Card no. {card_num}:<br>" + card[0] + "<hr>" + card[1] + "<hr><hr><br>" # Add front and back with spacing between both and next set of cards
+            html += F"<br>Card no. {card_num}:<br>\n" + card[0] + "<hr>\n" + card[1] + "<hr><hr><br>\n" # Add front and back with spacing between both and next set of cards
             card_num += 1
-        with open("displayCards_output.html", "w") as file:
+        with open("displayCards_output.html", "w", encoding="utf-8") as file:
             file.write(html)
         return self
         
