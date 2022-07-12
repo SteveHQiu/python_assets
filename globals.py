@@ -100,20 +100,28 @@ def getNodeTypeAndData(node: Element) -> Tuple[str, str]:
     
     return ("", "") # Returns two empty strings which evaluate as false when passed as logical arguments
 
-def getStem(node: Element) -> str:
+def getStemAndBody(node: Element) -> Tuple[str, str]:
     node_type, node_data = getNodeTypeAndData(node)
     if node_type == "concept":
         soup = BeautifulSoup(node_data, features="html.parser")
-        return soup.select_one('span[style*="font-weight:bold"]').text # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
+        stem_tag = soup.select_one('span[style*="font-weight:bold"]') # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
+        stem = stem_tag.text
+        stem_tag.decompose() # Deletes tag from soup variable
+        body = soup.text # Use updated soup variable to assign the body text
+        return (stem, body)
     elif node_type == "grouping":
         soup = BeautifulSoup(node_data, features="html.parser")
-        return soup.select_one('span[style*="text-decoration:underline"]').text # Returns first tag that matches selector
+        stem_tag = soup.select_one('span[style*="text-decoration:underline"]') # Returns first tag that matches selector
+        stem = stem_tag.text
+        stem_tag.decompose() # Deletes tag from soup variable
+        body = soup.text # Use updated soup variable to assign the body text
+        return (stem, body)
     else:
-        return ""
+        return ("", "")
 
 def getIndicators(node: Element) -> List[str]:
-    if getStem(node) and re.match(R"(\w+) ?\|", getStem(node)) != None: # Generalized for any stems in case of additional expansions
-        indicator_str = re.match(R"(\w+) ?\|", getStem(node)).group(1)
+    if getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
+        indicator_str = re.match(R"(\w+) ?\|", getStemAndBody(node)[0]).group(1)
         return list(indicator_str) # Convert indicators into set of characters
     else:
         return list() # Return an empty set for indicators otherwise
@@ -157,7 +165,7 @@ class OENodePoint:
         self.bullet_data = getBulletData(oenode)
         
         self.type, self.data = getNodeTypeAndData(oenode) # Unpack tuple into type and data
-        self.stem = getStem(oenode)
+        self.stem, self.body = getStemAndBody(oenode) # Unpack tuple into stem and body
         self.indicators = getIndicators(oenode)
         
         self.children_nodes: Iterable[Element] = getChildren(oenode)
@@ -320,6 +328,8 @@ class OENodePoint:
         back_html = "".join((back_html, context_img)) # Add images to end
         # Wrap UL tags around main body, add parents and header - this part should not be a part of the body loop
         back_html = "".join(("<ul>\n",back_html,"</ul>"))
+        
+        
         for parent in oeheader.context_tracker: # Wraps info of parent nodes around returned HTML list 
             if self.getGroupingStem() and oeheader.context_tracker.index(parent) == 0: # Only display parent in non-grey if it is a grouping, index is to make sure that it is the immediate parent, of the current node, otherwise will treat as a distant parent
                 back_html = "".join(("<ul>\n<li %s>%s\n" % (parent.bullet_data, parent.text), back_html, "\n</li>\n</ul>"))

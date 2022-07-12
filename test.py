@@ -4,7 +4,67 @@ import base64
 from anki.storage import Collection
 import inspect
 
-#%%
+
+#%% HTML Obtaining body via stem
+from bs4 import BeautifulSoup
+
+html = "<p>Good, <b>bad</b>, and <i>ug<b>l</b><u>y</u></i></p>"
+text = "<span style='font-weight:bold'>Concept</span>: concept definition"
+soup = BeautifulSoup(text)
+results = soup.select_one('span[style*="font-weight:bold"]')
+print(results)
+print(soup.text)
+results.decompose() # Destroys element 
+print(soup.text)
+# Can delete tag but keep contents with tag.replaceWithChildren() method - https://stackoverflow.com/questions/1765848/remove-a-tag-using-beautifulsoup-but-keep-its-contents
+
+#%% Timing branchless string computations
+import time
+
+cycles = 10000000
+
+def timerDecorator(fx):
+    def wrapper():
+        start = time.time()
+        for i in range(cycles):
+            fx()
+        print(time.time() - start)
+        return
+    return wrapper
+
+class tempClass:
+    def __init__(self):
+        self.data1 = ''
+        self.data2 = 'This is a string wwwwwwwwwsadfadfj;alskjflaskdv;lsejg;oserijg;osdb;osemg;osaij;sokdmblxkcmn.,kjn;ogwjipoivj;lxzkcfj;leskjgwiogj;sdlkfnv;slkdfng;klsj;fdoigj;sdkngm;lsdkfjg;sodfjgpoirgj;sdknf;saeiutposeiug'
+
+a = tempClass()
+
+@timerDecorator
+def fx1():
+    return (R'conditional '*bool(a.data1) + R'constant')
+
+@timerDecorator
+def fx2(): 
+    if a.data1:
+        return R'conditional constant'
+    else:
+        return R'constant'
+    
+@timerDecorator
+def fx3():    
+    return R'conditional '*bool(a.data2) + R'constant'
+
+@timerDecorator
+def fx4(): 
+    if a.data2:
+        return R'conditional constant'
+    else:
+        return R'constant'
+    
+fx1()
+fx2()
+fx3()
+fx4()
 
 
 
@@ -118,7 +178,7 @@ def decorator(a, b):
     def wrapper(fx):
         print(a, b)
         print("Wrapper executed")
-        return fx
+        return fx()
     return wrapper
 
 def test2():
@@ -145,6 +205,8 @@ def decorator(fx):
 def test():
     print("Test function")
     return
+
+test()
 
 #%% Anki list cards
 PROFILE_HOME = os.path.expanduser(r"~\AppData\Roaming\Anki2\User 1")

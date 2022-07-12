@@ -151,11 +151,12 @@ def renderConcept(node: OENodePoint, front: bool, level: str, root: bool = True)
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            return genHtmlElement(node.data, start=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
             return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
+            return genHtmlElement(text, GRAY, start=True, bullet=node.bullet_data) 
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -174,11 +175,12 @@ def renderGrouping(node: OENodePoint, front: bool, level: str, root: bool = True
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            return genHtmlElement(node.data, start=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
             return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
+            return genHtmlElement(text, GRAY, start=True, bullet=node.bullet_data) 
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -194,18 +196,19 @@ def renderNormalText(node: OENodePoint, front: bool, level: str, root: bool = Tr
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            return "" # Shouldn't have normal text as entry point
         elif level == "direct_child":
             return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
+            return genHtmlElement(text, GRAY, start=True, bullet=node.bullet_data) 
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
 def renderImage(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
     if front:
         if level == "entry":
-            return "" # Shouldn't have image as entry point
+            return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
             return genHtmlElement("Image", ["italic"], start=True, bullet=node.bullet_data) # Italicized placeholder
         elif level == "sibling":
@@ -214,7 +217,7 @@ def renderImage(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
             return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
@@ -234,7 +237,7 @@ def renderEquation(node: OENodePoint, front: bool, level: str, root: bool = True
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
             return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
@@ -254,7 +257,7 @@ def renderTable(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return F"<li>{getFxName()}, front: {front}, level: {level}"
+            return "" # Shouldn't have table as entry point in standard renderer
         elif level == "direct_child":
             return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
@@ -304,6 +307,7 @@ class StandardRenderer:
         } # Mapping of node type label to corresponding function 
         self.fronthtml = ""
         self.backhtml = ""
+        self.img_count = 0 # Image counter for each card to assign each image a unique identifier 
     
     def resetHtml(self):
         self.fronthtml = ""
