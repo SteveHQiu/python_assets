@@ -89,11 +89,11 @@ def renderCloze(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -110,11 +110,11 @@ def renderListed(node: OENodePoint, front: bool, level: str, root: bool = True) 
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -136,7 +136,8 @@ def renderConcept(node: OENodePoint, front: bool, level: str, root: bool = True)
     to default options from a special rendering option (i.e., reuse a standard rendering function when certain 
     criteria are met)
     """
-    if renderOptions(node, front, level) and root: # Will only return true if node.indicators contain rendering options and has not previously called renderOptions
+    if root and renderOptions(node, front, level): # Will only return true if node.indicators contain rendering options and has not previously called renderOptions
+        # Note that root must be evaluated first, otherwise will try to evaluate function and enter infinite recursion
         # Not actually implemented in Concept-type nodes yet
         return renderOptions(node, front, level) # Use output from renderOptions() instead if applicable, otherwise go through default
     elif front:
@@ -150,16 +151,17 @@ def renderConcept(node: OENodePoint, front: bool, level: str, root: bool = True)
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
 def renderGrouping(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
-    if renderOptions(node, front, level): # Will only return true if node.indicators contain rendering options
+    if root and renderOptions(node, front, level): # Will only return true if node.indicators contain rendering options
+        # Note that root must be evaluated first, otherwise will try to evaluate function and enter infinite recursion
         return renderOptions(node, front, level) # Use output from renderOptions() instead if applicable, otherwise go through default
     if front:
         if level == "entry":
@@ -172,11 +174,11 @@ def renderGrouping(node: OENodePoint, front: bool, level: str, root: bool = True
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -192,11 +194,11 @@ def renderNormalText(node: OENodePoint, front: bool, level: str, root: bool = Tr
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -212,11 +214,11 @@ def renderImage(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -232,11 +234,11 @@ def renderEquation(node: OENodePoint, front: bool, level: str, root: bool = True
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -252,11 +254,11 @@ def renderTable(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return "<li>ERROR: Unable to parse node level"
     else: # Functions for rendering backside
         if level == "entry":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "direct_child":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         elif level == "sibling":
-            return
+            return F"<li>{getFxName()}, front: {front}, level: {level}"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level"
 
@@ -325,14 +327,14 @@ class StandardRenderer:
                 front += func(node, True, "entry") # Has <li> start tag but needs closure
                 back += func(node, False, "entry") # Has <li> start tag but needs closure
                 if node.children_nodes: # Render direct children nodes
-                    front = "<ul>\n" # Open list for direct children nodes
-                    back = "<ul>\n" # Open list for direct children nodes
+                    front += "<ul>\n" # Open list for direct children nodes
+                    back += "<ul>\n" # Open list for direct children nodes
                     for child_node in (OENodePoint(cnode) for cnode in node.children_nodes): # Convert each child node into OENodePoint
                         cfunc = self.funcmap[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
                         front += cfunc(child_node, True, "direct_child") + "</li>\n"*bool(cfunc(child_node, True, "direct_child")) # Branchless conditional list item closure
                         back += cfunc(child_node, False, "direct_child") + "</li>\n"*bool(cfunc(child_node, False, "direct_child")) # Branchless conditional list item closure
-                    front = "</ul>\n" # Close list for direct children nodes
-                    back = "</ul>\n" # Close list for direct children nodes
+                    front += "</ul>\n" # Close list for direct children nodes
+                    back += "</ul>\n" # Close list for direct children nodes
                 front += "</li>\n"*bool(func(node, True, "entry")) # Branchless conditional list item closure (refers to function at start of if statement)
                 back += "</li>\n"*bool(func(node, False, "entry")) # Branchless conditional list item closure (refers to function at start of if statement)
                 # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
@@ -340,8 +342,8 @@ class StandardRenderer:
                 front += func(node, True, "sibling") + "</li>\n"*bool(func(node, True, "sibling")) # Branchless conditional list item closure
                 back += func(node, False, "sibling") + "</li>\n"*bool(func(node, False, "sibling")) # Branchless conditional list item closure
                 # No need for children parsing for sibling nodes 
-        front = "</ul>\n" # Close list for sibling nodes
-        back = "</ul>\n" # Close list for sibling nodes
+        front += "</ul>\n" # Close list for sibling nodes
+        back += "</ul>\n" # Close list for sibling nodes
         # Note that even without branchless closure, extra </li> tag won't affect rendering when node is ignored by the renderer function
         
         self.fronthtml += front
