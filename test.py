@@ -1,13 +1,53 @@
 #%% Imports
-import sys
+import sys, os
 import base64
+from anki.storage import Collection
+import inspect
 
 #%%
-print(" f ")
-print(" f ".strip())
-print("   ")
-print("  ".strip())
-print("end")
+
+
+
+#%% String to set of characters
+a = "test string"
+b = "abc"
+c = "aesdfjgposijdbokwnb4;oijsdpofxldkmn;sejh;sdojfv;lzmn;vljspoejigs"
+print(set(a))
+print(bool(set(a)))
+print(bool(set()))
+print(bool(set(a).intersection(set(b))))
+"".join(set(a))
+"".join(set(b))
+"".join(set(c))
+print(list(a))
+"".join(list(a))
+
+#%% Function name reporting
+import inspect
+def getFxName(): # Function that will return and print out name of currently calling function
+    return inspect.stack()[1].function
+
+def testFunction():
+    a = getFxName()
+    print(a)
+    return
+
+testFunction()
+    
+
+#%% Branchless adding of closure tags
+def f(x):
+    if x:
+        return "<li>Contents"
+    else:
+        return ""
+
+print(bool("")*"<li>Contents"+bool("True")*"</li>")
+print("=======")
+print(f(True)+"</li>"*bool(f(True)))
+print(f(False)+"</li>"*bool(f(False)))
+print(f("Lmao")+"</li>"*bool(f("Lmao")))
+
 
 #%% Nested scopes
 
@@ -72,6 +112,7 @@ print(output)
 # with open("TestImage.png", "wb") as img_file:
 #     img_file.write(base64.decodebytes(img_str))
 
+
 #%% Decorator functions
 def decorator(a, b):
     def wrapper(fx):
@@ -104,3 +145,18 @@ def decorator(fx):
 def test():
     print("Test function")
     return
+
+#%% Anki list cards
+PROFILE_HOME = os.path.expanduser(r"~\AppData\Roaming\Anki2\User 1")
+cpath = os.path.join(PROFILE_HOME, "collection.anki2")
+
+try:
+    col = Collection(cpath, log=True)
+    # for cid in col.findNotes("tag:*"):
+    #     note = col.getNote(cid);
+    #     front = note.fields[0];
+    #     print(front);
+    print(col.card_count())
+    print(col.card_count() - 153) # Used for debugging C# tool
+finally: 
+    col.close() # Need this function, otherwise instance stays open
