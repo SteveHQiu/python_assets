@@ -330,19 +330,17 @@ class StandardRenderer:
         for node in (OENodePoint(node) for node in self.node.sibling_nodes): # Convert to OENodePoint within generator expression
             func = self.funcmap[node.type] # Retrieve relevant function based on node type
             if self.node.id == node.id: # Node reponsible for entrypoint and called StandardRenderer
-                front += func(node, True, "entry") # Has <li> start tag but needs closure
-                back += func(node, False, "entry") # Has <li> start tag but needs closure
+                front += func(node, True, "entry") 
+                back += func(node, False, "entry") 
                 if node.children_nodes: # Render direct children nodes
                     front += "<ul>\n" # Open list for direct children nodes
                     back += "<ul>\n" # Open list for direct children nodes
                     for child_node in (OENodePoint(cnode) for cnode in node.children_nodes): # Convert each child node into OENodePoint
                         cfunc = self.funcmap[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
-                        front += cfunc(child_node, True, "direct_child")
-                        back += cfunc(child_node, False, "direct_child")
+                        front = insertSubstring(front, "</li>", cfunc(child_node, True, "direct_child")) 
+                        back = insertSubstring(back, "</li>", cfunc(child_node, False, "direct_child"))
                     front += "</ul>\n" # Close list for direct children nodes
                     back += "</ul>\n" # Close list for direct children nodes
-                front += "</li>\n"*bool(func(node, True, "entry")) # Branchless conditional list item closure (refers to function at start of if statement)
-                back += "</li>\n"*bool(func(node, False, "entry")) # Branchless conditional list item closure (refers to function at start of if statement)
                 # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
             else: # Assume it is an sibling/adjacent node
                 front += func(node, True, "sibling") 

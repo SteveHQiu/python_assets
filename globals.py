@@ -33,7 +33,7 @@ else:
 
 #%% Global functions
 
-def insertSubstring(text: str, sub: str, ins: str, end = True) -> str:
+def insertSubstring(text: str, substr: str, ins: str, end = True) -> str:
     """Inserts string into another string in front of a specified substring if it is found
     Otherwise returns original string
 
@@ -47,9 +47,9 @@ def insertSubstring(text: str, sub: str, ins: str, end = True) -> str:
         str: New modified string or original string if search substring not found
     """
     if end:
-        ind = text.rfind(sub) # Finds highest index of substring
+        ind = text.rfind(substr) # Finds highest index of substring
     else:
-        ind = text.find(sub) # Finds lowest index of substring
+        ind = text.find(substr) # Finds lowest index of substring
     if ind >= 0: # If match is found
         return text[:ind] + ins + text[ind:] 
     else:
