@@ -10,7 +10,7 @@ from xml.etree.ElementTree import Element
 from bs4 import BeautifulSoup
 
 # Internal modules
-from globals import OENodePoint
+from globals import OENodePoint, insertSubstring
 
 
 #%% Constants
@@ -52,7 +52,9 @@ def genHtmlElement(content: str,
     """
     html_item = "" # Initialize HTML container 
     if start:
-        html_item += F"<li {bullet}>" 
+        html_item += F"<li {bullet}>"
+        if color: # Change color of bullet if there is a color argument passed
+            html_item = insertSubstring(html_item, "'", F"; color:{color}")
         
     if style or color: # If style or color arguments not empty, add all applicable options below:
         html_item += "<span style='" # Open style attribute and span tag
@@ -61,7 +63,7 @@ def genHtmlElement(content: str,
         if "underline" in style:
             html_item += "text-decoration:underline;"
         if "italic" in style:
-            html_item += "font-style: italic;"
+            html_item += "font-style:italic;"
         if color:
             html_item += F"color:{color};"
         html_item += "'>" # Close style attribute and span tag

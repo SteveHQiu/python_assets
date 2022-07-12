@@ -33,11 +33,36 @@ else:
 
 #%% Global functions
 
-def getBulletData(node: Element) -> str:    
+def insertSubstring(text: str, sub: str, ins: str, end = True) -> str:
+    """Inserts string into another string in front of a specified substring if it is found
+    Otherwise returns original string
+
+    Args:
+        text (str): String to insert into
+        sub (str): Substring to search
+        ins (str): String to insert
+        end (bool, optional): Search from end. Defaults to True.
+
+    Returns:
+        str: New modified string or original string if search substring not found
+    """
+    if end:
+        ind = text.rfind(sub) # Finds highest index of substring
+    else:
+        ind = text.find(sub) # Finds lowest index of substring
+    if ind >= 0: # If match is found
+        return text[:ind] + ins + text[ind:] 
+    else:
+        return text
+
+def getBulletData(node: Element) -> str:
+    """
+    
+    """
     if node.find("one:List/one:Number", NAMESPACES) != None:
         if "restartNumberingAt" in node.find("one:List/one:Number", NAMESPACES).attrib: # Search for restart numbering attribute in tag: https://stackoverflow.com/questions/10115396/how-to-test-if-an-attribute-exists-in-some-xml
             number = node.find("one:List/one:Number", NAMESPACES).attrib["restartNumberingAt"]
-            return F"style='list-style-type: decimal'; value={number}"
+            return F"value={number}; style='list-style-type: decimal'"
         else: # Assume that ordered item does not need to be reordered
             return "style='list-style-type: decimal'"
     else: # Otherwise assumed to be an unordered item

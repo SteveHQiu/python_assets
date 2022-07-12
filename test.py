@@ -4,6 +4,12 @@ import base64
 from anki.storage import Collection
 import inspect
 
+#%% Substring search and insert
+
+text = "value=20; style='list-style-type: decimal'"
+ind = text.rfind("'")
+new_string = text[:ind] + "</li>" + text[ind:]
+print(new_string)
 
 #%% HTML Obtaining body via stem
 from bs4 import BeautifulSoup
