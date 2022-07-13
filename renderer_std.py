@@ -35,8 +35,9 @@ def genHtmlElement(content: str,
                 bullet: str = "",
                 ) -> str:
     """
-    Generates HTML element with a variety of styling options
-    Is to standardize HTML generation, default is to just return content variable
+    Generates HTML element with a variety of styling options. 
+    Is to standardize HTML generation
+    Defaults to return content variable with black color styling span (to prevent it from being colored by parent bullet color)
 
     Args:
         content (str): Actual str text data to render
@@ -68,7 +69,13 @@ def genHtmlElement(content: str,
             html_item += "font-style:italic;"
         if color:
             html_item += F"color:{color};"
+        else: # Otherwise color black
+            html_item += F"color:#000000;"
         html_item += "'>" # Close style attribute and span tag
+    else: # Assume no styling and color black (so that it won't be affected by bullet color)
+        html_item += "<span style='color:#000000;'>" # Open style attribute and span tag
+        
+        
         
     html_item += content # CONTENT ADDED HERE
     
@@ -356,10 +363,8 @@ class StandardRenderer:
         self.fronthtml = ""
         self.backhtml = ""
     
-    def renderParents(self):
-        pass
     
-    def renderHtml(self):
+    def renderHtmlMain(self):
         """
         Note that this method adds to the html attributes rather than overwrite them
         Use resetHtml() to reset front and back HTML if needed
@@ -396,5 +401,41 @@ class StandardRenderer:
         self.backhtml += back
         return self
     
-    
+    def renderHtmlParents(self):
+        """
+        Render parent nodes for entry node and add it to the generated HTML
+        """
+        front = ""
+        back = ""
 
+        for parent_node in (OENodePoint(pnode) for pnode in self.node.parent_nodes): # Convert parent nodes into OENodePoint instances
+            # Note that each node is added directly on top of entry point (i.e., previous parent gets bumped); hence furthest parent should be added first
+            pfront = "<ul>\n" # Open list for parent node
+            pback = "<ul>\n"
+            # Make list item
+            if self.node.type in ["grouping"] and parent_node.xml == self.node.parent_nodes[0]: # Checks if the parent node is the most immediate to entry point; if so, does special processing of immediate parent node if entry point is a grouping
+                if parent_node.type in ["concept"]:
+                    pfront += genHtmlElement(parent_node.stem, ["bold"], "", li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
+                elif parent_node.type in ["grouping"]:
+                    pfront += genHtmlElement(parent_node.stem, ["underline"], "", li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
+            else: # Treat as a distant parent node
+                if parent_node.type in ["concept"]:
+                    pfront += genHtmlElement(parent_node.stem, ["bold"], GRAY, li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], GRAY, li=True, bullet=parent_node.bullet_data)
+                elif parent_node.type in ["grouping"]:
+                    pfront += genHtmlElement(parent_node.stem, ["underline"], GRAY, li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], GRAY, li=True, bullet=parent_node.bullet_data)
+            pfront += "</ul>\n" # Close list for parent node (should only have 1 item), next level will have its own list
+            pback += "</ul>\n"
+            
+            front = insertSubstring(pfront, "</li>", "\n" + front) # Wrap new HTML around previous HTML by inserting old into new
+            back = insertSubstring(pback, "</li>", "\n" + back) # Most generated HTML elements will have \n at end so won't need to add one
+
+        if self.node.parent_nodes: # Only search and insert if there's parent nodes, otherwise there won't be any </li> tags to find
+            self.fronthtml = insertSubstring(front, "</li>", "\n" + self.fronthtml) # Insert main html into last item of list, need to insert AFTER </li> tag
+            self.backhtml = insertSubstring(back, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
+        
+        return self
+    

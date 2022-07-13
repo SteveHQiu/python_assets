@@ -36,7 +36,8 @@ class CardArbiter:
 
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
-                    renderer.renderHtml()
+                    renderer.renderHtmlMain()
+                    renderer.renderHtmlParents()
                     front = renderer.fronthtml
                     back = renderer.backhtml
                     self.cards.append((front, back)) # Append rendered HTMLs

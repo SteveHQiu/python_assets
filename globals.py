@@ -33,15 +33,16 @@ else:
 
 #%% Global functions
 
-def insertSubstring(text: str, substr: str, ins: str, end = True) -> str:
+def insertSubstring(text: str, substr: str, ins: str, end = True, before = True) -> str:
     """Inserts string into another string in front of a specified substring if it is found
-    Otherwise returns original string
+    Otherwise returns original string. If text to search is empty, it will return the substring instead
 
     Args:
         text (str): String to insert into
         substr (str): Substring to search
         ins (str): String to insert
-        end (bool, optional): Search from end. Defaults to True.
+        end (bool, optional): Search from end. Defaults to True. Otherwise search from beginning
+        before: Inserts string at beginning of substring. Otherwise inserts at end
 
     Returns:
         str: New modified string or original string if search substring not found
@@ -51,9 +52,13 @@ def insertSubstring(text: str, substr: str, ins: str, end = True) -> str:
     else:
         ind = text.find(substr) # Finds lowest index of substring
     if ind >= 0: # If match is found
+        if not before: 
+            ind += len(ins) # Increase index by length of insert string so that text is inserted at end of substring
         return text[:ind] + ins + text[ind:] 
-    else:
+    elif text: # If text is non-empty, return text
         return text
+    else: # Otherwise, text is an empty string, should return substring instead
+        return substr
 
 def getBulletData(node: Element) -> str:
     """
