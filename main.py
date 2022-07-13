@@ -12,3 +12,11 @@ if __name__ == "__main__":
     crawler.genCards()
     crawler.displayCards()
 
+""" Extra notes
+To fix XML file
+Find:
+([^>])\n
+Replace: 
+$1 
+
+"""

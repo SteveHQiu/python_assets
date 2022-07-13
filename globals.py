@@ -1,7 +1,7 @@
 #%% Imports
 # Built-in
 import sys, os, base64, re, string
-from typing import Union, Tuple, List, Set
+from typing import Union
 from collections.abc import Iterable
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
@@ -96,14 +96,14 @@ def getNodeText(node: Element) -> str:
     else:
         return "" # Returns empty string which will evaluate as False when passed as a logical argument
 
-def getNodeTypeAndData(node: Element) -> Tuple[str, str]: 
+def getNodeTypeAndData(node: Element) -> tuple[str, str]: 
     """Gets node type and corresponding data from an XML node element
 
     Args:
         node (Element): XML node element from OneNote export
 
     Returns:
-        Tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
+        tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
     """
     
     if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None : # Must have text
@@ -131,7 +131,7 @@ def getNodeTypeAndData(node: Element) -> Tuple[str, str]:
     
     return ("", "") # Returns two empty strings which evaluate as false when passed as logical arguments
 
-def getStemAndBody(node: Element) -> Tuple[str, str]:
+def getStemAndBody(node: Element) -> tuple[str, str]:
     node_type, node_data = getNodeTypeAndData(node)
     if node_type == "concept":
         soup = BeautifulSoup(node_data, features="html.parser")
@@ -150,7 +150,7 @@ def getStemAndBody(node: Element) -> Tuple[str, str]:
     else:
         return ("", "")
 
-def getIndicators(node: Element) -> List[str]:
+def getIndicators(node: Element) -> list[str]:
     if getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
         indicator_str = re.match(R"(\w+) ?\|", getStemAndBody(node)[0]).group(1)
         return list(indicator_str) # Convert indicators into set of characters
@@ -170,7 +170,7 @@ def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
         xml_title = "Untitled"
     return xml_title
 
-def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> List[Element]:
+def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[Element]:
     """
     Returns list of XML items of non-empty headers from XML
     xml_file: path to XML file from OneNote output
@@ -201,7 +201,7 @@ class OENodePoint:
         
         self.children_nodes: Iterable[Element] = getChildren(oenode)
         self.sibling_nodes: Iterable[Element] = [] # Contains all nodes at same level - is OEChildren XML node from previous items, modified in outer scope
-        self.parent_nodes: List[Element] = [] # Instantiate parent attribute which will be modified in outer scope
+        self.parent_nodes: list[Element] = [] # Instantiate parent attribute which will be modified in outer scope
 
     
     def getFront(self, oeheader) -> str:

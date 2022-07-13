@@ -1,7 +1,7 @@
 #%% Imports
 # Built-ins
 from cgitb import html
-from typing import Union, Tuple, List, Callable
+from typing import Union, Callable
 from collections.abc import Iterable
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
@@ -29,7 +29,7 @@ def renderHeaders(node: Element) -> str:
     return "Test header annotation"
 
 def genHtmlElement(content: str, 
-                style: List[str] = [],
+                style: list[str] = [],
                 color: str = "",
                 li: bool = False,
                 bullet: str = "",

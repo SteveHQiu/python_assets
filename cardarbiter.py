@@ -1,5 +1,5 @@
 # Built-in
-from typing import Union, Tuple, List
+from typing import Union
 from collections.abc import Iterable
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
@@ -18,11 +18,11 @@ from renderer_std import StandardRenderer, renderHeaders
 
 #%% Classes
 class CardArbiter:
-    def __init__(self, header_list: List[Element]):
+    def __init__(self, header_list: list[Element]):
         self.header_list = header_list # Input header list
         self.header_annotation = ""
-        self.parent_node_tracker: List[Element] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
-        self.cards: List[Tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
+        self.parent_node_tracker: list[Element] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
+        self.cards: list[tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
 
     def genCards(self):
         """
