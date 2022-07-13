@@ -199,7 +199,7 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[Element]:
         for i in range(index, 0, -1): # -1 step (decrement)
             if int(styled_headers[i-1].level) < int(header.level): # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
                 header.parent_headers.append(styled_headers[i-1])
-        print([pheader.text for pheader in header.parent_headers])
+        # print([pheader.text for pheader in header.parent_headers])
     return iterable_headers # Return processed iterable_headers
 
 #%% Global Classes
@@ -401,3 +401,4 @@ class OENodeHeader:
         self.level = header_node.get("quickStyleIndex")
         self.children_nodes = getChildren(header_node)
         self.parent_headers: list[OENodeHeader] = []
+        self.page_title = getTitle(XML_PATH)

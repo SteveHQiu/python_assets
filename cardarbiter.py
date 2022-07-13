@@ -38,8 +38,8 @@ class CardArbiter:
                     renderer = StandardRenderer(child_node) # New instance for each entry point
                     renderer.renderHtmlMain()
                     renderer.renderHtmlParents()
-                    front = renderer.fronthtml
-                    back = renderer.backhtml
+                    front = self.header_annotation + renderer.fronthtml # Combine renderer output with header annotation
+                    back = self.header_annotation + renderer.backhtml
                     self.cards.append((front, back)) # Append rendered HTMLs
 
                     if child_node.children_nodes: # Recursively search for children 
@@ -50,8 +50,6 @@ class CardArbiter:
             return None
 
         for header in self.header_list:
-            # FIXME Can parse header levels at this scope and add to oeheader attribute which can be accessed later
-            # Should nest header information inside OENodeHeader?
             self.header_annotation = renderHeaders(header) # Header information should not change for children nodes, will update with each header 
             iterNodes(header)
         return self

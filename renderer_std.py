@@ -12,7 +12,6 @@ from bs4 import BeautifulSoup
 # Internal modules
 from globals import OENodeHeader, OENodePoint, insertSubstring
 
-
 #%% Constants
 GRAY = "#e8e8e8" # Can set to empty string to insert nothing
 
@@ -21,12 +20,6 @@ import inspect
 def getFxName(): # Function that will return name of currently calling function, for debug
     return inspect.stack()[1].function
 
-
-def renderHeaders(node: OENodeHeader) -> str:
-    """
-    Will take header element and render
-    """
-    return "Test header annotation"
 
 def genHtmlElement(content: str, 
                 style: list[str] = [],
@@ -92,6 +85,7 @@ def genHtmlElement(content: str,
         html_item += "</li>\n"
     return html_item
 
+
 def genHtmlRecursively(node: OENodePoint, 
                        fx_genHtml: Callable,
                        data_atr: str = "data",
@@ -127,6 +121,19 @@ def genHtmlRecursively(node: OENodePoint,
             html_children += "</ul>\n" # Close list
             html_item = insertSubstring(html_item, "</li>", html_children) # Insert children into last item 
     return html_item
+
+def renderHeaders(node: OENodeHeader) -> str:
+    """
+    Will take header element and render its headers contained within the OENodeHeader object
+    """
+    header_html = genHtmlElement(node.page_title, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
+    header_html += genHtmlElement(F"[{node.text}]", ["underline"], GRAY) # Add itself as the immediate header
+    for header in node.parent_headers: # Add headers and links to respective element
+        header_html += F" - [{header.text}]"
+    header_html += "<br><br>\n"
+    
+    return genHtmlElement(header_html, [], GRAY) # Return the header_html wrapped with gray styling span 
+
 
 ## Special rendering functions
 
