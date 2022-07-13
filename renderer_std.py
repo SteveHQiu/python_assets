@@ -405,9 +405,7 @@ class StandardRenderer:
         """
         Render parent nodes for entry node and add it to the generated HTML
         """
-        front = ""
-        back = ""
-
+        
         for parent_node in (OENodePoint(pnode) for pnode in self.node.parent_nodes): # Convert parent nodes into OENodePoint instances
             # Note that each node is added directly on top of entry point (i.e., previous parent gets bumped); hence furthest parent should be added first
             pfront = "<ul>\n" # Open list for parent node
@@ -430,12 +428,8 @@ class StandardRenderer:
             pfront += "</ul>\n" # Close list for parent node (should only have 1 item), next level will have its own list
             pback += "</ul>\n"
             
-            front = insertSubstring(pfront, "</li>", "\n" + front) # Wrap new HTML around previous HTML by inserting old into new
-            back = insertSubstring(pback, "</li>", "\n" + back) # Most generated HTML elements will have \n at end so won't need to add one
+            self.fronthtml = insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
+            self.backhtml = insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
 
-        if self.node.parent_nodes: # Only search and insert if there's parent nodes, otherwise there won't be any </li> tags to find
-            self.fronthtml = insertSubstring(front, "</li>", "\n" + self.fronthtml) # Insert main html into last item of list, need to insert AFTER </li> tag
-            self.backhtml = insertSubstring(back, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
-        
         return self
     
