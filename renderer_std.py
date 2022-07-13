@@ -10,7 +10,7 @@ from xml.etree.ElementTree import Element
 from bs4 import BeautifulSoup
 
 # Internal modules
-from globals import OENodePoint, insertSubstring
+from globals import OENodeHeader, OENodePoint, insertSubstring
 
 
 #%% Constants
@@ -22,7 +22,7 @@ def getFxName(): # Function that will return name of currently calling function,
     return inspect.stack()[1].function
 
 
-def renderHeaders(node: Element) -> str:
+def renderHeaders(node: OENodeHeader) -> str:
     """
     Will take header element and render
     """

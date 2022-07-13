@@ -18,7 +18,7 @@ from renderer_std import StandardRenderer, renderHeaders
 
 #%% Classes
 class CardArbiter:
-    def __init__(self, header_list: list[Element]):
+    def __init__(self, header_list: list[OENodeHeader]):
         self.header_list = header_list # Input header list
         self.header_annotation = ""
         self.parent_node_tracker: list[Element] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
@@ -53,7 +53,6 @@ class CardArbiter:
             # FIXME Can parse header levels at this scope and add to oeheader attribute which can be accessed later
             # Should nest header information inside OENodeHeader?
             self.header_annotation = renderHeaders(header) # Header information should not change for children nodes, will update with each header 
-            header = OENodeHeader(header) # Convert item to class instance
             iterNodes(header)
         return self
         

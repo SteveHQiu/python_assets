@@ -4,6 +4,16 @@ import base64
 from anki.storage import Collection
 import inspect
 
+#%% List indices
+for i in range(5, 0, -1):
+    print(i)
+    print(F"Looking at {i-1}")
+
+#%% Unpacking comprehensions 
+
+norm_list = [[[1,2],[1,2]],[[1,2],[1,2]]]
+flat_list = [num for list1st in norm_list for list2nd in list1st for num in list2nd]
+
 #%% Getting attributes via string
 
 class tempClass:

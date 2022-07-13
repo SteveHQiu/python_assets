@@ -3,6 +3,7 @@
 import sys, os, base64, re, string
 from typing import Union
 from collections.abc import Iterable
+from uuid import getnode
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
@@ -92,6 +93,7 @@ def getChildren(node: Element) -> Iterable[Element]:
 def getNodeText(node: Element) -> str:
     node_content = node.find("one:T", NAMESPACES)
     if node_content != None and node_content.text != None:
+        # The .text attribute of one:T elements contains the raw text (Without CDATA wrapper)
         return node_content.text 
     else:
         return "" # Returns empty string which will evaluate as False when passed as a logical argument
@@ -172,18 +174,33 @@ def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
 
 def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[Element]:
     """
-    Returns list of XML items of non-empty headers from XML
+    Returns list of XML items of non-empty headers from XML and populates their parent trackers
     xml_file: path to XML file from OneNote output
     """
     xml_content = ElementTree.parse(xml_file)
-    list_OE_headers = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Is actually the XML element of OEChildren containing OE headers, returns list even if there's a single item
-    header_list = []
-    for headers in list_OE_headers:
-        for header_node in headers:
-            if getNodeText(header_node) and getChildren(header_node): # Only non-empty header with children will get parsed
+    list_outlines = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
+    # Note that each outline (page box) only has a SINGLE one:Children
+    styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
+    iterable_headers: list[OENodeHeader] = []
+    for header_node in (header for list_headers in list_outlines for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
+        if getNodeText(header_node): # Only parse non-empty nodes
+            if header_node.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
+                styled_headers.append(OENodeHeader(header_node)) # Convert to OENodeHeader before appending
+            if getChildren(header_node): # Is iterable if there are children
+                iterable_headers.append(OENodeHeader(header_node)) # Convert to OENodeHeader before appending
                 print("Found non-empty header: " + getNodeText(header_node))
-                header_list.append(header_node)
-    return header_list
+    styled_header_ids = [s_header.id for s_header in styled_headers] 
+    
+    for header in iterable_headers: # Modify items in iterable_headers
+        if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
+            index = styled_header_ids.index(header.id)
+        else:
+            index = 0 # Start at top of list (no parent headers)
+        for i in range(index, 0, -1): # -1 step (decrement)
+            if int(styled_headers[i-1].level) < int(header.level): # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
+                header.parent_headers.append(styled_headers[i-1])
+        print([pheader.text for pheader in header.parent_headers])
+    return iterable_headers # Return processed iterable_headers
 
 #%% Global Classes
 class OENodePoint:
@@ -376,68 +393,11 @@ class OENodeHeader:
     """
     Separate class for OE nodes for headers 
     """
-    def __init__(self, header_node):
+    def __init__(self, header_node: Element):
         # Should only be instantiated on non-empty headers with children
         self.id = header_node.get("objectID") # ID is an attribute of the XML node
-        self.text = getNodeText(header_node) 
+        self.xml = header_node
+        self.text = getNodeText(header_node)
+        self.level = header_node.get("quickStyleIndex")
         self.children_nodes = getChildren(header_node)
-        self.context_tracker = [] # Acts as the top-level tracker for all subpoints under the header
-
-
-
-#%% Execution
-
-# Need to distinguish between header OE and point OE as they should be processed differently        
-def iterHeaders(header_list):
-    def iterOE(cur_node, parent = False):
-        """
-        Iterates over children OE nodes given an OE node that contains children.
-        Can be used recursively -> entry point is an OENode class instance with children
-    
-        Parameters
-        ----------
-        oenode : OE node of OENode classes (header or point) that contains chilren 
-    
-        Returns
-        -------
-        None.
-    
-        """
-        nonlocal header # Refer to out scope's oeheader objects
-        # Will only run during recursive loops, not during initial loop which is for header
-        if parent:
-            header.context_tracker.insert(0, cur_node) # Insert most recent oenode at front of list 
-        # Main logic using functions defined in OENodePoint class
-        for child_node in cur_node.children:
-            child_node = OENodePoint(child_node) # Convert item to class instance
-            if child_node.text and child_node.getGeneralStem(): # Will only consider concepts/groupings for card generation
-                child_node.context = cur_node.children # Set context by adding all children at same level
-                # Fill front and back
-                OE1_front = child_node.getFront(header)
-                OE1_back = child_node.getBack(header, cur_node)
-                # Generate card below
-                
-
-                # Recursive flow for nodes below level of headers with children, will set parent attribute for these nodes
-                if child_node.children:
-                    iterOE(child_node, parent = True)
-        if parent:
-            header.context_tracker.pop(0) # Pop off most recent parent after leaving local scope
-        return None
-    
-
-    try:
-        # Initialize model
-        col = Collection(CPATH, log=True) # NOTE that this changes the directory
-        card_model = col.models.by_name("Basic") # Search for card model
-        deck = col.decks.by_name("ZExport") # Set current deck
-    
-        for header in header_list:
-            # FIXME Can parse header levels at this scope and add to oeheader attribute which can be accessed later
-            header = OENodeHeader(header) # Convert item to class instance
-            iterOE(header)
-            
-        col.save() # Save changes to DB
-    finally: # Should have this always run, otherwise, anki will get stuck        
-        col.close() # Need this function, otherwise instance stays open
-        return None
+        self.parent_headers: list[OENodeHeader] = []
