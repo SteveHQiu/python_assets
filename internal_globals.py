@@ -222,7 +222,8 @@ class OENodePoint:
         self.sibling_nodes: Iterable[Element] = [] # Contains all nodes at same level - is OEChildren XML node from previous items, modified in outer scope
         self.parent_nodes: list[Element] = [] # Instantiate parent attribute which will be modified in outer scope
         self.parent_headers: list[OENodeHeader] = [] # For use in inner scope (i.e., naming images)
-
+        
+    "test"
     
     def getFront(self, oeheader) -> str:
         """
