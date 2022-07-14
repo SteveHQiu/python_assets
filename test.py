@@ -135,26 +135,26 @@ def f(x):
         return ""
 
 print(bool("")*"<li>Contents"+bool("True")*"</li>")
-print("=======")
+print("")
 print(f(True)+"</li>"*bool(f(True)))
 print(f(False)+"</li>"*bool(f(False)))
 print(f("Lmao")+"</li>"*bool(f("Lmao")))
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
+
 #%% Additional test cell
 """
 Additional test lines
 """
-=======
+
 #%%
 print(" f ")
 print(" f ".strip())
 print("   ")
 print("  ".strip())
 print("end")
-=======
->>>>>>> refactor
+
+
 
 #%% Nested scopes
 
@@ -207,7 +207,6 @@ soup = BeautifulSoup(html, features="html.parser")
 print(soup.find_all())
 print(soup.find('mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"'))
 print(soup.select_one('span[style*="font-weight:bold"]'))
->>>>>>> test
 
 #%% System arguments
 output = sys.argv[1]
