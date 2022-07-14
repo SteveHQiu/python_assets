@@ -16,6 +16,93 @@ from internal_globals import OENodeHeader, OENodePoint, insertSubstring
 #%% Constants
 GRAY = "#e8e8e8" # Can set to empty string to insert nothing
 
+#%% Classes
+class StandardRenderer:
+    """
+    New instance created for each entry point 
+    """
+    # FIXME - Move this portion to main so that you can type without circular import
+    def __init__(self, node: OENodePoint):        
+        self.node = node # Is an instance of OENodePoint, the entry point node
+        self.fronthtml = ""
+        self.backhtml = ""
+        self.img_count = 0 # Image counter for each card to assign each image a unique identifier 
+    
+    def resetHtml(self):
+        self.fronthtml = ""
+        self.backhtml = ""
+    
+    
+    def renderHtmlMain(self):
+        """
+        Note that this method adds to the html attributes rather than overwrite them
+        Use resetHtml() to reset front and back HTML if needed
+
+        """
+        # Add parent node rendering here or in a separate function
+        front = "<ul>\n" # Open list for sibling nodes
+        back = "<ul>\n" # Open list for sibling nodes
+        for node in self.node.sibling_nodes:
+            func = FUNCMAP[node.type] # Retrieve relevant function based on node type
+            if self.node.id == node.id: # Node reponsible for entrypoint and called StandardRenderer
+                front += func(node, True, "entry") 
+                back += func(node, False, "entry") 
+                if node.children_nodes: # Render direct children nodes
+                    child_front = "\n<ul>\n" # Open list for direct children nodes
+                    child_back = "\n<ul>\n" # Open list for direct children nodes
+                    for child_node in node.children_nodes: 
+                        cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
+                        child_front += cfunc(child_node, True, "direct_child") 
+                        child_back += cfunc(child_node, False, "direct_child")
+                    child_front += "</ul>\n" # Close list for direct children nodes
+                    child_back += "</ul>\n" # Close list for direct children nodes
+                    front = insertSubstring(front, "</li>", child_front) 
+                    back = insertSubstring(back, "</li>", child_back)
+                # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
+            else: # Assume it is an sibling/adjacent node
+                front += func(node, True, "sibling") 
+                back += func(node, False, "sibling")
+                # No need for children parsing for sibling nodes 
+        front += "</ul>\n" # Close list for sibling nodes
+        back += "</ul>\n" # Close list for sibling nodes
+        
+        self.fronthtml += front
+        self.backhtml += back
+        return self
+    
+    def renderHtmlParents(self):
+        """
+        Render parent nodes for entry node and add it to the generated HTML
+        """
+        
+        for parent_node in self.node.parent_nodes: # Convert parent nodes into OENodePoint instances
+            # Note that each node is wrapped around old node, furthest parent node is added last
+            pfront = "<ul>\n" # Open list for parent node
+            pback = "<ul>\n"
+            # Make list item
+            if self.node.type in ["grouping"] and parent_node.id == self.node.parent_nodes[0].id: # Checks if the parent node is the most immediate to entry point; if so, does special processing of immediate parent node if entry point is a grouping
+                if parent_node.type in ["concept"]:
+                    pfront += genHtmlElement(parent_node.stem, ["bold"], "", li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
+                elif parent_node.type in ["grouping"]:
+                    pfront += genHtmlElement(parent_node.stem, ["underline"], "", li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
+            else: # Treat as a distant parent node
+                if parent_node.type in ["concept"]:
+                    pfront += genHtmlElement(parent_node.stem, ["bold"], GRAY, li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], GRAY, li=True, bullet=parent_node.bullet_data)
+                elif parent_node.type in ["grouping"]:
+                    pfront += genHtmlElement(parent_node.stem, ["underline"], GRAY, li=True, bullet=parent_node.bullet_data)
+                    pback += genHtmlElement(parent_node.data, [], GRAY, li=True, bullet=parent_node.bullet_data)
+            pfront += "</ul>\n" # Close list for parent node (should only have 1 item), next level will have its own list
+            pback += "</ul>\n"
+            
+            self.fronthtml = insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
+            self.backhtml = insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
+
+        return self
+    
+
 #%% Functions
 import inspect
 def getFxName(): # Function that will return name of currently calling function, for debug
@@ -113,7 +200,7 @@ def genHtmlRecursively(node: OENodePoint,
            
     # Recursive logic
     if node.children_nodes:
-        children_nodes = [OENodePoint(cnode) for cnode in node.children_nodes] # Convert each child node into OENodePoint
+        children_nodes = node.children_nodes # Convert each child node into OENodePoint
         has_renderable_children = any([cnode.type in renderable_types for cnode in children_nodes]) # Checks types of children nodes to see if they are renderable
         if has_renderable_children:
             html_children = "\n<ul>\n" # Open list
@@ -370,89 +457,3 @@ FUNCMAP = {
         } # Mapping of node type label to corresponding function 
 
 
-#%% Classes
-class StandardRenderer:
-    """
-    New instance created for each entry point 
-    """
-    # FIXME - Move this portion to main so that you can type without circular import
-    def __init__(self, node: OENodePoint):        
-        self.node = node # Is an instance of OENodePoint, the entry point node
-        self.fronthtml = ""
-        self.backhtml = ""
-        self.img_count = 0 # Image counter for each card to assign each image a unique identifier 
-    
-    def resetHtml(self):
-        self.fronthtml = ""
-        self.backhtml = ""
-    
-    
-    def renderHtmlMain(self):
-        """
-        Note that this method adds to the html attributes rather than overwrite them
-        Use resetHtml() to reset front and back HTML if needed
-
-        """
-        # Add parent node rendering here or in a separate function
-        front = "<ul>\n" # Open list for sibling nodes
-        back = "<ul>\n" # Open list for sibling nodes
-        for node in (OENodePoint(node) for node in self.node.sibling_nodes): # Convert to OENodePoint within generator expression
-            func = FUNCMAP[node.type] # Retrieve relevant function based on node type
-            if self.node.id == node.id: # Node reponsible for entrypoint and called StandardRenderer
-                front += func(node, True, "entry") 
-                back += func(node, False, "entry") 
-                if node.children_nodes: # Render direct children nodes
-                    child_front = "\n<ul>\n" # Open list for direct children nodes
-                    child_back = "\n<ul>\n" # Open list for direct children nodes
-                    for child_node in (OENodePoint(cnode) for cnode in node.children_nodes): # Convert each child node into OENodePoint
-                        cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
-                        child_front += cfunc(child_node, True, "direct_child") 
-                        child_back += cfunc(child_node, False, "direct_child")
-                    child_front += "</ul>\n" # Close list for direct children nodes
-                    child_back += "</ul>\n" # Close list for direct children nodes
-                    front = insertSubstring(front, "</li>", child_front) 
-                    back = insertSubstring(back, "</li>", child_back)
-                # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
-            else: # Assume it is an sibling/adjacent node
-                front += func(node, True, "sibling") 
-                back += func(node, False, "sibling")
-                # No need for children parsing for sibling nodes 
-        front += "</ul>\n" # Close list for sibling nodes
-        back += "</ul>\n" # Close list for sibling nodes
-        
-        self.fronthtml += front
-        self.backhtml += back
-        return self
-    
-    def renderHtmlParents(self):
-        """
-        Render parent nodes for entry node and add it to the generated HTML
-        """
-        
-        for parent_node in (OENodePoint(pnode) for pnode in self.node.parent_nodes): # Convert parent nodes into OENodePoint instances
-            # Note that each node is wrapped around old node, furthest parent node is added last
-            pfront = "<ul>\n" # Open list for parent node
-            pback = "<ul>\n"
-            # Make list item
-            if self.node.type in ["grouping"] and parent_node.xml == self.node.parent_nodes[0]: # Checks if the parent node is the most immediate to entry point; if so, does special processing of immediate parent node if entry point is a grouping
-                if parent_node.type in ["concept"]:
-                    pfront += genHtmlElement(parent_node.stem, ["bold"], "", li=True, bullet=parent_node.bullet_data)
-                    pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
-                elif parent_node.type in ["grouping"]:
-                    pfront += genHtmlElement(parent_node.stem, ["underline"], "", li=True, bullet=parent_node.bullet_data)
-                    pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
-            else: # Treat as a distant parent node
-                if parent_node.type in ["concept"]:
-                    pfront += genHtmlElement(parent_node.stem, ["bold"], GRAY, li=True, bullet=parent_node.bullet_data)
-                    pback += genHtmlElement(parent_node.data, [], GRAY, li=True, bullet=parent_node.bullet_data)
-                elif parent_node.type in ["grouping"]:
-                    pfront += genHtmlElement(parent_node.stem, ["underline"], GRAY, li=True, bullet=parent_node.bullet_data)
-                    pback += genHtmlElement(parent_node.data, [], GRAY, li=True, bullet=parent_node.bullet_data)
-            pfront += "</ul>\n" # Close list for parent node (should only have 1 item), next level will have its own list
-            pback += "</ul>\n"
-            
-            self.fronthtml = insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
-            self.backhtml = insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
-
-        return self
-    
