@@ -16,8 +16,8 @@ from renderer_std import StandardRenderer, renderHeaders
 #%% Classes
 class CardArbiter:
     def __init__(self, header_list: list[OENodeHeader]):
-        self.header_list = header_list # Input header list
-        self.header_annotation = ""
+        self.header_list: list[OENodeHeader] = header_list # Input header list
+        self.header_annotation: str = "" # Populated by renderHeaders() function within genCards()
         self.parent_node_tracker: list[OENodePoint] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
         self.cards: list[tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
 
@@ -31,6 +31,7 @@ class CardArbiter:
                     child_node.parent_nodes = self.parent_node_tracker # Copy parent_node_tracker information into current node's parent_nodes, should only be relevant when this function is recursively called
                     child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process                   
                     child_node.parent_headers = cur_node.parent_headers # Assign parent headers of parent node (which should stay the same for all children nodes)
+                    
 
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
