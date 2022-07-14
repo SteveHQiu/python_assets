@@ -373,7 +373,7 @@ def renderImage(node: OENodePoint, front: bool, level: str, renderer: StandardRe
         if level == "entry":
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
-            img_name = genImageName(node)
+            # img_name = genImageName(node)
             return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
             return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"

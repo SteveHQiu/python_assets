@@ -40,6 +40,7 @@ class OENodePoint:
         self.id: str | None = oenode.get("objectID") # ID is an attribute of the XML node
         self.xml: Element = oenode # Store original XML node in case needed
         self.bullet_data: str = getBulletData(oenode)
+        self.title: str = ""
         
         self.type, self.data = getNodeTypeAndData(oenode) # Unpack tuple into type and data
         self.stem, self.body = getStemAndBody(oenode) # Unpack tuple into stem and body
@@ -277,7 +278,7 @@ def getBulletData(node: Element) -> str:
 
 def getChildren(node: Element) -> list[OENodePoint]:
     """Gets children of the given node if it exist, otherwise returns False
-
+    IS THE ENTRY POINT FOR INITIALIZATION OF ALL OENodePoint instances as this function is recursively called during OENodePoint instantiation from iterating over headers
     Args:
         node (Element): XML node element
 
