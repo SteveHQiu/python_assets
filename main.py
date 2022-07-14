@@ -1,14 +1,19 @@
-# -*- coding: utf-8 -*-
+#%% Imports
+# Built-in
 import sys, os, base64, re, string
-from anki.storage import Collection
+from typing import Union, Tuple, List
 from xml.etree import ElementTree
+from xml.etree.ElementTree import Element
+
+# General
 from bs4 import BeautifulSoup
 
-"""
-Changelog
--Unfinished - trying to add page title to cards 
+# Anki
+from anki.storage import Collection
 
-"""
+# Internal modules
+from standard import StandardRenderer
+
 
 #%% Constants
 DEV = True # Change to False before running via program
@@ -27,115 +32,139 @@ else:
     ARG_FILENAME = sys.argv[1] # Contains filename of exported XML file
     XML_PATH = os.path.join(ROOT_PATH, ARG_FILENAME)
 
-# Note that elements with children nodes are iterable with the children notes being items of the container
-# Findall returns list format, even if single item, hence need to specify item
 
-#%% Functions
+#%% Global functions
 
-def getHeaders(xml_input) -> list:
+def checkOrdered(node: Element) -> bool:    
+    if node.find("one:List/one:Number", NAMESPACES) != None:
+        return True
+    else: # Otherwise assumed to be an unordered item
+        return False
+
+def getChildren(node: Element) -> Union[Element, bool]:
+    """Gets children of the given node if it exist, otherwise returns False
+
+    Args:
+        node (Element): XML node element
+
+    Returns:
+        Union[Element, False]: Returns the XML element (OEChildren) which contains the children nodes
     """
-    Returns list of XML items of non-empty headers from XML
-    xml_input: path to XML file from OneNote
-    """
-    xml_content = ElementTree.parse(xml_input)
-    list_OE_headers = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Is actually the XML element of OEChildren containing OE headers
-    header_list = []
-    for headers in list_OE_headers:
-        for OE_header in headers:
-            OE_content = OE_header.find("one:T", NAMESPACES)
-            if OE_content != None and OE_content.text != None: # Need to screen out empty lines
-                header_text = OE_header.find("one:T", NAMESPACES).text
-                print("Header:", header_text)
-                if OE_header.find("one:OEChildren", NAMESPACES) != None: # Only for headers that have children
-                    header_list.append(OE_header)
-    return header_list
+    # Only assign children if they exist
+    if node.find("one:OEChildren", NAMESPACES) != None:
+        return node.find("one:OEChildren", NAMESPACES)
+    else: 
+        return False
 
-def getTitle(xml_input) -> str:
+def getNodeText(node: Element) -> Union[str, bool]:
+    node_content = node.find("one:T", NAMESPACES)
+    if node_content != None and node_content.text != None:
+        return node_content.text 
+    else:
+        False
+
+def getNodeTypeAndData(node: Element) -> Union[Tuple[str, str], Tuple[None, None]]: 
+    """Gets node type and corresponding data from an XML node element
+
+    Args:
+        node (Element): XML node element from OneNote export
+
+    Returns:
+        Tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
+    """
+    
+    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None: # Text-based types
+        text = node.find("one:T", NAMESPACES).text # Remember that text is stored under text property, the object itself is an instance of Element (XML)
+        soup = BeautifulSoup(text, features="html.parser")
+        # Note that select() methods can search via styling while find() methods seem to capture the whole element that matches search
+        if soup.select_one('span[style*="font-weight:bold"]') != None:
+            return ("concept", text)
+        elif soup.select_one('span[style*="text-decoration:underline"]') != None:
+            return ("grouping", text)
+        elif "http://www.w3.org/1998/Math/MathML" in text: # Might not give correct rendering
+            return ("equation", text)
+        else: 
+            return ("standard", text)
+        
+        
+    elif node.find("one:Image/one:Data", NAMESPACES) != None and node.find("one:Image/one:Data", NAMESPACES).text != None: # Image nodes
+        image_data = node.find("one:Image/one:Data", NAMESPACES).text
+        return ("image", image_data)
+        
+    elif node.find("one:Table", NAMESPACES) != None and node.find("one:Table/one:Row", NAMESPACES) != None: # Table nodes
+        # FIXME - Way to to screen for table
+        return ("table", "placeholder data")
+    
+    return (None, None)
+
+def getStem(node: Element) -> Union[str, bool]:
+    node_type, node_data = getNodeTypeAndData(node)
+    if node_type == "concept":
+        soup = BeautifulSoup(node_data, features="html.parser")
+        return soup.select_one('span[style*="font-weight:bold"]').text # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
+    elif node_type == "grouping":
+        soup = BeautifulSoup(node_data, features="html.parser")
+        return soup.select_one('span[style*="text-decoration:underline"]').text # Returns first tag that matches selector
+    else:
+        return False
+
+def getIndicators(node: Element) -> List[str]:
+    if getStem(node) and re.match(r"(\w+) ?\|", getStem(node)) != None: # Generalized for any stems in case of additional expansions
+        return re.match(r"(\w+) ?\|", getStem(node)).group(1)
+    else:
+        return [] # Return an empty list for indicators otherwise
+
+
+
+def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
     """
     Returns string of title of page being parsed 
     """
-    xml_content = ElementTree.parse(xml_input)
+    xml_content = ElementTree.parse(xml_file)
     if xml_content.find("one:Title/one:OE/one:T", NAMESPACES) != None:
         xml_title = xml_content.find("one:Title/one:OE/one:T", NAMESPACES).text
     else: 
         xml_title = "Untitled"
     return xml_title
 
+def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> List[Element]:
+    """
+    Returns list of XML items of non-empty headers from XML
+    xml_file: path to XML file from OneNote output
+    """
+    xml_content = ElementTree.parse(xml_file)
+    list_OE_headers = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Is actually the XML element of OEChildren containing OE headers, returns list even if there's a single item
+    header_list = []
+    for headers in list_OE_headers:
+        for header_node in headers:
+            if getNodeText(header_node) and getChildren(header_node): # Only non-empty header with children will get parsed
+                print("Found non-empty header: " + getNodeText(header_node))
+                header_list.append(header_node)
+    return header_list
 
-#%% Classes
+def renderParents():
+    
+    pass
+
+
+
+#%% Global Classes
 class OENodePoint:
     """
     Parses an XML OE item from the OneNote export
     """
-    def __init__(self, oenode, card_forward = True, card_reverse = False):
+    def __init__(self, oenode):
         self.id = oenode.get("objectID") # ID is an attribute of the XML node
-        # Text is stored under a separate tag
-        if oenode.find("one:T", NAMESPACES) != None and oenode.find("one:T", NAMESPACES).text != None:
-            self.text = oenode.find("one:T", NAMESPACES).text
-        else: 
-            self.text = False
-        # Image is stored under a separate tag
-        if oenode.find("one:Image/one:Data", NAMESPACES) != None and oenode.find("one:Image/one:Data", NAMESPACES).text != None:
-            self.image = oenode.find("one:Image/one:Data", NAMESPACES).text
-        else: 
-            self.image = False
-        # Only assign children if they exist
-        if oenode.find("one:OEChildren", NAMESPACES) != None:
-            self.children = oenode.find("one:OEChildren", NAMESPACES)
-        else: 
-            self.children = False
-        # Is the field to replace the style in the bullet of lists
-        if oenode.find("one:List/one:Number", NAMESPACES) != None:
-            self.ordered = "style='list-style-type: decimal'"
-        else: # Otherwise assumed to be an unordered item
-            self.ordered = ""
-        # Instantiate parent attribute which will be modified in outer scope
-        self.parents = []
-        # Instantiate context attribute to take OEChildren container from previous items, modified in outer scope
-        self.context = False 
-            
-    def getGroupingStem(self) -> str:
-        """
-        Returns the stem of the grouping or attribute within HTML string
-        """
-        if self.text:
-            soup = BeautifulSoup(self.text, features="html.parser")
-            if soup.select_one('span[style*="text-decoration:underline"]') != None:
-                return soup.select_one('span[style*="text-decoration:underline"]').text # Returns first tag that matches selector
-        else:
-            return False
-    
-    def getConceptStem(self) -> str:
-        """
-        Returns the stem of the concept within HTML string
-        """
-        if self.text:
-            soup = BeautifulSoup(self.text, features="html.parser")
-            if soup.select_one('span[style*="font-weight:bold"]') != None:
-                return soup.select_one('span[style*="font-weight:bold"]').text # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
-        else:
-            return False
-    
-    def getGeneralStem(self) -> str:
-        """
-        Returns the appropriate stem when given a concept/attribute i.e., tests if there is a stem
-        """
-        if self.getConceptStem():
-            return self.getConceptStem()
-        elif self.getGroupingStem():
-            return self.getGroupingStem()
-        else:
-            return False
+        self.ordered = checkOrdered(oenode)
         
+        self.type, self.data = getNodeTypeAndData(oenode) # Unpack tuple into type and data
+        self.stem = getStem(oenode)
+        self.indicators = getIndicators(oenode)
         
-    def getIndicators(self) -> str:
-        """
-        Returns list of modifiers contained within the stem
-        """
-        if self.getGeneralStem() and re.match(r"(\w+) ?\|", self.getGeneralStem()) != None: # Generalized for any stems in case of additional expansions
-            return re.match(r"(\w+) ?\|", self.getGeneralStem()).group(1)
-        else:
-            return "" # Return an empty list for indicators otherwise
+        self.children_nodes = getChildren(oenode)
+        self.sibling_nodes = [] # Contains all nodes at same level - is OEChildren container from previous items, modified in outer scope
+        self.parent_nodes = [] # Instantiate parent attribute which will be modified in outer scope
+
     
     def getFront(self, oeheader) -> str:
         """
@@ -171,11 +200,12 @@ class OENodePoint:
                 # Render other concept/grouping OE nodes that are not the calling object and 
                 elif oepoint.getGeneralStem():
                     if oepoint.getConceptStem():
-                        front_html = "".join((front_html,"<li %s><span style='font-weight:boldcolor:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
+                        front_html = "".join((front_html,"<li %s><span style='font-weight:bold;color:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
                     if oepoint.getGroupingStem():
-                        front_html = "".join((front_html,"<li %s><span style='text-decoration:underlinecolor:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
+                        front_html = "".join((front_html,"<li %s><span style='text-decoration:underline;color:#e8e8e8'>%s</span></li>\n" % (oepoint.ordered, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
         # Wrap UL tags around main body, add parents and header - this part should not be a part of the body loop
         front_html = "".join(("<ul>\n",front_html,"</ul>"))
+        
         for parent in oeheader.context_tracker: # Wraps info of parent nodes around returned HTML list 
             if self.getGroupingStem() and oeheader.context_tracker.index(parent) == 0: # Only display parent in non-grey if it is a grouping, index is to make sure that it is the immediate parent, of the current node, otherwise will treat as a distant parent 
                 if parent.getConceptStem():
@@ -184,9 +214,9 @@ class OENodePoint:
                     front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underline'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
             else: # For when current node is a concept and for distant parents
                 if parent.getConceptStem():
-                    front_html = "".join(("<ul>\n<li %s><span style='font-weight:boldcolor:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getConceptStem()), front_html, "\n</li>\n</ul>"))
+                    front_html = "".join(("<ul>\n<li %s><span style='font-weight:bold;color:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getConceptStem()), front_html, "\n</li>\n</ul>"))
                 else: # Assume parent is a grouping instead
-                    front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underlinecolor:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
+                    front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underline;color:#e8e8e8'>%s</span>\n" % (parent.ordered, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
         front_html = "".join(("<span style='color:#e8e8e8'>%s</span>\n\n" % oeheader.text, front_html))
         front_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(XML_PATH), front_html))
         print(front_html)
@@ -301,31 +331,103 @@ class OENodePoint:
         print(back_html)
         return back_html
     
-
         
 class OENodeHeader:
     """
     Separate class for OE nodes for headers 
     """
-    def __init__(self, oenode):
-        self.id = oenode.get("objectID") # ID is an attribute of the XML node
-        # Text is stored under a separate tag
-        if oenode.find("one:T", NAMESPACES) != None and oenode.find("one:T", NAMESPACES).text != None:
-            self.text = oenode.find("one:T", NAMESPACES).text
-        else: 
-            self.text = False
-        # Only assign children if they exist
-        if oenode.find("one:OEChildren", NAMESPACES) != None:
-            self.children = oenode.find("one:OEChildren", NAMESPACES)
-        else: 
-            self.children = False
+    def __init__(self, header_node):
+        # Should only be instantiated on non-empty headers with children
+        self.id = header_node.get("objectID") # ID is an attribute of the XML node
+        self.text = getNodeText(header_node) 
+        self.children_nodes = getChildren(header_node)
         self.context_tracker = [] # Acts as the top-level tracker for all subpoints under the header
+
+class NodeIterator:
+    def __init__(self, header_list: List[Element]):
+        self.header_list = header_list # Input header list
+        self.header = None # Placeholder for current header being iterated over
+        self.cards = [] # Container for generated cards, format of Tuple[front, back]
+        
+    def genCards(self):
+        """
+        Note that this will still copy media into anki media directory if there are images
+        """
+        def iterNodes(cur_node: Union[OENodeHeader, Element], parent: bool = False):
+            if parent: # parent variable is re-instantiated each nested loop, hence uppmost loop (belonging to headers, looping over 1rst order OENodePoints) will always have parent = False, any loops beyond that (for 2nd order OENodePoints) 
+                # FIXME - Better way to track this?
+                header.context_tracker.insert(0, cur_node) # Insert most recent oenode at front of list             
+            for child_node in cur_node.children_nodes: # Starting point for nodes directly under header (or Element if in nested loop)
+                child_node = OENodePoint(child_node) # Convert item to class instance
+                if child_node.type in ["concept", "grouping",]: # Only certain types of nodes will trigger card generation
+                    child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process
+                    
+                    
+                    # Fill front and back 
+                    # FIXME - Better way to track headers?
+                    renderer = StandardRenderer(child_node)
+                    renderer.renderHtml()
+                    self.cards.append((renderer.fronthtml, renderer.backhtml)) # Append rendered HTMLs
+
+                    # Recursive flow for nodes below level of headers with children, will set parent attribute for these nodes
+                    if child_node.children_nodes: # Recursively search for children 
+                        iterNodes(child_node, parent = True)
+                        # Only becomes relevant after OENodeHeader loop
+            if parent:
+                header.context_tracker.pop(0) # Pop off most recent parent after leaving local scope
+            return None
+
+        for header in self.header_list:
+            self.header = header
+            # FIXME Can parse header levels at this scope and add to oeheader attribute which can be accessed later
+            header = OENodeHeader(header) # Convert item to class instance
+            iterNodes(header)
+        return self
+        
+    def displayCards(self):
+        """
+        Display generated card in HTML format, for debuggging purposes
+        """
+        html = ""
+        for card in self.cards:
+            html += card[0] + "<hr>" + card[1] + "<hr><hr><br><br>" # Add front and back with spacing between both and next set of cards
+        with open("displayCards_output.html", "w") as file:
+            file.write(html)
+        return self
+        
+    def addCards(self):
+        try: # Open Anki DB using try statement so that any errors during the process will not interrupt Python from closing DB
+            col = Collection(CPATH, log=True) # NOTE that this changes the directory
+            card_model = col.models.by_name("Basic") # Search for card model
+            deck = col.decks.by_name("ZExport") # Set current deck
+            
+            for card in self.cards:
+                front, back = card # Unpack HTML from cards
+                # Instantiate new note
+                note = col.new_note(card_model) # New new_note() method requires a card model to be passed as a parameter
+                note.note_type()['did'] = deck['id'] # Need to set deck ID since it doesn't come with the model
+                # Populate note, using strings to identify fields rather than strict indices in case field order changes
+                note.fields[note._field_index("Front")] = front
+                note.fields[note._field_index("Back")] = back
+                ## Set the tags (and add the new ones to the deck configuration
+                tags = "Auto" # Multiple tags separated by whitespace
+                note.tags = col.tags.canonify(col.tags.split(tags))
+                m = note.note_type()
+                m['tags'] = note.tags
+                col.models.save(m)
+                ## Add note to DB
+                col.addNote(note)
+                
+            col.save() # Save changes to DB
+        finally: # Should have this always run, otherwise, anki will get stuck        
+            col.close() # Need this function, otherwise instance stays open
+            return self
 
 #%% Execution
 
 # Need to distinguish between header OE and point OE as they should be processed differently        
 def iterHeaders(header_list):
-    def iterOE(oenode, parent = False):
+    def iterOE(cur_node, parent = False):
         """
         Iterates over children OE nodes given an OE node that contains children.
         Can be used recursively -> entry point is an OENode class instance with children
@@ -339,56 +441,39 @@ def iterHeaders(header_list):
         None.
     
         """
-        nonlocal oeheader # Refer to out scope's oeheader objects
+        nonlocal header # Refer to out scope's oeheader objects
         # Will only run during recursive loops, not during initial loop which is for header
         if parent:
-            oeheader.context_tracker.insert(0, oenode) # Insert most recent oenode at front of list 
+            header.context_tracker.insert(0, cur_node) # Insert most recent oenode at front of list 
         # Main logic using functions defined in OENodePoint class
-        for oepoint in oenode.children:
-            oepoint = OENodePoint(oepoint) # Convert item to class instance
-            if oepoint.text and oepoint.getGeneralStem(): # Will only consider concepts/groupings for card generation
-                oepoint.context = oenode.children # Set context
+        for child_node in cur_node.children:
+            child_node = OENodePoint(child_node) # Convert item to class instance
+            if child_node.text and child_node.getGeneralStem(): # Will only consider concepts/groupings for card generation
+                child_node.context = cur_node.children # Set context by adding all children at same level
                 # Fill front and back
-                OE1_front = oepoint.getFront(oeheader)
-                OE1_back = oepoint.getBack(oeheader, oenode)
-                # Generate card
-                ## Instantiate new note
-                note = col.new_note(card_model) # New new_note() method requires a card model to be passed as a parameter
-                note.note_type()['did'] = deck['id'] # Need to set deck ID since it doesn't come with the model
-                ## Populate note, using strings to identify fields rather than strict indices in case field order changes
-                note.fields[note._field_index("Front")] = OE1_front
-                note.fields[note._field_index("Back")] = OE1_back
-                ## Set the tags (and add the new ones to the deck configuration
-                tags = "Auto" # Multiple tags separated by whitespace
-                note.tags = col.tags.canonify(col.tags.split(tags))
-                m = note.note_type()
-                m['tags'] = note.tags
-                col.models.save(m)
-                ## Add note to DB
-                col.addNote(note)
-                # Recursive flow for nodes below level of headers with children, will set parent attribute for these nodes
-                if oepoint.children:
-                    iterOE(oepoint, parent = True)
-        if parent:
-            oeheader.context_tracker.pop(0) # Pop off most recent parent after leaving local scope
-        return None
+                OE1_front = child_node.getFront(header)
+                OE1_back = child_node.getBack(header, cur_node)
+                # Generate card below
+                
 
+                # Recursive flow for nodes below level of headers with children, will set parent attribute for these nodes
+                if child_node.children:
+                    iterOE(child_node, parent = True)
+        if parent:
+            header.context_tracker.pop(0) # Pop off most recent parent after leaving local scope
+        return None
     
-    # for oeheader in header_list:
-    #     oeheader = OENodeHeader(oeheader) # Convert item to class instance
-    #     iterOE(oeheader)
-    
-    # Uncomment when ready to generate cards
+
     try:
         # Initialize model
         col = Collection(CPATH, log=True) # NOTE that this changes the directory
         card_model = col.models.by_name("Basic") # Search for card model
         deck = col.decks.by_name("ZExport") # Set current deck
     
-        for oeheader in header_list:
+        for header in header_list:
             # FIXME Can parse header levels at this scope and add to oeheader attribute which can be accessed later
-            oeheader = OENodeHeader(oeheader) # Convert item to class instance
-            iterOE(oeheader)
+            header = OENodeHeader(header) # Convert item to class instance
+            iterOE(header)
             
         col.save() # Save changes to DB
     finally: # Should have this always run, otherwise, anki will get stuck        
@@ -397,7 +482,9 @@ def iterHeaders(header_list):
 
         
 #%% 
-# file_path = os.path.join(root_path, "Export.xml") # For debugging when required to manually set file path instead of from CLI arguments
-header_list = getHeaders(XML_PATH)
-iterHeaders(header_list)
+if __name__ == "__main__":
+    header_list = getHeaders(XML_PATH)
+    crawler = NodeIterator(header_list)
+    crawler.genCards()
+    crawler.displayCards()
 

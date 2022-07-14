@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{2A86A485-9285-0244-07DA-8556CD1607E3}{1}{E1947337257607614009521957827261829892141411}" name="Test document" dateTime="2021-09-23T05:17:26.000Z" lastModifiedTime="2022-07-09T02:56:16.000Z" pageLevel="1" isCurrentlyViewed="true" lang="en-CA">
+<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{2A86A485-9285-0244-07DA-8556CD1607E3}{1}{E1947337257607614009521957827261829892141411}" name="Test document" dateTime="2021-09-23T05:17:26.000Z" lastModifiedTime="2022-07-08T07:44:52.000Z" pageLevel="1" isCurrentlyViewed="true" lang="en-CA">
   <one:TagDef index="0" type="1" symbol="13" fontColor="automatic" highlightColor="none" name="Important" />
   <one:QuickStyleDef index="0" name="PageTitle" fontColor="automatic" highlightColor="automatic" font="Calibri Light" fontSize="20.0" spaceBefore="0.0" spaceAfter="0.0" />
   <one:QuickStyleDef index="1" name="h1" fontColor="#1E4E79" highlightColor="automatic" font="Calibri" fontSize="16.0" spaceBefore="0.0" spaceAfter="0.0" />
@@ -15,115 +15,13 @@
       <one:T><![CDATA[Test document]]></one:T>
     </one:OE>
   </one:Title>
-  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-07-09T02:56:16.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{50}{B0}">
+  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-07-08T07:44:51.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{50}{B0}">
     <one:Position x="36.0" y="86.4000015258789" z="0" />
-    <one:Size width="432.3600158691406" height="516.2052612304687" />
+    <one:Size width="432.3600158691406" height="326.8206787109375" />
     <one:OEChildren>
       <one:OE creationTime="2021-10-24T23:09:22.000Z" lastModifiedTime="2021-10-24T23:09:27.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{51}{B0}" alignment="left" quickStyleIndex="1">
         <one:T><![CDATA[General ]]></one:T>
         <one:OEChildren>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:54:59.000Z" lastModifiedTime="2022-07-09T02:55:03.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{10}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<span
-style='font-weight:bold'>Level 1 node</span>: description]]></one:T>
-            <one:OEChildren>
-              <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:07.000Z" lastModifiedTime="2022-07-09T02:55:14.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{14}{B0}" alignment="left" quickStyleIndex="2">
-                <one:List>
-                  <one:Bullet bullet="3" fontSize="11.0" />
-                </one:List>
-                <one:T><![CDATA[<span
-style='font-weight:bold'>Level 2 concept node</span>: description]]></one:T>
-                <one:OEChildren>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:36.000Z" lastModifiedTime="2022-07-09T02:55:37.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{23}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:38.000Z" lastModifiedTime="2022-07-09T02:55:39.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{37}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                </one:OEChildren>
-              </one:OE>
-              <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:17.000Z" lastModifiedTime="2022-07-09T02:55:28.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{19}{B0}" alignment="left" quickStyleIndex="2">
-                <one:List>
-                  <one:Bullet bullet="3" fontSize="11.0" />
-                </one:List>
-                <one:T><![CDATA[<span
-style='text-decoration:underline'>M | Level 2 grouping node</span>: description]]></one:T>
-                <one:OEChildren>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:36.000Z" lastModifiedTime="2022-07-09T02:55:48.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{110}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:50.000Z" lastModifiedTime="2022-07-09T02:55:50.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{114}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                </one:OEChildren>
-              </one:OE>
-            </one:OEChildren>
-          </one:OE>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:59.000Z" lastModifiedTime="2022-07-09T02:56:09.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{129}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<span
-style='text-decoration:underline'>G | Level 1 grouping node</span>: description]]></one:T>
-            <one:OEChildren>
-              <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:07.000Z" lastModifiedTime="2022-07-09T02:56:14.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{143}{B0}" alignment="left" quickStyleIndex="2">
-                <one:List>
-                  <one:Bullet bullet="3" fontSize="11.0" />
-                </one:List>
-                <one:T><![CDATA[<span
-style='font-weight:bold'>Level 2 concept node</span>: description]]></one:T>
-                <one:OEChildren>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:36.000Z" lastModifiedTime="2022-07-09T02:56:14.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{145}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:38.000Z" lastModifiedTime="2022-07-09T02:56:14.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{149}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                </one:OEChildren>
-              </one:OE>
-              <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:17.000Z" lastModifiedTime="2022-07-09T02:56:14.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{155}{B0}" alignment="left" quickStyleIndex="2">
-                <one:List>
-                  <one:Bullet bullet="3" fontSize="11.0" />
-                </one:List>
-                <one:T><![CDATA[<span
-style='text-decoration:underline'>M | Level 2 grouping node</span>: description]]></one:T>
-                <one:OEChildren>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:36.000Z" lastModifiedTime="2022-07-09T02:56:14.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{157}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:56:16.000Z" lastModifiedTime="2022-07-09T02:56:16.000Z" objectID="{C0D3A75D-9313-452D-AE78-4D904FF8AC12}{161}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="13" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints]]></one:T>
-                  </one:OE>
-                </one:OEChildren>
-              </one:OE>
-            </one:OEChildren>
-          </one:OE>
           <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-08T07:44:10.000Z" lastModifiedTime="2022-07-08T07:44:51.000Z" objectID="{4FD9B4AC-5260-4D0F-B19F-1E5C516556EB}{41}{B0}" alignment="left">
             <one:List>
               <one:Bullet bullet="2" fontSize="11.0" />
