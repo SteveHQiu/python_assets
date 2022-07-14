@@ -1,7 +1,7 @@
 #%% Imports
 import sys, os
 # Internal modules
-from globals import getHeaders
+from internal_globals import getHeaders
 from cardarbiter import CardArbiter
 
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py

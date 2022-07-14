@@ -9,8 +9,8 @@ from xml.etree.ElementTree import Element
 from anki.storage import Collection
 
 # Internal modules
-from globals import OENodeHeader, OENodePoint
-from globals import CPATH
+from internal_globals import OENodeHeader, OENodePoint
+from internal_globals import CPATH
 from renderer_std import StandardRenderer, renderHeaders
 
 

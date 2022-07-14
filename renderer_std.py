@@ -10,7 +10,7 @@ from xml.etree.ElementTree import Element
 from bs4 import BeautifulSoup
 
 # Internal modules
-from globals import OENodeHeader, OENodePoint, insertSubstring
+from internal_globals import OENodeHeader, OENodePoint, insertSubstring
 
 #%% Constants
 GRAY = "#e8e8e8" # Can set to empty string to insert nothing
