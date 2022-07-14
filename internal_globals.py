@@ -36,19 +36,19 @@ class OENodePoint:
     """
     Parses an XML OE item from the OneNote export
     """
-    def __init__(self, oenode):
-        self.id = oenode.get("objectID") # ID is an attribute of the XML node
-        self.xml = oenode # Store original XML node in case needed
-        self.bullet_data = getBulletData(oenode)
+    def __init__(self, oenode: Element):
+        self.id: str | None = oenode.get("objectID") # ID is an attribute of the XML node
+        self.xml: Element = oenode # Store original XML node in case needed
+        self.bullet_data: str = getBulletData(oenode)
         
         self.type, self.data = getNodeTypeAndData(oenode) # Unpack tuple into type and data
         self.stem, self.body = getStemAndBody(oenode) # Unpack tuple into stem and body
-        self.indicators = getIndicators(oenode)
+        self.indicators: list[str] = getIndicators(oenode)
         
         self.children_nodes: list[OENodePoint] = getChildren(oenode)
         self.sibling_nodes: list[OENodePoint] = [] # Contains all nodes at same level - .children_nodes of parent node gets passed here
-        self.parent_nodes: list[Element] = [] # Instantiate parent attribute which will be modified in outer scope
-        self.parent_headers: list[Element] = [] # For use in inner scope (i.e., naming images)
+        self.parent_nodes: list[OENodePoint] = [] # Instantiate parent attribute which will be modified in outer scope
+        self.parent_headers: list[OENodeHeader] = [] # For use in inner scope (i.e., naming images), passed from genCards in cardarbiter
     
     def getFront(self, oeheader) -> str:
         """
@@ -224,13 +224,13 @@ class OENodeHeader:
     """
     def __init__(self, header_node: Element):
         # Should only be instantiated on non-empty headers with children
-        self.id = header_node.get("objectID") # ID is an attribute of the XML node
-        self.xml = header_node
-        self.text = getNodeText(header_node)
-        self.level = header_node.get("quickStyleIndex")
-        self.children_nodes = getChildren(header_node)
+        self.id: str | None = header_node.get("objectID") # ID is an attribute of the XML node
+        self.xml: Element = header_node
+        self.text: str = getNodeText(header_node)
+        self.level: int = int(header_node.get("quickStyleIndex"))
+        self.children_nodes: list[OENodeHeader] = getChildren(header_node)
         self.parent_headers: list[OENodeHeader] = []
-        self.page_title = "" # Populated by outer scope in getHeaders()
+        self.page_title: str = "" # Populated by outer scope in getHeaders()
 
 #%% Global functions
 
@@ -286,7 +286,7 @@ def getChildren(node: Element) -> list[OENodePoint]:
     """
     # Only assign children if they exist
     if node.find("one:OEChildren", NAMESPACES) != None:
-        return [OENodePoint(cnode) for cnode in node.find("one:OEChildren", NAMESPACES)]
+        return [OENodePoint(cnode) for cnode in node.find("one:OEChildren", NAMESPACES)] # Need a list comprehension rather than generator (which breaks card generation)
     else: 
         return [] # Empty list which will evaluate as False when passed as a logical argument
 
@@ -400,7 +400,7 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
         else:
             index = 0 # Start at top of list (no parent headers)
         for i in range(index, 0, -1): # -1 step (decrement)
-            if int(styled_headers[i-1].level) < int(header.level): # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
+            if styled_headers[i-1].level < header.level: # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
                 header.parent_headers.append(styled_headers[i-1])
         # print([pheader.text for pheader in header.parent_headers])
     return iterable_headers # Return processed iterable_headers

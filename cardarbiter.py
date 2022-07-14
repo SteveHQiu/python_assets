@@ -18,7 +18,7 @@ class CardArbiter:
     def __init__(self, header_list: list[OENodeHeader]):
         self.header_list = header_list # Input header list
         self.header_annotation = ""
-        self.parent_node_tracker: list[Element] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
+        self.parent_node_tracker: list[OENodePoint] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
         self.cards: list[tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
 
     def genCards(self):
@@ -30,7 +30,7 @@ class CardArbiter:
                 if child_node.type in ["concept", "grouping",]: # Only certain types of nodes will trigger card generation
                     child_node.parent_nodes = self.parent_node_tracker # Copy parent_node_tracker information into current node's parent_nodes, should only be relevant when this function is recursively called
                     child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process                   
-                    
+                    child_node.parent_headers = cur_node.parent_headers # Assign parent headers of parent node (which should stay the same for all children nodes)
 
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
@@ -42,7 +42,7 @@ class CardArbiter:
 
                     if child_node.children_nodes: # Recursively search for children 
                         # Only becomes relevant after OENodeHeader loop
-                        self.parent_node_tracker.insert(0, child_node.xml) # Add a parent node as XML before going into nested loop
+                        self.parent_node_tracker.insert(0, child_node) # Add a parent node as XML before going into nested loop
                         iterNodes(child_node) 
                         self.parent_node_tracker.pop(0) # Pop off parent node after leaving nested loop
             return None

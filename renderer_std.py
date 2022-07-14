@@ -75,12 +75,12 @@ class StandardRenderer:
         Render parent nodes for entry node and add it to the generated HTML
         """
         
-        for parent_node in (OENodePoint(pnode) for pnode in self.node.parent_nodes): # Convert parent nodes into OENodePoint instances
+        for parent_node in self.node.parent_nodes: # Convert parent nodes into OENodePoint instances
             # Note that each node is wrapped around old node, furthest parent node is added last
             pfront = "<ul>\n" # Open list for parent node
             pback = "<ul>\n"
             # Make list item
-            if self.node.type in ["grouping"] and parent_node.xml == self.node.parent_nodes[0]: # Checks if the parent node is the most immediate to entry point; if so, does special processing of immediate parent node if entry point is a grouping
+            if self.node.type in ["grouping"] and parent_node.id == self.node.parent_nodes[0].id: # Checks if the parent node is the most immediate to entry point; if so, does special processing of immediate parent node if entry point is a grouping
                 if parent_node.type in ["concept"]:
                     pfront += genHtmlElement(parent_node.stem, ["bold"], "", li=True, bullet=parent_node.bullet_data)
                     pback += genHtmlElement(parent_node.data, [], "", li=True, bullet=parent_node.bullet_data)
