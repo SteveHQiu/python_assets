@@ -13,9 +13,6 @@ from internal_globals import OENodeHeader, OENodePoint
 from internal_globals import CPATH
 from renderer_std import StandardRenderer, renderHeaders
 
-
-#%% Functions
-
 #%% Classes
 class CardArbiter:
     def __init__(self, header_list: list[OENodeHeader]):
