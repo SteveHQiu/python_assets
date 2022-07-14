@@ -31,6 +31,179 @@ $1
 
 """
 
+#%% Global functions
+
+def insertSubstring(text: str, substr: str, ins: str, end = True, before = True) -> str:
+    """Inserts string into another string in front of a specified substring if it is found
+    Otherwise returns original string. If text to search is empty, it will return the substring instead
+
+    Args:
+        text (str): String to insert into
+        substr (str): Substring to search
+        ins (str): String to insert
+        end (bool, optional): Search from end. Defaults to True. Otherwise search from beginning
+        before: Inserts string at beginning of substring. Otherwise inserts at end
+
+    Returns:
+        str: New modified string or original string if search substring not found
+    """
+    if end:
+        ind = text.rfind(substr) # Finds highest index of substring
+    else:
+        ind = text.find(substr) # Finds lowest index of substring
+    if ind >= 0: # If match is found
+        if not before: 
+            ind += len(ins) # Increase index by length of insert string so that text is inserted at end of substring
+        return text[:ind] + ins + text[ind:] 
+    elif text: # If text is non-empty, return text
+        return text
+    else: # Otherwise, text is an empty string, should return substring instead
+        return substr
+
+def getBulletData(node: Element) -> str:
+    """
+    
+    """
+    if node.find("one:List/one:Number", NAMESPACES) != None:
+        if "restartNumberingAt" in node.find("one:List/one:Number", NAMESPACES).attrib: # Search for restart numbering attribute in tag: https://stackoverflow.com/questions/10115396/how-to-test-if-an-attribute-exists-in-some-xml
+            number = node.find("one:List/one:Number", NAMESPACES).attrib["restartNumberingAt"]
+            return f"value={number}; style='list-style-type: decimal'"
+        else: # Assume that ordered item does not need to be reordered
+            return "style='list-style-type: decimal'"
+    else: # Otherwise assumed to be an unordered item
+        return ""
+    # Styling can be modified in-line with HTML styling attribute which supports CSS styling directly inside: https://www.w3schools.com/tags/att_style.asp
+
+def getChildren(node: Element) -> Iterable[Element]:
+    """Gets children of the given node if it exist, otherwise returns False
+
+    Args:
+        node (Element): XML node element
+
+    Returns:
+        Iterable[Element]: Returns the XML element (OEChildren) which contains the children nodes
+    """
+    # Only assign children if they exist
+    if node.find("one:OEChildren", NAMESPACES) != None:
+        return node.find("one:OEChildren", NAMESPACES)
+    else: 
+        return [] # Empty list which will evaluate as False when passed as a logical argument
+
+def getNodeText(node: Element) -> str:
+    node_content = node.find("one:T", NAMESPACES)
+    if node_content != None and node_content.text != None:
+        # The .text attribute of one:T elements contains the raw text (Without CDATA wrapper)
+        return node_content.text 
+    else:
+        return "" # Returns empty string which will evaluate as False when passed as a logical argument
+
+def getNodeTypeAndData(node: Element) -> tuple[str, str]: 
+    """Gets node type and corresponding data from an XML node element
+
+    Args:
+        node (Element): XML node element from OneNote export
+
+    Returns:
+        tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
+    """
+    
+    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None : # Must have text
+        text = node.find("one:T", NAMESPACES).text # Remember that text is stored under text property, the object itself is an instance of Element (XML)
+        soup = BeautifulSoup(text, features="html.parser")
+        if soup.text.strip() != "": # Only assign text type if rendering text is not just whitespace
+            # Note that select() methods can search via styling while find() methods seem to capture the whole element that matches search
+            if soup.select_one('span[style*="font-weight:bold"]') != None:
+                return ("concept", text)
+            elif soup.select_one('span[style*="text-decoration:underline"]') != None:
+                return ("grouping", text)
+            elif "http://www.w3.org/1998/Math/MathML" in text: # Might not give correct rendering
+                return ("equation", text)
+            else: 
+                return ("standard", text)
+        
+        
+    elif node.find("one:Image/one:Data", NAMESPACES) != None and node.find("one:Image/one:Data", NAMESPACES).text != None: # Image nodes
+        image_data = node.find("one:Image/one:Data", NAMESPACES).text
+        return ("image", image_data)
+        
+    elif node.find("one:Table", NAMESPACES) != None and node.find("one:Table/one:Row", NAMESPACES) != None: # Table nodes
+        # FIXME - Way to to screen for table
+        return ("table", "placeholder data")
+    
+    return ("", "") # Returns two empty strings which evaluate as false when passed as logical arguments
+
+def getStemAndBody(node: Element) -> tuple[str, str]:
+    node_type, node_data = getNodeTypeAndData(node)
+    if node_type == "concept":
+        soup = BeautifulSoup(node_data, features="html.parser")
+        stem_tag = soup.select_one('span[style*="font-weight:bold"]') # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
+        stem = stem_tag.text
+        stem_tag.decompose() # Deletes tag from soup variable
+        body = soup.text # Use updated soup variable to assign the body text
+        return (stem, body)
+    elif node_type == "grouping":
+        soup = BeautifulSoup(node_data, features="html.parser")
+        stem_tag = soup.select_one('span[style*="text-decoration:underline"]') # Returns first tag that matches selector
+        stem = stem_tag.text
+        stem_tag.decompose() # Deletes tag from soup variable
+        body = soup.text # Use updated soup variable to assign the body text
+        return (stem, body)
+    else:
+        return ("", "")
+
+def getIndicators(node: Element) -> list[str]:
+    if getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
+        indicator_str = re.match(R"(\w+) ?\|", getStemAndBody(node)[0]).group(1)
+        return list(indicator_str) # Convert indicators into set of characters
+    else:
+        return list() # Return an empty set for indicators otherwise
+
+
+
+def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
+    """
+    Returns string of title of page being parsed 
+    """
+    xml_content = ElementTree.parse(xml_file)
+    if xml_content.find("one:Title/one:OE/one:T", NAMESPACES) != None:
+        xml_title = xml_content.find("one:Title/one:OE/one:T", NAMESPACES).text
+    else: 
+        xml_title = "Untitled"
+    return xml_title
+
+def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[Element]:
+    """
+    Returns list of XML items of non-empty headers from XML and populates their parent trackers
+    xml_file: path to XML file from OneNote output
+    """
+    xml_content = ElementTree.parse(xml_file)
+    xml_title = getTitle(xml_file)
+    list_outlines = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
+    # Note that each outline (page box) only has a SINGLE one:Children
+    styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
+    iterable_headers: list[OENodeHeader] = []
+    for header_node in (header for list_headers in list_outlines for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
+        if getNodeText(header_node): # Only parse non-empty nodes
+            header_node = OENodeHeader(header_node)
+            header_node.page_title = xml_title # Populate title property of instantiated OENodeHeader
+            if header_node.xml.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
+                styled_headers.append(header_node) 
+            if header_node.children_nodes: # Is iterable if there are children
+                iterable_headers.append(header_node) # Convert to OENodeHeader before appending
+                print("Found non-empty header: " + header_node.text)
+    styled_header_ids = [s_header.id for s_header in styled_headers] 
+    
+    for header in iterable_headers: # Modify items in iterable_headers
+        if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
+            index = styled_header_ids.index(header.id)
+        else:
+            index = 0 # Start at top of list (no parent headers)
+        for i in range(index, 0, -1): # -1 step (decrement)
+            if int(styled_headers[i-1].level) < int(header.level): # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
+                header.parent_headers.append(styled_headers[i-1])
+        # print([pheader.text for pheader in header.parent_headers])
+    return iterable_headers # Return processed iterable_headers
+
 #%% Global Classes
 class OENodePoint:
     """
@@ -48,7 +221,9 @@ class OENodePoint:
         self.children_nodes: Iterable[Element] = getChildren(oenode)
         self.sibling_nodes: Iterable[Element] = [] # Contains all nodes at same level - is OEChildren XML node from previous items, modified in outer scope
         self.parent_nodes: list[Element] = [] # Instantiate parent attribute which will be modified in outer scope
-        self.parent_headers: list[Element] = [] # For use in inner scope (i.e., naming images)
+        self.parent_headers: list[OENodeHeader] = [] # For use in inner scope (i.e., naming images)
+        
+    "test"
     
     def getFront(self, oeheader) -> str:
         """
@@ -217,7 +392,7 @@ class OENodePoint:
         print(back_html)
         return back_html
     
-
+        
 class OENodeHeader:
     """
     Separate class for OE nodes for headers 
@@ -231,178 +406,3 @@ class OENodeHeader:
         self.children_nodes = getChildren(header_node)
         self.parent_headers: list[OENodeHeader] = []
         self.page_title = "" # Populated by outer scope in getHeaders()
-
-#%% Global functions
-
-def insertSubstring(text: str, substr: str, ins: str, end = True, before = True) -> str:
-    """Inserts string into another string in front of a specified substring if it is found
-    Otherwise returns original string. If text to search is empty, it will return the substring instead
-
-    Args:
-        text (str): String to insert into
-        substr (str): Substring to search
-        ins (str): String to insert
-        end (bool, optional): Search from end. Defaults to True. Otherwise search from beginning
-        before: Inserts string at beginning of substring. Otherwise inserts at end
-
-    Returns:
-        str: New modified string or original string if search substring not found
-    """
-    if end:
-        ind = text.rfind(substr) # Finds highest index of substring
-    else:
-        ind = text.find(substr) # Finds lowest index of substring
-    if ind >= 0: # If match is found
-        if not before: 
-            ind += len(ins) # Increase index by length of insert string so that text is inserted at end of substring
-        return text[:ind] + ins + text[ind:] 
-    elif text: # If text is non-empty, return text
-        return text
-    else: # Otherwise, text is an empty string, should return substring instead
-        return substr
-
-def getBulletData(node: Element) -> str:
-    """
-    
-    """
-    if node.find("one:List/one:Number", NAMESPACES) != None:
-        if "restartNumberingAt" in node.find("one:List/one:Number", NAMESPACES).attrib: # Search for restart numbering attribute in tag: https://stackoverflow.com/questions/10115396/how-to-test-if-an-attribute-exists-in-some-xml
-            number = node.find("one:List/one:Number", NAMESPACES).attrib["restartNumberingAt"]
-            return f"value={number}; style='list-style-type: decimal'"
-        else: # Assume that ordered item does not need to be reordered
-            return "style='list-style-type: decimal'"
-    else: # Otherwise assumed to be an unordered item
-        return ""
-    # Styling can be modified in-line with HTML styling attribute which supports CSS styling directly inside: https://www.w3schools.com/tags/att_style.asp
-
-def getChildren(node: Element) -> Iterable[Element]:
-    """Gets children of the given node if it exist, otherwise returns False
-
-    Args:
-        node (Element): XML node element
-
-    Returns:
-        Iterable[Element]: Returns the XML element (OEChildren) which contains the children nodes
-    """
-    # Only assign children if they exist
-    if node.find("one:OEChildren", NAMESPACES) != None:
-        return node.find("one:OEChildren", NAMESPACES)
-    else: 
-        return [] # Empty list which will evaluate as False when passed as a logical argument
-
-def getNodeText(node: Element) -> str:
-    node_content = node.find("one:T", NAMESPACES)
-    if node_content != None and node_content.text != None:
-        # The .text attribute of one:T elements contains the raw text (Without CDATA wrapper)
-        return node_content.text 
-    else:
-        return "" # Returns empty string which will evaluate as False when passed as a logical argument
-
-def getNodeTypeAndData(node: Element) -> tuple[str, str]: 
-    """Gets node type and corresponding data from an XML node element
-
-    Args:
-        node (Element): XML node element from OneNote export
-
-    Returns:
-        tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
-    """
-    
-    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None : # Must have text
-        text = node.find("one:T", NAMESPACES).text # Remember that text is stored under text property, the object itself is an instance of Element (XML)
-        soup = BeautifulSoup(text, features="html.parser")
-        if soup.text.strip() != "": # Only assign text type if rendering text is not just whitespace
-            # Note that select() methods can search via styling while find() methods seem to capture the whole element that matches search
-            if soup.select_one('span[style*="font-weight:bold"]') != None:
-                return ("concept", text)
-            elif soup.select_one('span[style*="text-decoration:underline"]') != None:
-                return ("grouping", text)
-            elif "http://www.w3.org/1998/Math/MathML" in text: # Might not give correct rendering
-                return ("equation", text)
-            else: 
-                return ("standard", text)
-        
-        
-    elif node.find("one:Image/one:Data", NAMESPACES) != None and node.find("one:Image/one:Data", NAMESPACES).text != None: # Image nodes
-        image_data = node.find("one:Image/one:Data", NAMESPACES).text
-        return ("image", image_data)
-        
-    elif node.find("one:Table", NAMESPACES) != None and node.find("one:Table/one:Row", NAMESPACES) != None: # Table nodes
-        # FIXME - Way to to screen for table
-        return ("table", "placeholder data")
-    
-    return ("", "") # Returns two empty strings which evaluate as false when passed as logical arguments
-
-def getStemAndBody(node: Element) -> tuple[str, str]:
-    node_type, node_data = getNodeTypeAndData(node)
-    if node_type == "concept":
-        soup = BeautifulSoup(node_data, features="html.parser")
-        stem_tag = soup.select_one('span[style*="font-weight:bold"]') # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
-        stem = stem_tag.text
-        stem_tag.decompose() # Deletes tag from soup variable
-        body = soup.text # Use updated soup variable to assign the body text
-        return (stem, body)
-    elif node_type == "grouping":
-        soup = BeautifulSoup(node_data, features="html.parser")
-        stem_tag = soup.select_one('span[style*="text-decoration:underline"]') # Returns first tag that matches selector
-        stem = stem_tag.text
-        stem_tag.decompose() # Deletes tag from soup variable
-        body = soup.text # Use updated soup variable to assign the body text
-        return (stem, body)
-    else:
-        return ("", "")
-
-def getIndicators(node: Element) -> list[str]:
-    if getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
-        indicator_str = re.match(R"(\w+) ?\|", getStemAndBody(node)[0]).group(1)
-        return list(indicator_str) # Convert indicators into set of characters
-    else:
-        return list() # Return an empty set for indicators otherwise
-
-
-
-def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
-    """
-    Returns string of title of page being parsed 
-    """
-    xml_content = ElementTree.parse(xml_file)
-    if xml_content.find("one:Title/one:OE/one:T", NAMESPACES) != None:
-        xml_title = xml_content.find("one:Title/one:OE/one:T", NAMESPACES).text
-    else: 
-        xml_title = "Untitled"
-    return xml_title
-
-def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
-    """
-    Returns list of XML items of non-empty headers from XML and populates their parent trackers
-    xml_file: path to XML file from OneNote output
-    """
-    xml_content = ElementTree.parse(xml_file)
-    xml_title = getTitle(xml_file)
-    list_outlines = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
-    # Note that each outline (page box) only has a SINGLE one:Children
-    styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
-    iterable_headers: list[OENodeHeader] = []
-    for header_node in (header for list_headers in list_outlines for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
-        if getNodeText(header_node): # Only parse non-empty nodes
-            header_node = OENodeHeader(header_node)
-            header_node.page_title = xml_title # Populate title property of instantiated OENodeHeader
-            if header_node.xml.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
-                styled_headers.append(header_node) 
-            if header_node.children_nodes: # Is iterable if there are children
-                iterable_headers.append(header_node) # Convert to OENodeHeader before appending
-                print("Found non-empty header: " + header_node.text)
-    styled_header_ids = [s_header.id for s_header in styled_headers] 
-    
-    for header in iterable_headers: # Modify items in iterable_headers
-        if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
-            index = styled_header_ids.index(header.id)
-        else:
-            index = 0 # Start at top of list (no parent headers)
-        for i in range(index, 0, -1): # -1 step (decrement)
-            if int(styled_headers[i-1].level) < int(header.level): # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
-                header.parent_headers.append(styled_headers[i-1])
-        # print([pheader.text for pheader in header.parent_headers])
-    return iterable_headers # Return processed iterable_headers
-
-

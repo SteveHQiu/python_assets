@@ -370,7 +370,7 @@ def iterHeaders(header_list):
                 if oepoint.children:
                     iterOE(oepoint, parent = True)
         if parent:
-            oeheader.context_tracker.pop(0) # Pop off most recent parent after leaving local scope
+            oeheader.context_tracker.pop(0) # Pop off most recent parent after leaving local scope (0 specifies the first item, otherwise pops off the end)
         return None
 
     
