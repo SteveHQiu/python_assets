@@ -15,22 +15,21 @@ from anki.storage import Collection
 
 
 #%% Constants
-DEV = True # Change to False before running via program
 
-ROOT_PATH = os.path.abspath(__file__)
-os.chdir(os.path.dirname(ROOT_PATH))
+
 PROFILE_HOME = os.path.expanduser(R"~\AppData\Roaming\Anki2\User 1")
 CPATH = os.path.join(PROFILE_HOME, "collection.anki2")
 MPATH = os.path.join(PROFILE_HOME, "collection.media")
 NAMESPACES = {"one": R"http://schemas.microsoft.com/office/onenote/2013/onenote"} # Namespace to prefix tags, may change if API changes
 
-if DEV:
-    XML_PATH = R"export.xml"
-else:
-    # Command line arguments come in list, 0 = name of script, 1 = 1rst argument passed, 2 = 2nd argument passed
-    ARG_FILENAME = sys.argv[1] # Contains filename of exported XML file
-    XML_PATH = os.path.join(ROOT_PATH, ARG_FILENAME)
+""" Extra notes
+To fix XML file
+Find:
+([^>])\n
+Replace: 
+$1 
 
+"""
 
 #%% Global functions
 
@@ -178,17 +177,20 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[Element]:
     xml_file: path to XML file from OneNote output
     """
     xml_content = ElementTree.parse(xml_file)
+    xml_title = getTitle(xml_file)
     list_outlines = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
     # Note that each outline (page box) only has a SINGLE one:Children
     styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
     iterable_headers: list[OENodeHeader] = []
     for header_node in (header for list_headers in list_outlines for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
         if getNodeText(header_node): # Only parse non-empty nodes
-            if header_node.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
-                styled_headers.append(OENodeHeader(header_node)) # Convert to OENodeHeader before appending
-            if getChildren(header_node): # Is iterable if there are children
-                iterable_headers.append(OENodeHeader(header_node)) # Convert to OENodeHeader before appending
-                print("Found non-empty header: " + getNodeText(header_node))
+            header_node = OENodeHeader(header_node)
+            header_node.page_title = xml_title # Populate title property of instantiated OENodeHeader
+            if header_node.xml.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
+                styled_headers.append(header_node) 
+            if header_node.children_nodes: # Is iterable if there are children
+                iterable_headers.append(header_node) # Convert to OENodeHeader before appending
+                print("Found non-empty header: " + header_node.text)
     styled_header_ids = [s_header.id for s_header in styled_headers] 
     
     for header in iterable_headers: # Modify items in iterable_headers
@@ -401,4 +403,4 @@ class OENodeHeader:
         self.level = header_node.get("quickStyleIndex")
         self.children_nodes = getChildren(header_node)
         self.parent_headers: list[OENodeHeader] = []
-        self.page_title = getTitle(XML_PATH)
+        self.page_title = "" # Populated by outer scope in getHeaders()
