@@ -26,7 +26,7 @@ class CardArbiter:
         Note that this will still copy media into anki media directory if there are images
         """
         def iterNodes(cur_node: OENodeHeader|OENodePoint):
-            for child_node in (OENodePoint(node) for node in cur_node.children_nodes): # Starting point for nodes directly under header (or Element if in nested loop), Convert to OENodePoint within generator expression
+            for child_node in cur_node.children_nodes: # Starting point for nodes directly under header (or Element if in nested loop)
                 if child_node.type in ["concept", "grouping",]: # Only certain types of nodes will trigger card generation
                     child_node.parent_nodes = self.parent_node_tracker # Copy parent_node_tracker information into current node's parent_nodes, should only be relevant when this function is recursively called
                     child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process                   

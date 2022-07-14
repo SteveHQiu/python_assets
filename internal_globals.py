@@ -45,8 +45,8 @@ class OENodePoint:
         self.stem, self.body = getStemAndBody(oenode) # Unpack tuple into stem and body
         self.indicators = getIndicators(oenode)
         
-        self.children_nodes: Iterable[Element] = getChildren(oenode)
-        self.sibling_nodes: Iterable[Element] = [] # Contains all nodes at same level - is OEChildren XML node from previous items, modified in outer scope
+        self.children_nodes: list[OENodePoint] = getChildren(oenode)
+        self.sibling_nodes: list[OENodePoint] = [] # Contains all nodes at same level - .children_nodes of parent node gets passed here
         self.parent_nodes: list[Element] = [] # Instantiate parent attribute which will be modified in outer scope
         self.parent_headers: list[Element] = [] # For use in inner scope (i.e., naming images)
     
@@ -275,7 +275,7 @@ def getBulletData(node: Element) -> str:
         return ""
     # Styling can be modified in-line with HTML styling attribute which supports CSS styling directly inside: https://www.w3schools.com/tags/att_style.asp
 
-def getChildren(node: Element) -> Iterable[Element]:
+def getChildren(node: Element) -> list[OENodePoint]:
     """Gets children of the given node if it exist, otherwise returns False
 
     Args:
@@ -286,7 +286,7 @@ def getChildren(node: Element) -> Iterable[Element]:
     """
     # Only assign children if they exist
     if node.find("one:OEChildren", NAMESPACES) != None:
-        return node.find("one:OEChildren", NAMESPACES)
+        return [OENodePoint(cnode) for cnode in node.find("one:OEChildren", NAMESPACES)]
     else: 
         return [] # Empty list which will evaluate as False when passed as a logical argument
 

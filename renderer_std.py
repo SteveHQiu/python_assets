@@ -42,7 +42,7 @@ class StandardRenderer:
         # Add parent node rendering here or in a separate function
         front = "<ul>\n" # Open list for sibling nodes
         back = "<ul>\n" # Open list for sibling nodes
-        for node in (OENodePoint(node) for node in self.node.sibling_nodes): # Convert to OENodePoint within generator expression
+        for node in self.node.sibling_nodes:
             func = FUNCMAP[node.type] # Retrieve relevant function based on node type
             if self.node.id == node.id: # Node reponsible for entrypoint and called StandardRenderer
                 front += func(node, True, "entry") 
@@ -50,7 +50,7 @@ class StandardRenderer:
                 if node.children_nodes: # Render direct children nodes
                     child_front = "\n<ul>\n" # Open list for direct children nodes
                     child_back = "\n<ul>\n" # Open list for direct children nodes
-                    for child_node in (OENodePoint(cnode) for cnode in node.children_nodes): # Convert each child node into OENodePoint
+                    for child_node in node.children_nodes: 
                         cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
                         child_front += cfunc(child_node, True, "direct_child") 
                         child_back += cfunc(child_node, False, "direct_child")
@@ -200,7 +200,7 @@ def genHtmlRecursively(node: OENodePoint,
            
     # Recursive logic
     if node.children_nodes:
-        children_nodes = [OENodePoint(cnode) for cnode in node.children_nodes] # Convert each child node into OENodePoint
+        children_nodes = node.children_nodes # Convert each child node into OENodePoint
         has_renderable_children = any([cnode.type in renderable_types for cnode in children_nodes]) # Checks types of children nodes to see if they are renderable
         if has_renderable_children:
             html_children = "\n<ul>\n" # Open list
