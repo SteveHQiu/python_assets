@@ -33,6 +33,7 @@ class CardArbiter:
                 if child_node.type in ["concept", "grouping",]: # Only certain types of nodes will trigger card generation
                     child_node.parent_nodes = self.parent_node_tracker # Copy parent_node_tracker information into current node's parent_nodes, should only be relevant when this function is recursively called
                     child_node.sibling_nodes = cur_node.children_nodes # Set children of upper node as sibling nodes to the child nodes that we are about to process                   
+                    
 
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
@@ -61,7 +62,7 @@ class CardArbiter:
         html = ""
         card_num = 1
         for card in self.cards:
-            html += F"<br>Card no. {card_num}:<br>\n" + card[0] + "<hr>\n" + card[1] + "<hr><hr><br>\n" # Add front and back with spacing between both and next set of cards
+            html += f"<br>Card no. {card_num}:<br>\n" + card[0] + "<hr>\n" + card[1] + "<hr><hr><br>\n" # Add front and back with spacing between both and next set of cards
             card_num += 1
         with open("displayCards_output.html", "w", encoding="utf-8") as file:
             file.write(html)

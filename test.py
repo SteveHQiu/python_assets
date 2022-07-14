@@ -4,6 +4,10 @@ import base64
 from anki.storage import Collection
 import inspect
 
+#%% String slicing
+a = "test string 1"
+print(a[0:100])
+
 #%% List indices
 for i in range(5, 0, -1):
     print(i)

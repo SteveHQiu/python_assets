@@ -67,7 +67,7 @@ def getBulletData(node: Element) -> str:
     if node.find("one:List/one:Number", NAMESPACES) != None:
         if "restartNumberingAt" in node.find("one:List/one:Number", NAMESPACES).attrib: # Search for restart numbering attribute in tag: https://stackoverflow.com/questions/10115396/how-to-test-if-an-attribute-exists-in-some-xml
             number = node.find("one:List/one:Number", NAMESPACES).attrib["restartNumberingAt"]
-            return F"value={number}; style='list-style-type: decimal'"
+            return f"value={number}; style='list-style-type: decimal'"
         else: # Assume that ordered item does not need to be reordered
             return "style='list-style-type: decimal'"
     else: # Otherwise assumed to be an unordered item
@@ -221,6 +221,7 @@ class OENodePoint:
         self.children_nodes: Iterable[Element] = getChildren(oenode)
         self.sibling_nodes: Iterable[Element] = [] # Contains all nodes at same level - is OEChildren XML node from previous items, modified in outer scope
         self.parent_nodes: list[Element] = [] # Instantiate parent attribute which will be modified in outer scope
+        self.parent_headers: list[OENodeHeader] = [] # For use in inner scope (i.e., naming images)
 
     
     def getFront(self, oeheader) -> str:

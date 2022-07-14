@@ -1,6 +1,7 @@
 #%% Imports
 # Built-ins
 from cgitb import html
+import re
 from typing import Union, Callable
 from collections.abc import Iterable
 from xml.etree import ElementTree
@@ -44,12 +45,12 @@ def genHtmlElement(content: str,
     """
     html_item = "" # Initialize HTML container 
     if li:
-        html_item += F"<li {bullet}>"
+        html_item += f"<li {bullet}>"
         if color: # Change color of bullet if there is a color argument passed
             if "style" in html_item: # If there is a styling element already
-                html_item = insertSubstring(html_item, "'", F"; color:{color}") # Insert color property in styling element
+                html_item = insertSubstring(html_item, "'", f"; color:{color}") # Insert color property in styling element
             else:
-                html_item = insertSubstring(html_item, ">", F"style='color:{color}'") # Create and insert new styling element with color
+                html_item = insertSubstring(html_item, ">", f"style='color:{color}'") # Create and insert new styling element with color
         else: # Assume color is black
             if "style" in html_item: # If there is a styling element already
                 html_item = insertSubstring(html_item, "'", "; color:#000000") # Insert color property in styling element
@@ -67,9 +68,9 @@ def genHtmlElement(content: str,
         if "italic" in style:
             html_item += "font-style:italic;"
         if color:
-            html_item += F"color:{color};"
+            html_item += f"color:{color};"
         else: # Otherwise color black
-            html_item += F"color:#000000;"
+            html_item += f"color:#000000;"
         html_item += "'>" # Close style attribute and span tag
     else: # Assume no styling and color black (so that it won't be affected by bullet color)
         html_item += "<span style='color:#000000;'>" # Open style attribute and span tag
@@ -127,9 +128,9 @@ def renderHeaders(node: OENodeHeader) -> str:
     Will take header element and render its headers contained within the OENodeHeader object
     """
     header_html = genHtmlElement(node.page_title, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
-    header_html += genHtmlElement(F"[{node.text}]", ["underline"], GRAY) # Add itself as the immediate header
+    header_html += genHtmlElement(f"[{node.text}]", ["underline"], GRAY) # Add itself as the immediate header
     for header in node.parent_headers: # Add headers and links to respective element
-        header_html += F" - [{header.text}]"
+        header_html += f" - [{header.text}]"
     header_html += "<br><br>\n"
     
     return genHtmlElement(header_html, [], GRAY) # Return the header_html wrapped with gray styling span 
@@ -143,7 +144,7 @@ def renderCloze(node: OENodePoint, front: bool, level: str, root: bool = True) -
             return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
             indicators = "".join(node.indicators)            
-            return genHtmlElement(F"{indicators} |____:", ["underline"], li=True, bullet=node.bullet_data) # Add colon for prompting
+            return genHtmlElement(f"{indicators} |____:", ["underline"], li=True, bullet=node.bullet_data) # Add colon for prompting
         elif level == "sibling":
             return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
         else: # Insert error message
@@ -270,6 +271,15 @@ def renderNormalText(node: OENodePoint, front: bool, level: str, root: bool = Tr
             return "<li>ERROR: Unable to parse node level</li>\n"
 
 def renderImage(node: OENodePoint, front: bool, level: str, root: bool = True) -> str:
+    def nameImage(node: OENodePoint, level: str) -> str:
+        re_punct = re.compile('[\W_]+') # Regexp that matches any non-alphanumeric
+        title = node.parent_headers[0].page_title # Use first node's page title
+        img_name = re_punct.sub("", title)[:30] # Instantiate img_name string with first 30 chars of title (with punct removed)
+        for h_node in node.parent_headers:
+            img_name += re_punct.sub("", h_node.text)[:20] # Add first 20 chars of each header to img_name
+        for p_node in node.parent_nodes:
+            pass
+    
     if front:
         if level == "entry":
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
@@ -283,9 +293,9 @@ def renderImage(node: OENodePoint, front: bool, level: str, root: bool = True) -
         if level == "entry":
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level</li>\n"
 
@@ -303,9 +313,9 @@ def renderEquation(node: OENodePoint, front: bool, level: str, root: bool = True
         if level == "entry":
             return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level</li>\n"
 
@@ -323,9 +333,9 @@ def renderTable(node: OENodePoint, front: bool, level: str, root: bool = True) -
         if level == "entry":
             return "" # Shouldn't have table as entry point in standard renderer
         elif level == "direct_child":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         elif level == "sibling":
-            return F"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
         else: # Insert error message
             return "<li>ERROR: Unable to parse node level</li>\n"
 
@@ -420,7 +430,7 @@ class StandardRenderer:
         """
         
         for parent_node in (OENodePoint(pnode) for pnode in self.node.parent_nodes): # Convert parent nodes into OENodePoint instances
-            # Note that each node is added directly on top of entry point (i.e., previous parent gets bumped); hence furthest parent should be added first
+            # Note that each node is wrapped around old node, furthest parent node is added last
             pfront = "<ul>\n" # Open list for parent node
             pback = "<ul>\n"
             # Make list item
