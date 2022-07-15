@@ -1,7 +1,6 @@
 #%% Imports
 import sys, os
 # Internal modules
-from internal_globals import getHeaders
 from cardarbiter import CardArbiter
 
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py
@@ -20,8 +19,7 @@ else:
 
 #%% 
 if __name__ == "__main__":
-    header_list = getHeaders(XML_PATH)
-    crawler = CardArbiter(header_list)
+    crawler = CardArbiter(XML_PATH)
     crawler.genCards()
     crawler.displayCards()
 

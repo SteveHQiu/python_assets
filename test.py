@@ -4,6 +4,23 @@ import base64
 from anki.storage import Collection
 import inspect
 
+#%% Reference vs copy
+a = [1, 2, 3]
+b = a
+b[2] = 11
+a[0] = 144
+
+print("list a:", a)
+print("list b:", b)
+
+a = "abcd"
+b = a
+b[2] = "z"
+a[0] = "y"
+
+print("list a:", a)
+print("list b:", b)
+
 #%% String slicing
 a = "test string 1"
 print(a[0:100])
@@ -18,17 +35,29 @@ for i in range(5, 0, -1):
 norm_list = [[[1,2],[1,2]],[[1,2],[1,2]]]
 flat_list = [num for list1st in norm_list for list2nd in list1st for num in list2nd]
 
-#%% Getting attributes via string
+#%% Getting attributes via string, modifying vs referencing attributes
+
+b = "temp1"
+c = ["test"]
+
 
 class tempClass:
     def __init__(self):
         self.data1 = 'data1 info'
-        self.data2 = 'data2 info'
+        self.data2 = b
+        self.data3 = c
 
 a = tempClass()
 print(a.__getattribute__("data1"))
 print(a.__getattribute__("data2"))
-print(a.__getattribute__("data3")) # Throws error if it doesn't exist
+b = "modified"
+print(a.__getattribute__("data2"))
+print(a.__getattribute__("data3"))
+c.append("new value")
+print(a.__getattribute__("data3"))
+c = ["new list"]
+print(a.__getattribute__("data3"))
+
 
 #%% Substring search and insert
 

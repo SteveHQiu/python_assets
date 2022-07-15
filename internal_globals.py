@@ -1,6 +1,6 @@
 #%% Imports
 # Built-in
-import sys, os, base64, re, string
+import sys, os, base64, re, string, copy
 from typing import Union
 from collections.abc import Iterable
 from uuid import getnode
@@ -40,16 +40,17 @@ class OENodePoint:
         self.id: str | None = oenode.get("objectID") # ID is an attribute of the XML node
         self.xml: Element = oenode # Store original XML node in case needed
         self.bullet_data: str = getBulletData(oenode)
-        self.title: str = ""
         
         self.type, self.data = getNodeTypeAndData(oenode) # Unpack tuple into type and data
         self.stem, self.body = getStemAndBody(oenode) # Unpack tuple into stem and body
         self.indicators: list[str] = getIndicators(oenode)
         
-        self.children_nodes: list[OENodePoint] = getChildren(oenode)
-        self.sibling_nodes: list[OENodePoint] = [] # Contains all nodes at same level - .children_nodes of parent node gets passed here
-        self.parent_nodes: list[OENodePoint] = [] # Instantiate parent attribute which will be modified in outer scope
+        # Attributes below are populated recursively in getChildren()
+        self.page_title: str = ""
         self.parent_headers: list[OENodeHeader] = [] # For use in inner scope (i.e., naming images), passed from genCards in cardarbiter
+        self.sibling_nodes: list[OENodePoint] = [] # Contains all nodes at same level - .children_nodes of parent node gets passed here
+        self.parent_nodes: list[OENodePoint] = [] # For parent context rendering
+        self.children_nodes: list[OENodePoint] = [] # 
     
     def getFront(self, oeheader) -> str:
         """
@@ -229,9 +230,10 @@ class OENodeHeader:
         self.xml: Element = header_node
         self.text: str = getNodeText(header_node)
         self.level: int = int(header_node.get("quickStyleIndex"))
-        self.children_nodes: list[OENodeHeader] = getChildren(header_node)
-        self.parent_headers: list[OENodeHeader] = []
-        self.page_title: str = "" # Populated by outer scope in getHeaders()
+        
+        self.page_title: str = "" # Populated by outer scope when first retrieving headers for cardarbiter
+        self.parent_headers: list[OENodeHeader] = [] # Populated by outer scope when first retrieving headers for cardarbiter
+        self.children_nodes: list[OENodeHeader] = [] # Populated by outer scope when first retrieving headers for cardarbiter
 
 #%% Global functions
 
@@ -276,20 +278,39 @@ def getBulletData(node: Element) -> str:
         return ""
     # Styling can be modified in-line with HTML styling attribute which supports CSS styling directly inside: https://www.w3schools.com/tags/att_style.asp
 
-def getChildren(node: Element) -> list[OENodePoint]:
+def getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
     """Gets children of the given node if it exist, otherwise returns False
     IS THE ENTRY POINT FOR INITIALIZATION OF ALL OENodePoint instances as this function is recursively called during OENodePoint instantiation from iterating over headers
+    Outer function starts with header node while inner recursive function handles both headers and points 
+    
     Args:
         node (Element): XML node element
 
     Returns:
         Iterable[Element]: Returns the XML element (OEChildren) which contains the children nodes
     """
-    # Only assign children if they exist
-    if node.find("one:OEChildren", NAMESPACES) != None:
-        return [OENodePoint(cnode) for cnode in node.find("one:OEChildren", NAMESPACES)] # Need a list comprehension rather than generator (which breaks card generation)
-    else: 
-        return [] # Empty list which will evaluate as False when passed as a logical argument
+    
+    parent_node_tracker: list[OENodePoint] =  [] # For use by inner function
+    
+    def iterChildren(node: OENodeHeader | OENodePoint) -> list[OENodePoint]:
+        # Only assign children if they exist
+        if node.xml.find("one:OEChildren", NAMESPACES):
+            if type(node) == OENodePoint: # Only add node to parent tracker if current node is a point (rather than a header)
+                parent_node_tracker.insert(0, node)
+            child_nodes = [OENodePoint(cnode) for cnode in node.xml.find("one:OEChildren", NAMESPACES)] # List comprehensions less prone to breaking than generators
+            for child_node in child_nodes:
+                child_node.page_title = node.page_title # Inherit from parent
+                child_node.parent_headers = node.parent_headers # Inherit from parent
+                child_node.sibling_nodes = child_nodes # Assign current node's children container, list doesn't get modified so don't need to copy (each cycle creates new list)
+                child_node.parent_nodes = copy.copy(parent_node_tracker) # Copy tracker nodes using shallow copy since tracker gets modified by outer scope
+                child_node.children_nodes = iterChildren(child_node) # Recursively call function, will rebound from recursion at nodes without children
+            if type(node) == OENodePoint: # Mirror entry conditions
+                parent_node_tracker.pop(0)
+            return child_nodes # List comprehensions less prone to breaking than generators
+        else: 
+            return [] # Empty list which will evaluate as False when passed as a logical argument
+    
+    return iterChildren(header_node)
 
 def getNodeText(node: Element) -> str:
     node_content = node.find("one:T", NAMESPACES)
@@ -360,8 +381,6 @@ def getIndicators(node: Element) -> list[str]:
     else:
         return list() # Return an empty set for indicators otherwise
 
-
-
 def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
     """
     Returns string of title of page being parsed 
@@ -387,23 +406,26 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
     for header_node in (header for list_headers in list_outlines for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
         if getNodeText(header_node): # Only parse non-empty nodes
             header_node = OENodeHeader(header_node)
-            header_node.page_title = xml_title # Populate title property of instantiated OENodeHeader
             if header_node.xml.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
                 styled_headers.append(header_node) 
-            if header_node.children_nodes: # Is iterable if there are children
+            if header_node.xml.find("one:OEChildren", NAMESPACES): # Is iterable if there are children, can't use getChildren here, otherwise will enter recursion before all fields are populated
                 iterable_headers.append(header_node) # Convert to OENodeHeader before appending
                 print("Found non-empty header: " + header_node.text)
     styled_header_ids = [s_header.id for s_header in styled_headers] 
     
-    for header in iterable_headers: # Modify items in iterable_headers
+    for header in iterable_headers: # POPULATE PLACEHOLDER ATTRIBUTES (.page_title, .parent_headers, .children_nodes)
+        header.page_title = xml_title # Populate title property of instantiated OENodeHeader
         if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
-            index = styled_header_ids.index(header.id)
+            index = styled_header_ids.index(header.id) # Index used for identifying parent headers in flattened header list 
         else:
             index = 0 # Start at top of list (no parent headers)
         for i in range(index, 0, -1): # -1 step (decrement)
             if styled_headers[i-1].level < header.level: # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
                 header.parent_headers.append(styled_headers[i-1])
         # print([pheader.text for pheader in header.parent_headers])
+        
+        # Children populated last since it requires previous fields to be populated first (in order to pull from them)
+        header.children_nodes = getChildren(header) # Recursively instantiates children as OENodePoints
     return iterable_headers # Return processed iterable_headers
 
 
