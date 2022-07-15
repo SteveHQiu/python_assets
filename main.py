@@ -22,4 +22,5 @@ if __name__ == "__main__":
     crawler = CardArbiter(XML_PATH)
     crawler.genCards()
     crawler.displayCards()
+    # crawler.addCards()
 

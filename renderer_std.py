@@ -376,10 +376,10 @@ def renderImage(node: OENodePoint, front: bool, level: str, renderer: StandardRe
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
             renderer.img_count_child += 1
-            img_name = genImageName(node) + str(renderer.img_count_child) # Append img_count to make it a unique name
+            img_name = genImageName(node) + str(renderer.img_count_child) + ".png" # Append img_count to make it a unique name
         elif level == "sibling":
             renderer.img_count_sibling += 1
-            img_name = genImageName(node) + str(renderer.img_count_sibling)
+            img_name = genImageName(node) + str(renderer.img_count_sibling) + ".png" 
         
         # Common image generation path
         img_path = os.path.join(MPATH, img_name)
