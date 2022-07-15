@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{2A86A485-9285-0244-07DA-8556CD1607E3}{1}{E1947337257607614009521957827261829892141411}" name="Test document" dateTime="2021-09-23T05:17:26.000Z" lastModifiedTime="2022-07-15T03:15:38.000Z" pageLevel="1" isCurrentlyViewed="true" lang="en-CA">
+<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{2A86A485-9285-0244-07DA-8556CD1607E3}{1}{E1947337257607614009521957827261829892141411}" name="Test document" dateTime="2021-09-23T05:17:26.000Z" lastModifiedTime="2022-07-15T03:56:20.000Z" pageLevel="1" isCurrentlyViewed="true" lang="en-CA">
   <one:QuickStyleDef index="0" name="PageTitle" fontColor="automatic" highlightColor="automatic" font="Calibri Light" fontSize="20.0" spaceBefore="0.0" spaceAfter="0.0" />
   <one:QuickStyleDef index="1" name="h1" fontColor="#1E4E79" highlightColor="automatic" font="Calibri" fontSize="16.0" spaceBefore="0.0" spaceAfter="0.0" />
   <one:QuickStyleDef index="2" name="p" fontColor="automatic" highlightColor="automatic" font="Calibri" fontSize="11.0" spaceBefore="0.0" spaceAfter="0.0" />
@@ -17,9 +17,9 @@
       <one:T><![CDATA[Test document]]></one:T>
     </one:OE>
   </one:Title>
-  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-07-15T03:14:27.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{50}{B0}">
+  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-07-15T03:56:20.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{50}{B0}">
     <one:Position x="36.0" y="86.4000015258789" z="0" />
-    <one:Size width="311.3669128417969" height="1344.617553710937" />
+    <one:Size width="311.3669128417969" height="1304.334228515625" />
     <one:OEChildren>
       <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2021-10-24T23:09:22.000Z" lastModifiedTime="2022-07-13T18:51:52.000Z" objectID="{FC31D11D-D4B4-4B6B-BB9D-68FA39E8F65D}{51}{B0}" alignment="left" quickStyleIndex="1">
         <one:T><![CDATA[Level 1 header]]></one:T>
@@ -289,7 +289,7 @@ miKHCicDgfnMq8lA8flUMpnK9huUy56Ojv8BP3wocrvuRIUAAAAASUVORK5CYII=</one:Data>
                 <one:List>
                   <one:Bullet bullet="3" fontSize="11.0" />
                 </one:List>
-                <one:Image>
+                <one:Image alt="imail &#xA;e &#xA;Meeting &#xA;Details &#xA;Meetings &#xA;Custom Favorites Mot &#xA;Styles &#xA;OneMore &#xA;Non-Curricular &gt; Worksg ">
                   <one:Size width="181.7999725341797" height="97.93096160888671" isSetByUser="true" />
                   <one:Data>iVBORw0KGgoAAAANSUhEUgAAAWoAAADDCAIAAAAk3swmAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
 jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAF+rSURBVHhe7Z0HQFVXtveBS6+CIIKAig0L9oKK
@@ -725,41 +725,39 @@ IWEkJH1ISEgYCUkfEhISRkLSh4SEhJGQ9CEhIWEkJH1ISEgYCUkfEhISRkLSh4SEhJGQ9CEhIWEk
 JH1ISEgYBTOz/w+9l9VTNg/4dAAAAABJRU5ErkJggg==</one:Data>
                   <one:OCRData lang="en-US">
                     <one:OCRText><![CDATA[imail 
-Page 
-Email 
+e 
 Meeting 
-Details v 
+Details 
 Meetings 
 Custom Favorites Mot 
 Styles 
 OneMore 
-Non-Curricular > Worksg ]]></one:OCRText>
-                    <one:OCRToken startPos="0" region="0" line="0" x="0.0" y="34.20000076293945" width="22.20000076293945" height="8.399999618530273" />
-                    <one:OCRToken startPos="7" region="0" line="1" x="0.0" y="48.60000228881836" width="21.60000038146973" height="10.80000019073486" />
-                    <one:OCRToken startPos="13" region="0" line="2" x="0.0" y="70.79999542236328" width="19.80000114440918" height="7.800000667572021" />
-                    <one:OCRToken startPos="20" region="1" line="3" x="47.40000152587891" y="34.20000076293945" width="38.40000152587891" height="10.80000019073486" />
-                    <one:OCRToken startPos="29" region="1" line="4" x="45.0" y="48.60000228881836" width="32.40000152587891" height="8.399999618530273" />
-                    <one:OCRToken startPos="37" region="1" line="4" x="81.0" y="50.39999771118164" width="5.400000095367431" height="3.600000143051147" />
-                    <one:OCRToken startPos="40" region="1" line="5" x="46.19999694824219" y="70.79999542236328" width="38.40000152587891" height="10.19999980926514" />
-                    <one:OCRToken startPos="50" region="2" line="6" x="106.2000045776367" y="34.20000076293945" width="36.0" height="8.399999618530273" />
-                    <one:OCRToken startPos="57" region="2" line="6" x="148.7999877929687" y="34.20000076293945" width="41.39999771118164" height="8.399999618530273" />
-                    <one:OCRToken startPos="67" region="2" line="6" x="199.8000030517578" y="34.20000076293945" width="17.39999961853027" height="8.399999618530273" />
-                    <one:OCRToken startPos="72" region="2" line="7" x="106.2000045776367" y="48.60000228881836" width="27.0" height="10.80000019073486" />
-                    <one:OCRToken startPos="80" region="2" line="8" x="147.0" y="71.4000015258789" width="40.20000076293945" height="7.200000286102295" />
-                    <one:OCRToken startPos="89" region="3" line="9" x="81.0" y="95.4000015258789" width="81.59999847412109" height="10.80000019073486" />
-                    <one:OCRToken startPos="104" region="3" line="9" x="167.4000091552734" y="98.4000015258789" width="6.0" height="6.599999904632568" />
-                    <one:OCRToken startPos="106" region="3" line="9" x="178.2000122070312" y="95.4000015258789" width="39.0" height="13.19999980926514" />
+Non-Curricular > Worksg 
+]]></one:OCRText>
+                    <one:OCRToken startPos="0" region="0" line="0" x="0.0" y="34.5" width="22.5" height="8.25" />
+                    <one:OCRToken startPos="7" region="0" line="1" x="15.75" y="51.0" width="6.0" height="6.0" />
+                    <one:OCRToken startPos="10" region="1" line="2" x="47.25" y="34.5" width="39.0" height="10.5" />
+                    <one:OCRToken startPos="19" region="1" line="3" x="45.0" y="48.75" width="33.0" height="8.25" />
+                    <one:OCRToken startPos="28" region="1" line="4" x="46.5" y="71.25" width="38.25" height="9.75" />
+                    <one:OCRToken startPos="38" region="2" line="5" x="106.5" y="34.5" width="35.25" height="8.25" />
+                    <one:OCRToken startPos="45" region="2" line="5" x="148.5" y="34.5" width="42.0" height="8.25" />
+                    <one:OCRToken startPos="55" region="2" line="5" x="199.5" y="34.5" width="18.0" height="8.25" />
+                    <one:OCRToken startPos="60" region="2" line="6" x="105.75" y="48.75" width="27.75" height="10.5" />
+                    <one:OCRToken startPos="68" region="2" line="7" x="147.0" y="72.0" width="39.75" height="6.75" />
+                    <one:OCRToken startPos="77" region="3" line="8" x="81.0" y="95.25" width="81.75" height="11.25" />
+                    <one:OCRToken startPos="92" region="3" line="8" x="167.25" y="98.25" width="6.0" height="6.75" />
+                    <one:OCRToken startPos="94" region="3" line="8" x="178.5" y="95.25" width="39.0" height="13.5" />
                   </one:OCRData>
                 </one:Image>
               </one:OE>
             </one:OEChildren>
           </one:OE>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:13:15.000Z" lastModifiedTime="2022-07-15T03:13:20.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{11}{B0}" alignment="left" quickStyleIndex="2">
+          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:13:15.000Z" lastModifiedTime="2022-07-15T03:54:09.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{11}{B0}" alignment="left" quickStyleIndex="2">
             <one:List>
               <one:Bullet bullet="2" fontSize="11.0" />
             </one:List>
             <one:T><![CDATA[<span
-style='font-weight:bold'>Node with image 2</span>: ]]></one:T>
+style='font-weight:bold'>Node with image 2</span>: Hmmm]]></one:T>
             <one:OEChildren>
               <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-12T23:52:37.000Z" lastModifiedTime="2022-07-12T23:52:41.000Z" objectID="{10F400CB-8E4E-4BCC-9D37-C1BF7613450D}{55}{B0}" alignment="left">
                 <one:List>
@@ -1091,7 +1089,7 @@ Audio
                 <one:List>
                   <one:Bullet bullet="3" fontSize="11.0" />
                 </one:List>
-                <one:Image>
+                <one:Image alt="Basic Text &#xA;bpoints red &#xA;s red ">
                   <one:Size width="195.0" height="98.78631591796875" isSetByUser="true" />
                   <one:Data>iVBORw0KGgoAAAANSUhEUgAAAXsAAADACAIAAABqJlReAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
 jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAADIISURBVHhe7Z0JfFTluf/Pmckkmawz2TcSEpJA
@@ -1323,13 +1321,14 @@ BEFIBykOQRBSwXH/B31jEFA0GT9iAAAAAElFTkSuQmCC</one:Data>
                   <one:OCRData lang="en-US">
                     <one:OCRText><![CDATA[Basic Text 
 bpoints red 
-s red ]]></one:OCRText>
-                    <one:OCRToken startPos="0" region="0" line="0" x="133.0157318115234" y="68.17314147949219" width="21.0" height="7.800000667572021" />
-                    <one:OCRToken startPos="6" region="0" line="0" x="156.4325561523437" y="68.77806091308594" width="16.79999732971191" height="7.200000286102295" />
-                    <one:OCRToken startPos="12" region="0" line="1" x="0.96651303768158" y="87.81723785400391" width="38.99999618530273" height="11.40000057220459" />
-                    <one:OCRToken startPos="20" region="0" line="1" x="43.57098770141602" y="88.73747253417969" width="16.79999732971191" height="9.0" />
-                    <one:OCRToken startPos="25" region="0" line="2" x="1.416906714439392" y="106.8717346191406" width="5.999999523162841" height="6.0" />
-                    <one:OCRToken startPos="27" region="0" line="2" x="11.58569526672363" y="104.0365219116211" width="16.79999732971191" height="9.0" />
+s red 
+]]></one:OCRText>
+                    <one:OCRToken startPos="0" region="0" line="0" x="133.5" y="68.25" width="20.25" height="8.25" />
+                    <one:OCRToken startPos="6" region="0" line="0" x="156.75" y="69.0" width="16.5" height="7.5" />
+                    <one:OCRToken startPos="12" region="0" line="1" x="0.0" y="84.0" width="39.75" height="11.25" />
+                    <one:OCRToken startPos="20" region="0" line="1" x="42.75" y="86.25" width="17.25" height="9.0" />
+                    <one:OCRToken startPos="25" region="0" line="2" x="0.0" y="102.75" width="6.75" height="6.75" />
+                    <one:OCRToken startPos="27" region="0" line="2" x="9.75" y="100.5" width="17.25" height="9.75" />
                   </one:OCRData>
                 </one:Image>
               </one:OE>
@@ -1339,7 +1338,7 @@ s red ]]></one:OCRText>
             <one:List>
               <one:Bullet bullet="2" fontSize="11.0" />
             </one:List>
-            <one:Image>
+            <one:Image alt="Home &#xA;Insert &#xA;Draw &#xA;Histoo &#xA;Calibri &#xA;Format Painter ">
               <one:Size width="184.1999969482422" height="141.6000061035156" isSetByUser="true" />
               <one:Data>iVBORw0KGgoAAAANSUhEUgAAATMAAADsCAIAAACXJdZHAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
 jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAFS2SURBVHhe7b0HnFTV3f+/M9t7731hO2WXjkgX
@@ -1726,21 +1725,19 @@ TqSaKMBrf/VgEECDhx9+ODQ0lNewGqkJ3wh94kevIFjvj0wTioODgwl39fX1XCglJQUWidtIBNs7
 t1GpR1+5qgAAAABJRU5ErkJggg==</one:Data>
               <one:OCRData lang="en-US">
                 <one:OCRText><![CDATA[Home 
-Insert Draw 
-History 
+Insert 
+Draw 
+Histoo 
 Calibri 
-Copy 
-Paste 
-Format Painter ]]></one:OCRText>
-                <one:OCRToken startPos="0" region="0" line="0" x="4.199999809265137" y="42.5999984741211" width="33.0" height="9.0" />
-                <one:OCRToken startPos="6" region="1" line="1" x="54.60000228881836" y="42.5999984741211" width="30.0" height="9.0" />
-                <one:OCRToken startPos="13" region="1" line="1" x="102.0000076293945" y="42.5999984741211" width="27.59999847412109" height="9.0" />
-                <one:OCRToken startPos="19" region="2" line="2" x="148.1999969482422" y="42.00000381469727" width="36.0" height="12.59999942779541" />
-                <one:OCRToken startPos="28" region="2" line="3" x="151.2000122070312" y="78.0" width="30.0" height="8.399999618530273" />
-                <one:OCRToken startPos="37" region="3" line="4" x="57.60000228881836" y="94.19999694824218" width="24.0" height="9.600000381469726" />
-                <one:OCRToken startPos="43" region="3" line="5" x="3.600000143051147" y="102.0000076293945" width="24.60000038146973" height="7.800000667572021" />
-                <one:OCRToken startPos="50" region="3" line="6" x="58.20000076293945" y="117.0" width="33.0" height="8.399999618530273" />
-                <one:OCRToken startPos="57" region="3" line="6" x="94.80000305175781" y="117.0" width="31.79999923706055" height="8.399999618530273" />
+Format Painter 
+]]></one:OCRText>
+                <one:OCRToken startPos="0" region="0" line="0" x="3.75" y="42.75" width="33.75" height="9.0" />
+                <one:OCRToken startPos="6" region="1" line="1" x="54.75" y="42.75" width="30.0" height="9.0" />
+                <one:OCRToken startPos="14" region="2" line="2" x="102.0" y="42.75" width="27.75" height="9.0" />
+                <one:OCRToken startPos="20" region="3" line="3" x="147.75" y="42.0" width="36.75" height="12.75" />
+                <one:OCRToken startPos="28" region="3" line="4" x="150.75" y="78.0" width="30.75" height="8.25" />
+                <one:OCRToken startPos="37" region="4" line="5" x="57.75" y="117.0" width="33.75" height="8.25" />
+                <one:OCRToken startPos="44" region="4" line="5" x="94.5" y="117.0" width="32.25" height="8.25" />
               </one:OCRData>
             </one:Image>
           </one:OE>
@@ -1748,7 +1745,7 @@ Format Painter ]]></one:OCRText>
             <one:List>
               <one:Bullet bullet="2" fontSize="11.0" />
             </one:List>
-            <one:Image>
+            <one:Image alt="ToDo 孓 trl + 1 ) &#xA;* Important (Ctrl+2) ">
               <one:Size width="253.8000030517578" height="82.79999542236328" isSetByUser="true" />
               <one:Data>iVBORw0KGgoAAAANSUhEUgAAAacAAACKCAIAAACByBKTAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
 jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAEcfSURBVHhe7b0HfBzXefa7O9t7ARaL3gEShQQI
@@ -2072,16 +2069,19 @@ FIq8AuPOT+l3fFL36I7RH+Pjn9GuWS8xJ/OLXmZe9FKebYyrl3JHRwf35nL+u4DA7OAO3wwZCAS6
 urqKi4sT7z3W2Ni4e/d7EJAf/ehZ8x28tVHwerMdrnvN3TREgoAA7meQSKk/FQiqN9uBf6coKhod
 R8O8gMAsB7d0LBZTKpXimahOEVRvtqPRaHB/IByY/roIAYGpAHdyOBzGLa3X62fgSQGR6P8HfM8R
 hf+7hXwAAAAASUVORK5CYII=</one:Data>
-              <one:OCRData lang="en-US">
-                <one:OCRText><![CDATA[Styles 
-To Do (Ctrl-I) 
-Important (Ctrl+2) ]]></one:OCRText>
-                <one:OCRToken startPos="0" region="0" line="0" x="36.60000228881836" y="57.60000228881836" width="26.39999961853027" height="10.19999980926514" />
-                <one:OCRToken startPos="8" region="1" line="1" x="117.6000061035156" y="39.0" width="12.0" height="8.399999618530273" />
-                <one:OCRToken startPos="11" region="1" line="1" x="133.1999969482422" y="39.0" width="13.79999923706055" height="8.399999618530273" />
-                <one:OCRToken startPos="14" region="1" line="1" x="150.6000061035156" y="39.0" width="36.0" height="9.600000381469726" />
-                <one:OCRToken startPos="24" region="1" line="2" x="118.1999969482422" y="66.59999847412109" width="47.40000152587891" height="10.19999980926514" />
-                <one:OCRToken startPos="34" region="1" line="2" x="168.6000061035156" y="66.0" width="36.0" height="10.19999980926514" />
+              <one:OCRData lang="zh-TW">
+                <one:OCRText><![CDATA[ToDo 孓 trl + 1 ) 
+* Important (Ctrl+2) 
+]]></one:OCRText>
+                <one:OCRToken startPos="0" region="0" line="0" x="117.0" y="38.25" width="30.0" height="9.0" />
+                <one:OCRToken startPos="5" region="0" line="0" x="150.0" y="39.0" width="9.75" height="9.75" />
+                <one:OCRToken startPos="7" region="0" line="0" x="159.75" y="39.0" width="9.75" height="8.25" />
+                <one:OCRToken startPos="11" region="0" line="0" x="171.0" y="41.25" width="6.0" height="5.25" />
+                <one:OCRToken startPos="13" region="0" line="0" x="178.5" y="39.0" width="3.75" height="8.25" />
+                <one:OCRToken startPos="15" region="0" line="0" x="183.0" y="39.0" width="3.75" height="9.75" />
+                <one:OCRToken startPos="18" region="0" line="1" x="90.75" y="60.75" width="15.75" height="18.75" />
+                <one:OCRToken startPos="20" region="0" line="1" x="117.75" y="66.0" width="48.0" height="10.5" />
+                <one:OCRToken startPos="30" region="0" line="1" x="168.0" y="66.0" width="36.75" height="9.75" />
               </one:OCRData>
             </one:Image>
           </one:OE>
@@ -2106,10 +2106,7 @@ style='color:#FA0000'> red</span>]]></one:T>
       <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:45.000Z" lastModifiedTime="2022-07-13T18:53:45.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{75}{B0}" alignment="left" quickStyleIndex="2">
         <one:T><![CDATA[]]></one:T>
       </one:OE>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:19.000Z" lastModifiedTime="2022-07-13T18:53:19.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{61}{B0}" alignment="left" quickStyleIndex="2">
-        <one:T><![CDATA[]]></one:T>
-      </one:OE>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:51:55.000Z" lastModifiedTime="2022-07-13T18:53:23.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{65}{B0}" alignment="left" quickStyleIndex="4">
+      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:19.000Z" lastModifiedTime="2022-07-13T18:53:23.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{61}{B0}" alignment="left" quickStyleIndex="4">
         <one:T><![CDATA[Level 3 header 1.1.2]]></one:T>
         <one:OEChildren>
           <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:50.000Z" lastModifiedTime="2022-07-13T18:53:50.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{88}{B0}" alignment="left" quickStyleIndex="2">
@@ -2125,18 +2122,8 @@ style='color:#FA0000'> red</span>]]></one:T>
       <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:19.000Z" lastModifiedTime="2022-07-13T18:53:19.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{58}{B0}" alignment="left" quickStyleIndex="2">
         <one:T><![CDATA[]]></one:T>
       </one:OE>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:52:03.000Z" lastModifiedTime="2022-07-13T18:53:12.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{21}{B0}" alignment="left" quickStyleIndex="3">
+      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:56:13.000Z" lastModifiedTime="2022-07-15T03:56:13.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{21}{B0}" alignment="left" quickStyleIndex="3">
         <one:T><![CDATA[Level 2 header 1.2]]></one:T>
-        <one:OEChildren>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:54.000Z" lastModifiedTime="2022-07-13T18:53:54.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{100}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<span
-style='font-weight:bold'>Level 1 node</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-          </one:OE>
-        </one:OEChildren>
       </one:OE>
       <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:54:09.000Z" lastModifiedTime="2022-07-13T18:54:09.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{150}{B0}" alignment="left" quickStyleIndex="2">
         <one:T><![CDATA[]]></one:T>
@@ -2193,18 +2180,8 @@ style='color:#FA0000'> red</span>]]></one:T>
       <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:52:10.000Z" lastModifiedTime="2022-07-13T18:52:10.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{30}{B0}" alignment="left" quickStyleIndex="2">
         <one:T><![CDATA[]]></one:T>
       </one:OE>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:52:16.000Z" lastModifiedTime="2022-07-13T18:52:19.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{27}{B0}" alignment="left" quickStyleIndex="1">
+      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:56:20.000Z" lastModifiedTime="2022-07-15T03:56:20.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{27}{B0}" alignment="left" quickStyleIndex="1">
         <one:T><![CDATA[Level 1 header 2]]></one:T>
-        <one:OEChildren>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:53:56.000Z" lastModifiedTime="2022-07-13T18:53:56.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{112}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<span
-style='font-weight:bold'>Level 1 node</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-          </one:OE>
-        </one:OEChildren>
       </one:OE>
       <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T18:52:25.000Z" lastModifiedTime="2022-07-13T18:52:25.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{36}{B0}" alignment="left" quickStyleIndex="2">
         <one:T><![CDATA[]]></one:T>
@@ -2238,115 +2215,6 @@ style='color:#FA0000'> red</span>]]></one:T>
             <one:T><![CDATA[<span
 style='font-weight:bold'>Level 1 node</span>: description<span
 style='color:#FA0000'> red</span>]]></one:T>
-          </one:OE>
-        </one:OEChildren>
-      </one:OE>
-    </one:OEChildren>
-  </one:Outline>
-  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{235}{B0}">
-    <one:Position x="450.0" y="770.3999633789062" z="1" />
-    <one:Size width="311.366943359375" height="199.4993591308594" />
-    <one:OEChildren>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T19:21:21.000Z" lastModifiedTime="2022-07-13T19:21:23.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{236}{B0}" alignment="left" quickStyleIndex="1">
-        <one:T><![CDATA[Test outline 2]]></one:T>
-        <one:OEChildren>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T21:41:27.000Z" lastModifiedTime="2022-07-13T21:41:30.000Z" objectID="{B70B24AA-CD2D-40A0-A34A-A6327E145FD2}{238}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<span
-style='font-weight:bold'>Level 1 node outer</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-          </one:OE>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T21:41:42.000Z" lastModifiedTime="2022-07-15T03:15:16.000Z" objectID="{B9A6FE3D-3018-4574-BBC3-1D8F37C14804}{22}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<a
-href="onenote:#Test%20document&amp;section-id={5502BF8A-B298-4275-AC96-BED54BE59F54}&amp;page-id={24AAF33C-8BF8-4D50-9249-680E3440DDA8}&amp;object-id={C1C9646F-A76C-09D0-2B19-3322F2E46628}&amp;A3&amp;base-path=https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Non-Academic/Workspace.one">Level 3 header 1.2.1</a>&nbsp; (<a
-href="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/_layouts/OneNote.aspx?id=%2Fpersonal%2Fhqiu1_ualberta_ca%2FDocuments%2FOneNote%2FNon-Academic&amp;wd=target%28Workspace.one%7C5502BF8A-B298-4275-AC96-BED54BE59F54%2FTest%20document%7C24AAF33C-8BF8-4D50-9249-680E3440DDA8%2F%29">Web view</a>)\]]></one:T>
-          </one:OE>
-        </one:OEChildren>
-      </one:OE>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:15:18.000Z" lastModifiedTime="2022-07-15T03:15:18.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{85}{B0}" alignment="left" quickStyleIndex="2">
-        <one:T><![CDATA[]]></one:T>
-      </one:OE>
-      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:15:20.000Z" lastModifiedTime="2022-07-15T03:15:25.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{81}{B0}" alignment="left" quickStyleIndex="3">
-        <one:T><![CDATA[Test outline 2 subheader]]></one:T>
-        <one:OEChildren>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-12T23:52:21.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{95}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[<span
-style='font-weight:bold'>Level 1 node</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-            <one:OEChildren>
-              <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:07.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{97}{B0}" alignment="left" quickStyleIndex="2">
-                <one:List>
-                  <one:Bullet bullet="3" fontSize="11.0" />
-                </one:List>
-                <one:T><![CDATA[<span
-style='font-weight:bold'>Level 2 concept node</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-                <one:OEChildren>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T07:15:10.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{99}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="3" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[<span
-style='font-weight:bold'>Level 3 concept node</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-                    <one:OEChildren>
-                      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:38.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{101}{B0}" alignment="left" quickStyleIndex="2">
-                        <one:List>
-                          <one:Bullet bullet="13" fontSize="11.0" />
-                        </one:List>
-                        <one:T><![CDATA[Subpoints<span
-style='color:#FA0000'> red</span>]]></one:T>
-                      </one:OE>
-                    </one:OEChildren>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:17.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{107}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="3" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[<span
-style='text-decoration:underline'>M | Level 3 grouping node</span>: description<span
-style='color:#FA0000'> red</span>]]></one:T>
-                    <one:OEChildren>
-                      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-13T07:15:05.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{109}{B0}" alignment="left" quickStyleIndex="2">
-                        <one:List>
-                          <one:Bullet bullet="13" fontSize="11.0" />
-                        </one:List>
-                        <one:T><![CDATA[Subpoints<span
-style='color:#FA0000'> red</span>]]></one:T>
-                      </one:OE>
-                    </one:OEChildren>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:36.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{115}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="3" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints<span
-style='color:#FA0000'> red</span>]]></one:T>
-                  </one:OE>
-                  <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-09T02:55:38.000Z" lastModifiedTime="2022-07-15T03:15:37.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{119}{B0}" alignment="left" quickStyleIndex="2">
-                    <one:List>
-                      <one:Bullet bullet="3" fontSize="11.0" />
-                    </one:List>
-                    <one:T><![CDATA[Subpoints<span
-style='color:#FA0000'> red</span>]]></one:T>
-                  </one:OE>
-                </one:OEChildren>
-              </one:OE>
-            </one:OEChildren>
-          </one:OE>
-          <one:OE authorResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-07-15T03:15:34.000Z" lastModifiedTime="2022-07-15T03:15:34.000Z" objectID="{2170695E-A376-41C6-9228-DB4D22600C97}{88}{B0}" alignment="left" quickStyleIndex="2">
-            <one:List>
-              <one:Bullet bullet="2" fontSize="11.0" />
-            </one:List>
-            <one:T><![CDATA[]]></one:T>
           </one:OE>
         </one:OEChildren>
       </one:OE>

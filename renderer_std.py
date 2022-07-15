@@ -1,20 +1,22 @@
 #%% Imports
 # Built-ins
+import re, os
 from cgitb import html
-import re
 from typing import Union, Callable
 from collections.abc import Iterable
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
+import base64
 
 # General
 from bs4 import BeautifulSoup
 
 # Internal modules
-from internal_globals import OENodeHeader, OENodePoint, insertSubstring
+from internal_globals import MPATH, OENodeHeader, OENodePoint, insertSubstring
 
 #%% Constants
 GRAY = "#e8e8e8" # Can set to empty string to insert nothing
+IMG_STYLING = "style='max-width:600px'"
 
 #%% Classes
 class StandardRenderer:
@@ -27,7 +29,8 @@ class StandardRenderer:
         self.node = node # Is an instance of OENodePoint, the entry point node
         self.fronthtml = ""
         self.backhtml = ""
-        self.img_count = 0 # Image counter for each card to assign each image a unique identifier 
+        self.img_count_child = 0 # Image counter for each card to assign each image a unique identifier 
+        self.img_count_sibling = 0 # Separate image counter for sibling to avoid interference with direct child images
     
     def resetHtml(self):
         self.fronthtml = ""
@@ -372,13 +375,18 @@ def renderImage(node: OENodePoint, front: bool, level: str, renderer: StandardRe
         if level == "entry":
             return "" # Shouldn't have image as entry point, unless there's a specific function (e.g., name this picture)
         elif level == "direct_child":
-            img_name = genImageName(node)
-            print(img_name)
-            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            renderer.img_count_child += 1
+            img_name = genImageName(node) + str(renderer.img_count_child) # Append img_count to make it a unique name
         elif level == "sibling":
-            img_name = genImageName(node)
-            print(img_name)
-            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            renderer.img_count_sibling += 1
+            img_name = genImageName(node) + str(renderer.img_count_sibling)
+        
+        # Common image generation path
+        img_path = os.path.join(MPATH, img_name)
+        img_data_bytes = node.data.encode("utf-8")
+        with open(img_path, "wb") as file:
+            file.write(base64.decodebytes(img_data_bytes)) # Convert bytes format to base64 format which is read by write() functio
+        return genHtmlElement(f"<img src='{img_name}' {IMG_STYLING}>", [], "", li=True, bullet=node.bullet_data)
 
 
 def renderEquation(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
@@ -404,7 +412,7 @@ def renderTable(node: OENodePoint, front: bool, level: str, renderer: StandardRe
         if level == "entry":
             return "" # Shouldn't have table as entry point in standard renderer
         elif level == "direct_child":
-            return genHtmlElement("Table", ["italic"], li=True, bullet=node.bullet_data) # Italicized placeholder
+            return "" # Ignore
         elif level == "sibling":
             return "" # Ignore
 
@@ -412,9 +420,9 @@ def renderTable(node: OENodePoint, front: bool, level: str, renderer: StandardRe
         if level == "entry":
             return "" # Shouldn't have table as entry point in standard renderer
         elif level == "direct_child":
-            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return genHtmlElement("Table", ["italic"], li=True, bullet=node.bullet_data) # Italicized placeholder
         elif level == "sibling":
-            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            return genHtmlElement("Table", ["italic"], li=True, bullet=node.bullet_data) # Italicized placeholder
 
 
 def ignoreNode(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
@@ -446,3 +454,5 @@ FUNCMAP = {
         } # Mapping of node type label to corresponding function 
 
 
+
+# %%
