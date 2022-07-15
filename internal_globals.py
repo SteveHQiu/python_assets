@@ -218,10 +218,11 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
             index = styled_header_ids.index(header.id) # Index used for identifying parent headers in flattened header list 
         else:
             index = 0 # Otherwise skip header 
-        levels_from_top = header.level - 2 # Number of header levels until parent_headers reaches top level header (quick style #1), 2nd order (#3) would = 1
+        current_level = header.level # Tracks current level of header
         for i in range(index, 0, -1): # step=-1 makes index decrease instead of increasing
-            if styled_headers[i-1].level < header.level and levels_from_top > 0: # Checks if the header above the current header in styled_headers is of a higher level (i.e., lower style #) and if parent_headers list should have reached top already
-                levels_from_top -= 1 # Is one level closer to top
+            if styled_headers[i-1].level < current_level: 
+                # Checks if styled header directly above is hierarchically higher (i.e., lower style #) than headers that we've seen, will stop at level=1 since there is no level=0
+                current_level = styled_headers[i-1].level # If header above is higher, set new current level
                 header.parent_headers.append(styled_headers[i-1]) # Add the above header as a parent header
         
         # Children populated last since it requires previous fields to be populated first (in order to pull from them)
