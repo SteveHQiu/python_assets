@@ -51,174 +51,6 @@ class OENodePoint:
         self.sibling_nodes: list[OENodePoint] = [] # Contains all nodes at same level - .children_nodes of parent node gets passed here
         self.parent_nodes: list[OENodePoint] = [] # For parent context rendering
         self.children_nodes: list[OENodePoint] = [] # 
-    
-    def getFront(self, oeheader) -> str:
-        """
-        Returns full front HTML with focus on item at calling item
-        """
-        front_html = ""
-        for oepoint in self.context: # Using OEChildren container that will be passed into the context attribute in outer scope
-            oepoint = OENodePoint(oepoint) # Convert into class 
-            if oepoint.text and oepoint.getGeneralStem(): # Screens for concepts/groupings using class attriburtes and methods
-                # Will only expand if current OE node in loop is the same as the instance calling this method
-                if self.id == oepoint.id:
-                    # Render stems depending on point type
-                    if oepoint.getConceptStem():
-                        front_html = "".join((front_html,"<li %s><span style='font-weight:bold'>%s</span>:" % (oepoint.bullet_data, oepoint.getGeneralStem()))) # Start list item
-                    if oepoint.getGroupingStem():
-                        front_html = "".join((front_html,"<li %s><span style='text-decoration:underline'>%s</span>:" % (oepoint.bullet_data, oepoint.getGeneralStem())))
-                    # Render sub-points if any
-                    if oepoint.children:
-                        substems = "\n<ul>\n"
-                        for oesubpoint in oepoint.children:
-                            oesubpoint = OENodePoint(oesubpoint) # Convert to class
-                            if oesubpoint.getConceptStem(): # Rendering for concepts
-                                substems = "".join((substems, "<li %s><span style='font-weight:bold'>%s</span>:</li>\n" % (oesubpoint.bullet_data, "___")))
-                            elif "C" in oesubpoint.getIndicators(): # Rendering for concept-like attributes
-                                substems = "".join((substems, "<li %s><span style='text-decoration:underline'>%s</span>:</li>\n" % (oesubpoint.bullet_data, f"{oesubpoint.getIndicators()} |___")))
-                            elif "L" in oesubpoint.getIndicators(): # Rendering for listed attributes
-                                substems = "".join((substems, "<li %s><span style='text-decoration:underline'>%s</span>:</li>\n" % (oesubpoint.bullet_data, oesubpoint.getGeneralStem())))
-                            elif oesubpoint.text and not oesubpoint.getGroupingStem(): # Filters for non-empty (text) raw points, excludes groupings and attributes
-                                substems = "".join((substems, "<li %s><span style='font-style: italic'>%s</span></li>\n" % (oesubpoint.bullet_data, "Subpoint")))
-                        substems = "".join((substems, "</ul>\n"))
-                        front_html = "".join((front_html, substems)) # Append substems to main HTML
-                    front_html = "".join((front_html,"</li>\n")) # Close list item
-                # Render other concept/grouping OE nodes that are not the calling object and 
-                elif oepoint.getGeneralStem():
-                    if oepoint.getConceptStem():
-                        front_html = "".join((front_html,"<li %s><span style='font-weight:bold;color:#e8e8e8'>%s</span></li>\n" % (oepoint.bullet_data, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
-                    if oepoint.getGroupingStem():
-                        front_html = "".join((front_html,"<li %s><span style='text-decoration:underline;color:#e8e8e8'>%s</span></li>\n" % (oepoint.bullet_data, oepoint.getGeneralStem()))) # Will only render stems, ignores points without stems
-        # Wrap UL tags around main body, add parents and header - this part should not be a part of the body loop
-        front_html = "".join(("<ul>\n",front_html,"</ul>"))
-        
-        for parent in oeheader.context_tracker: # Wraps info of parent nodes around returned HTML list 
-            if self.getGroupingStem() and oeheader.context_tracker.index(parent) == 0: # Only display parent in non-grey if it is a grouping, index is to make sure that it is the immediate parent, of the current node, otherwise will treat as a distant parent 
-                if parent.getConceptStem():
-                    front_html = "".join(("<ul>\n<li %s><span style='font-weight:bold'>%s</span>\n" % (parent.bullet_data, parent.getConceptStem()), front_html, "\n</li>\n</ul>"))
-                else: # Assume parent is a grouping instead
-                    front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underline'>%s</span>\n" % (parent.bullet_data, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
-            else: # For when current node is a concept and for distant parents
-                if parent.getConceptStem():
-                    front_html = "".join(("<ul>\n<li %s><span style='font-weight:bold;color:#e8e8e8'>%s</span>\n" % (parent.bullet_data, parent.getConceptStem()), front_html, "\n</li>\n</ul>"))
-                else: # Assume parent is a grouping instead
-                    front_html = "".join(("<ul>\n<li %s><span style='text-decoration:underline;color:#e8e8e8'>%s</span>\n" % (parent.bullet_data, parent.getGroupingStem()), front_html, "\n</li>\n</ul>"))
-        front_html = "".join(("<span style='color:#e8e8e8'>%s</span>\n\n" % oeheader.text, front_html))
-        front_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(XML_PATH), front_html))
-        print(front_html)
-        return front_html
-
-    def getBack(self, oeheader, oenode) -> str:
-        """
-        Returns greyed HTML list of complete items contained within the given container
-        with item with the given index ungreyed i.e., focuses on item of index
-        """
-        def getChildText(oechildren):
-            """
-            Used to render children nodes
-            """
-            nonlocal subsubpoints # Uses subsubpoints str container from the function that calls it
-            subsubpoints = "".join((subsubpoints,"<ul>\n")) # Open container
-            for oepoint in oechildren:
-                oepoint = OENodePoint(oepoint)
-                if oepoint.text: # Render points but won't gray out since this function currently only runs for raw points
-                    # subsubpoints = "".join((subsubpoints,"<li %s><span style='color:#e8e8e8'>%s</span>" % (oepoint.bullet_data, oepoint.text)))
-                    subsubpoints = "".join((subsubpoints,"<li %s>%s" % (oepoint.bullet_data, oepoint.text)))
-                    if oepoint.children:
-                        subsubpoints = getChildText(oepoint.children)
-                    subsubpoints = "".join((subsubpoints,"</li>\n" ))
-                if oepoint.image: # Really shouldn't be reaching this point since raw points should not conatain diagrams
-                    subsubpoints = "".join((subsubpoints,"<li %s><span style='color:#e8e8e8'>%s</span></li>\n" % (oepoint.bullet_data, "+Diagram")))
-            subsubpoints = "".join((subsubpoints,"</ul>\n")) # Close container
-            return subsubpoints
-        
-        back_html = ""
-        context_img = "" # Context pictures should always apply to all nodes at the same level, thus can be displayed at the end
-        img_count = 0 # Counter to index multiple images at same level so that there are no duplicates of images
-        for oepoint in self.context: # Using OEChildren container that will be passed into the context attribute in outer scope
-            oepoint = OENodePoint(oepoint) # Convert into class 
-            if oepoint.text: # Will consider any non-empty points, not just concepts/groupings
-                # Will only expand if current OE node in loop is the same as the instance calling this method
-                if self.id == oepoint.id: 
-                    img_stem = re.sub(r'[^\w\s]', '', oepoint.getGeneralStem())
-                    back_html = "".join((back_html,"<li %s>%s" % (oepoint.bullet_data, oepoint.text))) # Render point and start list item
-                    # Render sub-points if any
-                    if oepoint.children:
-                        subpoints = "\n<ul>\n" # Open sub-list
-                        subnode_img_count = 0
-                        for oesubpoint in oepoint.children:
-                            oesubpoint = OENodePoint(oesubpoint) # Convert to class
-                            if oesubpoint.text: # Process subpoints containing text 
-                                subpoints = "".join((subpoints, "<li %s>\n" % oesubpoint.bullet_data)) # Start sub-list item
-                                # Process subpoints differently depending on type of subpoint
-                                if oesubpoint.getConceptStem(): # Show stem and grey body of concepts
-                                    concept_stem = oesubpoint.getConceptStem()
-                                    concept_body = oesubpoint.text.replace(concept_stem, "", 1) # Remove stem to only get body
-                                    subpoints = "".join((subpoints, "<span style='font-weight:bold'>%s</span>" % concept_stem)) 
-                                    subpoints = "".join((subpoints, "<span style='color:#e8e8e8'>%s</span>" % concept_body))
-                                    if oesubpoint.children: # Add children indicator 
-                                        subpoints = "".join((subpoints, "<span style='color:#e8e8e8'>%s</span>" % "(+)"))
-                                elif oesubpoint.getGroupingStem(): # Process groupings
-                                    if "C" in oesubpoint.getIndicators(): # Rendering for concept-like attributes
-                                        subpoints = "".join((subpoints, oesubpoint.text))
-                                    elif "L" in oesubpoint.getIndicators(): # Rendering for listed attributes
-                                        subpoints = "".join((subpoints, oesubpoint.text))
-                                    else: # Assume that the current subpoint is a grouping
-                                        subpoints = "".join((subpoints, "<span style='color:#e8e8e8'>%s</span>" % oesubpoint.text)) 
-                                    if oesubpoint.children: # Add children indicator
-                                        subpoints = "".join((subpoints, "<span style='color:#e8e8e8'>%s</span>" % "(+)"))
-                                else: # Assume it is a regular point and will display it regularly 
-                                    subpoints = "".join((subpoints, oesubpoint.text)) 
-                                    if oesubpoint.children: # Only render children subpoints for raw points since they won't get another card dedicated to them
-                                        subsubpoints = "" # Declare and initiate subsubpoint container
-                                        subsubpoints = getChildText(oesubpoint.children) # Use getChildrenText recursive function to add to all children nodes that aren't highlighted
-                                        subpoints = "".join((subpoints, subsubpoints))
-                                subpoints = "".join((subpoints, "</li>\n")) # End sub-list item
-                            if oesubpoint.image: # Process subpoints containing image
-                                img_name = "%s.png" % (img_stem + str(subnode_img_count)) # FIXME Might need to link more contexts in the future so that same concepts don't have overlapping picture names
-                                img_path = os.path.join(MPATH, img_name)
-                                img_str = oesubpoint.image
-                                img_bytes = img_str.encode("utf-8")
-                                with open(img_path, "wb") as img_file: # Write image to media directory
-                                    img_file.write(base64.decodebytes(img_bytes)) # Convert bytes format to base64 format which is read by write() functio
-                                subpoints = "".join((subpoints, "<li %s><img src='%s'style='max-width:600px'></li>" % (oesubpoint.bullet_data, img_name)))
-                                subnode_img_count += 1
-                        subpoints = "".join((subpoints, "</ul>\n")) # Close sub-list 
-                        back_html = "".join((back_html, subpoints)) # Append subpoints to main HTML
-                    back_html = "".join((back_html,"</li>\n")) # Close list item
-                else: # For non-focused text-points of same rank 
-                    back_html = "".join((back_html,"<li %s><span style='color:#e8e8e8'>" % oepoint.bullet_data))
-                    if oepoint.children: # Add indicator of children before adding content
-                        back_html = "".join((back_html,"(+)"))
-                    back_html = "".join((back_html,"%s</span></li>\n" % oepoint.text)) #
-            if oepoint.image: # For images of same rank
-                # Set up naming system for images - will replace with hash at a diffferent location
-                img_pattern = re.compile('[\W_]+') # To remove punctuation from filename
-                img_stem = img_pattern.sub('', oenode.text)[0:75] # oenode refers to the calling outer node passed into this method, also have to truncate to account for filename size
-                img_name = "%s.png" % (img_stem + str(img_count)) # FIXME might need to add more context relative to the title  
-                img_path = os.path.join(MPATH, img_name)
-                img_str = oepoint.image
-                img_bytes = img_str.encode("utf-8")
-                with open(img_path, "wb") as img_file: # Write image to media directory
-                    img_file.write(base64.decodebytes(img_bytes)) # Convert bytes format to base64 format which is read by write() functio
-                context_img = "".join((context_img,"<li %s><img src='%s'style='max-width:600px'></li>\n" % (oepoint.bullet_data, img_name))) # Store reference in context_img variable and add at very end
-                # back_html = "".join((back_html,"<li %s><img src='%s'style='max-width:600px'></li>\n" % (oepoint.bullet_data, img_name))) # Legacy line that can be used instead if you want images to be in order
-                img_count += 1
-        back_html = "".join((back_html, context_img)) # Add images to end
-        # Wrap UL tags around main body, add parents and header - this part should not be a part of the body loop
-        back_html = "".join(("<ul>\n",back_html,"</ul>"))
-        
-        
-        for parent in oeheader.context_tracker: # Wraps info of parent nodes around returned HTML list 
-            if self.getGroupingStem() and oeheader.context_tracker.index(parent) == 0: # Only display parent in non-grey if it is a grouping, index is to make sure that it is the immediate parent, of the current node, otherwise will treat as a distant parent
-                back_html = "".join(("<ul>\n<li %s>%s\n" % (parent.bullet_data, parent.text), back_html, "\n</li>\n</ul>"))
-            else:
-                back_html = "".join(("<ul>\n<li %s><span style='color:#e8e8e8'>%s</span>\n" % (parent.bullet_data, parent.text), back_html, "\n</li>\n</ul>"))
-        back_html = "".join(("<span style='color:#e8e8e8'>%s</span>\n\n" % oeheader.text, back_html))
-        back_html = "".join(("<span style='color:#e8e8e8'>%s - </span>" % getTitle(XML_PATH), back_html))
-        print(back_html)
-        return back_html
-    
 
 class OENodeHeader:
     """
@@ -297,16 +129,23 @@ def getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
         if node.xml.find("one:OEChildren", NAMESPACES):
             if type(node) == OENodePoint: # Only add node to parent tracker if current node is a point (rather than a header)
                 parent_node_tracker.insert(0, node)
+                
             child_nodes = [OENodePoint(cnode) for cnode in node.xml.find("one:OEChildren", NAMESPACES)] # List comprehensions less prone to breaking than generators
             for child_node in child_nodes:
+                if type(node) == OENodeHeader:
+                    child_node.parent_headers = [node] # Inherit directly from header since its .parents_headers may be empty if it's a top-level header
+                elif type(node) == OENodePoint:
+                    child_node.parent_headers = node.parent_headers # Inherit from parent node which will have inherited it from immediate header
                 child_node.page_title = node.page_title # Inherit from parent
-                child_node.parent_headers = node.parent_headers # Inherit from parent
                 child_node.sibling_nodes = child_nodes # Assign current node's children container, list doesn't get modified so don't need to copy (each cycle creates new list)
                 child_node.parent_nodes = copy.copy(parent_node_tracker) # Copy tracker nodes using shallow copy since tracker gets modified by outer scope
                 child_node.children_nodes = iterChildren(child_node) # Recursively call function, will rebound from recursion at nodes without children
+                
             if type(node) == OENodePoint: # Mirror entry conditions
                 parent_node_tracker.pop(0)
+                
             return child_nodes # List comprehensions less prone to breaking than generators
+        
         else: 
             return [] # Empty list which will evaluate as False when passed as a logical argument
     
@@ -419,6 +258,7 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
             index = styled_header_ids.index(header.id) # Index used for identifying parent headers in flattened header list 
         else:
             index = 0 # Start at top of list (no parent headers)
+            
         for i in range(index, 0, -1): # -1 step (decrement)
             if styled_headers[i-1].level < header.level: # If the header above the current header in styled_headers is of a higher level (i.e., lower style #), add the above header as a parent
                 header.parent_headers.append(styled_headers[i-1])

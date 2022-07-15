@@ -11,17 +11,14 @@ from anki.storage import Collection
 # Internal modules
 from internal_globals import OENodeHeader, OENodePoint, getHeaders
 from internal_globals import CPATH
-from renderer_std import StandardRenderer, renderHeaders
+from renderer_std import StandardRenderer
 
 #%% Classes
 class CardArbiter:
     
     def __init__(self, xml_path):
         self.header_list: list[OENodeHeader] = getHeaders(xml_path) # Input header list, should be able to access rest of nodes through this point
-        
-        self.parent_node_tracker: list[OENodePoint] = [] # Container for parent XML nodes when going into nested lists below level of first order OENodePoints, not necessarily a list
         self.cards: list[tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
-        self.header_annotation: str = "" # Populated by renderHeaders() function within genCards()
 
     def genCards(self):
         """
@@ -35,8 +32,8 @@ class CardArbiter:
                     renderer = StandardRenderer(child_node) # New instance for each entry point
                     renderer.renderHtmlMain()
                     renderer.renderHtmlParents()
-                    front = self.header_annotation + renderer.fronthtml # Combine renderer output with header annotation
-                    back = self.header_annotation + renderer.backhtml
+                    front = renderer.fronthtml 
+                    back = renderer.backhtml
                     self.cards.append((front, back)) # Append rendered HTMLs
 
                     if child_node.children_nodes: # Recursively search for children 
@@ -45,9 +42,8 @@ class CardArbiter:
             return None
 
         for header in self.header_list:
-            self.header_annotation = renderHeaders(header) # Header information should not change for children nodes, will update with each header 
-            # FIXME refactor annotation into renderer
             enterEntryPoints(header)
+            
         return self
         
     def displayCards(self):

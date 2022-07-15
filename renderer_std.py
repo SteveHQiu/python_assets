@@ -76,6 +76,7 @@ class StandardRenderer:
         Render parent nodes for entry node and add it to the generated HTML
         """
         
+        # Parent node rendering
         for parent_node in self.node.parent_nodes: # Convert parent nodes into OENodePoint instances
             # Note that each node is wrapped around old node, furthest parent node is added last
             pfront = "<ul>\n" # Open list for parent node
@@ -101,10 +102,21 @@ class StandardRenderer:
             self.fronthtml = insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
             self.backhtml = insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
 
+        # Parent header rendering
+        header = self.node.parent_headers[0] # Retrieve immediate header of the entry point
+        header_html = genHtmlElement(header.page_title, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
+        header_html += genHtmlElement(f"[{header.text}]", ["underline"], GRAY) # Add itself as the immediate header
+        for pheader in header.parent_headers: # Add headers and links to respective element
+            header_html += f" - [{pheader.text}]"
+        header_html = genHtmlElement(header_html, [], GRAY) + "<br><br>\n" # Wrapped HTML with gray styling span 
+        
+        self.fronthtml = header_html + self.fronthtml # Add header rendering to front of HTML
+        self.backhtml = header_html + self.backhtml
+        
         return self
     
 
-#%% Functions
+##%% Functions
 import inspect
 def getFxName(): # Function that will return name of currently calling function, for debug
     return inspect.stack()[1].function
@@ -210,19 +222,6 @@ def genHtmlRecursively(node: OENodePoint,
             html_children += "</ul>\n" # Close list
             html_item = insertSubstring(html_item, "</li>", html_children) # Insert children into last item 
     return html_item
-
-def renderHeaders(node: OENodeHeader) -> str:
-    """
-    Will take header element and render its headers contained within the OENodeHeader object
-    """
-    header_html = genHtmlElement(node.page_title, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
-    header_html += genHtmlElement(f"[{node.text}]", ["underline"], GRAY) # Add itself as the immediate header
-    for header in node.parent_headers: # Add headers and links to respective element
-        header_html += f" - [{header.text}]"
-    header_html += "<br><br>\n"
-    
-    return genHtmlElement(header_html, [], GRAY) # Return the header_html wrapped with gray styling span 
-
 
 ## Special rendering functions
 
