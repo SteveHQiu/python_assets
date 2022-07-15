@@ -1,8 +1,31 @@
 #%% Imports
-import sys, os
-import base64
+
 from anki.storage import Collection
 import inspect
+
+#%% Math ML processing
+import re
+from bs4 import BeautifulSoup
+from mathml2latex.mathml import process_mathml
+
+math_str = '<!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math><![endif]-->'
+math_str = math_str.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
+print(math_str)
+tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
+for tag in tags:
+    new_tag = tag.replace("mml:", "")
+    math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
+print(math_str)
+soup1 = BeautifulSoup(math_str, features="html.parser")
+c = process_mathml(soup1)
+print(c)
+
+a = """
+<![CDATA[<!--[if mathML]><math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></math><![endif]-->]]
+"""
+soup2 = BeautifulSoup(a, features="html.parser")
+b = process_mathml(soup2)
+print(b)
 
 #%% Reference vs copy
 a = [1, 2, 3]

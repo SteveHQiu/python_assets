@@ -138,10 +138,10 @@ def getNodeTypeAndData(node: Element) -> tuple[str, str]:
                 return ("concept", text)
             elif soup.select_one('span[style*="text-decoration:underline"]') != None:
                 return ("grouping", text)
-            elif "http://www.w3.org/1998/Math/MathML" in text: # Might not give correct rendering
-                return ("equation", text)
             else: 
                 return ("standard", text)
+        elif "http://www.w3.org/1998/Math/MathML" in text and "mathML" in text: # bs4 output for equations are blank
+            return ("equation", text)
         
         
     elif node.find("one:Image/one:Data", NAMESPACES) != None and node.find("one:Image/one:Data", NAMESPACES).text != None: # Image nodes

@@ -11,6 +11,9 @@ import base64
 # General
 from bs4 import BeautifulSoup
 
+# Math
+from mathml2latex.mathml import process_mathml
+
 # Internal modules
 from internal_globals import MPATH, OENodeHeader, OENodePoint, insertSubstring
 
@@ -231,49 +234,49 @@ def genHtmlRecursively(node: OENodePoint,
 def renderCloze(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
     if front:
         if level == "entry":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
             indicators = "".join(node.indicators)            
             return genHtmlElement(f"{indicators} |____:", ["underline"], li=True, bullet=node.bullet_data) # Add colon for prompting
         elif level == "sibling":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
 
     else: # Functions for rendering backside
         if level == "entry":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
             text_styled = genHtmlElement(node.stem, ["underline"], "") + genHtmlElement(node.body, [], GRAY) # Style stem and body differently
             return genHtmlElement(text_styled, [], "", li=True, bullet=node.bullet_data) # Create a greyed list item using styled text
         elif level == "sibling":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
 
 
 def renderListed(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
     if front:
         if level == "entry":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
-            return renderGrouping(node, front, "entry", root=False) # Run as if it was an entry-level node, root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, "entry", renderer, root=False) # Run as if it was an entry-level node, root=False to avoid re-running renderOptions()
             return genHtmlElement(node.stem + ":", ["underline"], li=True, bullet=node.bullet_data) # Actual code from renderGrouping
         elif level == "sibling":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
 
     else: # Functions for rendering backside
         if level == "entry":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
             return genHtmlElement(text, [], "", li=True, bullet=node.bullet_data) # No formatting
         elif level == "sibling":
-            return renderGrouping(node, front, level, root=False) # root=False to avoid re-running renderOptions()
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
 
 
-def renderOptions(node: OENodePoint, front: bool, level: str) -> str:
+def renderOptions(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer) -> str:
     if {"C", "L"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
         if "C" in node.indicators:
-            return renderCloze(node, front, level)
+            return renderCloze(node, front, level, renderer)
         if "L" in node.indicators:
-            return renderListed(node, front, level)
+            return renderListed(node, front, level, renderer)
     else:
         return ""
 
@@ -286,10 +289,10 @@ def renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standard
     to default options from a special rendering option (i.e., reuse a standard rendering function when certain 
     criteria are met)
     """
-    if root and renderOptions(node, front, level): # Will only return true if node.indicators contain rendering options and has not previously called renderOptions
+    if root and renderOptions(node, front, level, renderer): # Will only return true if node.indicators contain rendering options and has not previously called renderOptions
         # Note that root must be evaluated first, otherwise will try to evaluate function and enter infinite recursion
         # Not actually implemented in Concept-type nodes yet
-        return renderOptions(node, front, level) # Use output from renderOptions() instead if applicable, otherwise go through default
+        return renderOptions(node, front, level, renderer) # Use output from renderOptions() instead if applicable, otherwise go through default
     elif front:
         if level == "entry":
             return genHtmlElement("【" + node.stem + ":】", ["bold"], li=True, bullet=node.bullet_data) # Add unformatted colon for prompting
@@ -310,9 +313,9 @@ def renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standard
 
 
 def renderGrouping(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
-    if root and renderOptions(node, front, level): # Will only return true if node.indicators contain rendering options
+    if root and renderOptions(node, front, level, renderer): # Will only return true if node.indicators contain rendering options
         # Note that root must be evaluated first, otherwise will try to evaluate function and enter infinite recursion
-        return renderOptions(node, front, level) # Use output from renderOptions() instead if applicable, otherwise go through default
+        return renderOptions(node, front, level, renderer) # Use output from renderOptions() instead if applicable, otherwise go through default
     if front:
         if level == "entry":
             return genHtmlElement("【" + node.stem + ":】", ["underline"], li=True, bullet=node.bullet_data) # Add colon for prompting
@@ -402,10 +405,19 @@ def renderEquation(node: OENodePoint, front: bool, level: str, renderer: Standar
         if level == "entry":
             return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
-            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
+            pass # Pass onto common processing
         elif level == "sibling":
-            return f"<li>{getFxName()}, front: {front}, level: {level}</li>\n"
-
+            pass # Pass onto common processing
+        
+        math_str = node.data.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
+        html_tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
+        for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
+            new_tag = tag.replace("mml:", "")
+            math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
+        soup = BeautifulSoup(math_str, features="html.parser")
+        latex = "<anki-mathjax>" + str(process_mathml(soup)) + "</anki-mathjax>" # Conversion to string just in case conversion fails
+        return genHtmlElement(latex, [], li=True, bullet=node.bullet_data)
+        
 
 def renderTable(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
     if front:
