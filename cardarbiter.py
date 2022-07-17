@@ -64,7 +64,7 @@ class CardArbiter:
             col = Collection(CPATH, log=True) # NOTE that this changes the directory
             card_model = col.models.by_name("Basic") # Search for card model
             deck = col.decks.by_name("ZExport") # Set current deck
-            
+            card_num = 1
             for card in self.cards:
                 front, back = card # Unpack HTML from cards
                 # Instantiate new note
@@ -81,7 +81,8 @@ class CardArbiter:
                 col.models.save(m)
                 ## Add note to DB
                 col.addNote(note)
-                
+                print(f"Added card #{card_num}")
+                card_num += 1
             col.save() # Save changes to DB
         finally: # Should have this always run, otherwise, anki will get stuck        
             col.close() # Need this function, otherwise instance stays open
