@@ -1,31 +1,75 @@
 #%% Imports
-import sys, os
+import sys, os, re
 from anki.storage import Collection
 import inspect
 
-#%% Math ML processing
+#%% MathML processing
+import lxml.etree as ET
 import re
-from bs4 import BeautifulSoup
-from mathml2latex.mathml import process_mathml
 
+def processMath(math_str: str) -> str:
+    """
+    Modified from: https://dev.to/furkan_kalkan1/quick-hack-converting-mathml-to-latex-159c
+    """
+    math_str = re.sub(r"(\$\$.*?\$\$)", " ", math_str) # Remove tex codes in text 
+    # Formatting specific to OneNote MathML output
+    math_str = math_str.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
+    html_tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
+    for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
+        new_tag = tag.replace("mml:", "")
+        new_tag = new_tag.replace(":mml", "") # Still need xmlns attribute to use XSLT to parse
+        math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
+    
+    # Exception parsing: For errors due to undefined symbols, can probably find a reference here http://zvon.org/comp/r/ref-MathML_2.html#intro
+    math_str = math_str.replace("&nbsp;", "&#x2003;") # nbsp not in XSLT, replace with code for emspace http://zvon.org/comp/r/ref-MathML_2.html#Entities~emsp
+    
+    math_mml_list = re.findall(R"(<math.*?<\/math>)", math_str) # Only retain information inside math tags (FIXME can probably expand to iterate)
+    for math_mml in math_mml_list: # XSLT transformation
+        mml_ns = math_mml.replace('<math>', '<math xmlns="http://www.w3.org/1998/Math/MathML">') #Required.
+        math_xml = ET.fromstring(mml_ns)
+        xslt_table = ET.parse("mml2tex/mmltex.xsl") # This XSL file links to the other other XSL files in the folder
+        transformer = ET.XSLT(xslt_table)
+        math_tex = str(transformer(math_xml)) # Convert transformed output to string
+        math_tex = re.sub(R"(^\$)|(\$$)", "", math_tex).strip() # Remove $ at start and end (due to transformation) and strip whitespace
+        math_str = math_str.replace(math_mml, math_tex)
+
+    return "<anki-mathjax>" + math_str + "</anki-mathjax>" 
+math_str = '<math><munderover><mo stretchy="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><mrow><mi>s</mi><mi>t</mi><mi>o</mi><mi>p</mi></mrow></munderover><mrow><mo fence="false">(</mo><mi>expression</mi><mo>&nbsp;</mo><mi>involving</mi><mo>&nbsp;</mo><mi>i</mi><mo fence="false">)</mo></mrow></math>'
+math_str = '<math><munderover><mo stretchy="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><mrow><mi>s</mi><mi>t</mi><mi>o</mi><mi>p</mi></mrow></munderover><mrow><mo fence="false">(</mo><mi>expression</mi><mo>&#x2003;</mo><mi>involving</mi><mo>&#x2003;</mo><mi>i</mi><mo fence="false">)</mo></mrow></math>'
 math_str = '<!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math><![endif]-->'
-math_str = math_str.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
-print(math_str)
-tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
-for tag in tags:
-    new_tag = tag.replace("mml:", "")
-    math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
-print(math_str)
-soup1 = BeautifulSoup(math_str, features="html.parser")
-c = process_mathml(soup1)
-print(c)
+math_str = '<mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math>'
+# print(processMath(math_str))
+processMath(math_str)
+#%% MathML Processing 2
+import re
+import lxml.etree as ET
 
-a = """
-<![CDATA[<!--[if mathML]><math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></math><![endif]-->]]
-"""
-soup2 = BeautifulSoup(a, features="html.parser")
-b = process_mathml(soup2)
-print(b)
+def to_latex(text):
+
+    """ Remove TeX codes in text"""
+    text = re.sub(r"(\$\$.*?\$\$)", " ", text) 
+
+    """ Find MathML codes and replace it with its LaTeX representations."""
+    mml_codes = re.findall(r"(<math.*?<\/math>)", text)
+    for mml_code in mml_codes:
+        mml_ns = mml_code.replace('<math>', '<math xmlns="http://www.w3.org/1998/Math/MathML">') #Required.
+        mml_dom = ET.fromstring(mml_ns)
+        xslt = ET.parse("mml2tex/mmltex.xsl")
+        transform = ET.XSLT(xslt)
+        mmldom = transform(mml_dom)
+        latex_code = str(mmldom)
+        text = text.replace(mml_code, latex_code)
+    return text
+math_str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mrow><mfenced open="‖" close="‖"><mi>&#119857;</mi></mfenced></mrow><mi>p</mi></msub><mo>=</mo><msup><mrow><mfenced open="[" close="]"><mrow><msup><mrow><mfenced open="|" close="|"><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow></mfenced></mrow><mi>p</mi></msup><mo>+</mo><msup><mrow><mfenced open="|" close="|"><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow></mfenced></mrow><mi>p</mi></msup><mo>+</mo><mo>…</mo><mo>+</mo><msup><mrow><mfenced open="|" close="|"><mrow><msub><mi>x</mi><mi>n</mi></msub></mrow></mfenced></mrow><mi>p</mi></msup></mrow></mfenced></mrow><mrow><mfrac><mn>1</mn><mi>p</mi></mfrac></mrow></msup><mo>=</mo><msup><mrow><mfenced open="[" close="]"><mrow><munderover><mo stretchy="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><msup><mrow><mfenced open="|" close="|"><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow></mfenced></mrow><mi>p</mi></msup></mrow></mrow></mfenced></mrow><mrow><mfrac><mn>1</mn><mi>p</mi></mfrac></mrow></msup></math>'
+math_str = '<math><munderover><mo stretchy="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><mrow><mi>s</mi><mi>t</mi><mi>o</mi><mi>p</mi></mrow></munderover><mrow><mo fence="false">(</mo><mi>expression</mi><mo>&#x2003;</mo><mi>involving</mi><mo>&#x2003;</mo><mi>i</mi><mo fence="false">)</mo></mrow></math>'
+print(to_latex(math_str))
+
+
+math_str = '<![CDATA[<!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:msub><mml:mrow><mml:mfenced open="‖" close="‖"><mml:mi>&#119857;</mml:mi></mml:mfenced></mml:mrow><mml:mi>p</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:msup><mml:mrow><mml:mfenced open="[" close="]"><mml:mrow><mml:msup><mml:mrow><mml:mfenced open="|" close="|"><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mn>1</mml:mn></mml:msub></mml:mrow></mml:mfenced></mml:mrow><mml:mi>p</mml:mi></mml:msup><mml:mo>+</mml:mo><mml:msup><mml:mrow><mml:mfenced open="|" close="|"><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:mfenced></mml:mrow><mml:mi>p</mml:mi></mml:msup><mml:mo>+</mml:mo><mml:mo>…</mml:mo><mml:mo>+</mml:mo><mml:msup><mml:mrow><mml:mfenced open="|" close="|"><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mi>n</mml:mi></mml:msub></mml:mrow></mml:mfenced></mml:mrow><mml:mi>p</mml:mi></mml:msup></mml:mrow></mml:mfenced></mml:mrow><mml:mrow><mml:mfrac><mml:mn>1</mml:mn><mml:mi>p</mml:mi></mml:mfrac></mml:mrow></mml:msup><mml:mo>=</mml:mo><mml:msup><mml:mrow><mml:mfenced open="[" close="]"><mml:mrow><mml:munderover><mml:mo stretchy="false">∑</mml:mo><mml:mrow><mml:mi>i</mml:mi><mml:mo>=</mml:mo><mml:mn>1</mml:mn></mml:mrow><mml:mi>n</mml:mi></mml:munderover><mml:mrow><mml:msup><mml:mrow><mml:mfenced open="|" close="|"><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:mrow></mml:mfenced></mml:mrow><mml:mi>p</mml:mi></mml:msup></mml:mrow></mml:mrow></mml:mfenced></mml:mrow><mml:mrow><mml:mfrac><mml:mn>1</mml:mn><mml:mi>p</mml:mi></mml:mfrac></mml:mrow></mml:msup></mml:math><![endif]-->]]>'
+math_str = '<!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math><![endif]-->'
+math_str = '<mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math>'
+
+
 
 #%% Reference vs copy
 a = [1, 2, 3]

@@ -12,7 +12,7 @@ import base64
 from bs4 import BeautifulSoup
 
 # Math
-from mathml2latex.mathml import process_mathml
+import lxml.etree as ET
 
 # Internal modules
 from internal_globals import MPATH, OENodeHeader, OENodePoint, insertSubstring
@@ -393,6 +393,32 @@ def renderImage(node: OENodePoint, front: bool, level: str, renderer: StandardRe
 
 
 def renderEquation(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
+    def processMath(math_str: str) -> str:
+        """
+        Modified from: https://dev.to/furkan_kalkan1/quick-hack-converting-mathml-to-latex-159c
+        """
+        math_str = re.sub(r"(\$\$.*?\$\$)", " ", math_str) # Remove tex codes in text 
+        # Formatting specific to OneNote MathML output
+        math_str = math_str.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
+        html_tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
+        for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
+            new_tag = tag.replace("mml:", "")
+            new_tag = new_tag.replace(":mml", "") # Still need xmlns attribute to use XSLT to parse
+            math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
+        
+        # Exception parsing: For errors due to undefined symbols, can probably find a reference here http://zvon.org/comp/r/ref-MathML_2.html#intro
+        math_str = math_str.replace("&nbsp;", "&#x02004;") # nbsp not in XSLT entities, replace with code for 1/3emspace http://zvon.org/comp/r/ref-MathML_2.html#Entities~emsp
+        math_mml_list = re.findall(R"(<math.*?<\/math>)", math_str) # Only retain information inside math tags (FIXME can probably expand to iterate)
+        for math_mml in math_mml_list: # XSLT transformation
+            math_xml = ET.fromstring(math_mml)
+            xslt_table = ET.parse("mml2tex/mmltex.xsl") # This XSL file links to the other other XSL files in the folder
+            transformer = ET.XSLT(xslt_table)
+            math_tex = str(transformer(math_xml)) # Convert transformed output to string
+            # math_tex = math_tex.replace(R"\[", R"\(") # Can replace square brackets with regular for inline display https://docs.ankiweb.net/math.html
+            # math_tex = math_tex.replace(R"\]", R"\)")
+            math_str = math_str.replace(math_mml, math_tex)
+
+        return math_str 
     if front:
         if level == "entry":
             return "" # Shouldn't have equation as entry point
@@ -405,18 +431,12 @@ def renderEquation(node: OENodePoint, front: bool, level: str, renderer: Standar
         if level == "entry":
             return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
-            pass # Pass onto common processing
+            math_tex = processMath(node.data)
+            return genHtmlElement(math_tex, [], li=True, bullet=node.bullet_data)
         elif level == "sibling":
-            pass # Pass onto common processing
+            math_tex = processMath(node.data)
+            return genHtmlElement(math_tex, [], li=True, bullet=node.bullet_data)
         
-        math_str = node.data.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
-        html_tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
-        for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
-            new_tag = tag.replace("mml:", "")
-            math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
-        soup = BeautifulSoup(math_str, features="html.parser")
-        latex = "<anki-mathjax>" + str(process_mathml(soup)) + "</anki-mathjax>" # Conversion to string just in case conversion fails
-        return genHtmlElement(latex, [], li=True, bullet=node.bullet_data)
         
 
 def renderTable(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
