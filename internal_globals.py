@@ -63,9 +63,11 @@ class OENodeHeader:
         self.text: str = getNodeText(header_node)
         self.level: int = int(header_node.get("quickStyleIndex"))
         
-        self.page_title: str = "" # Populated by outer scope when first retrieving headers for cardarbiter
-        self.parent_headers: list[OENodeHeader] = [] # Populated by outer scope when first retrieving headers for cardarbiter
-        self.children_nodes: list[OENodeHeader] = [] # Populated by outer scope when first retrieving headers for cardarbiter
+        self.page_title: str = "" # Populated by outer scope getHeaders
+        self.parent_pages: list[Element] = [] # Populated by outer scope getHeaders
+        self.link: str = "" # Populated by outer scope getHeaders
+        self.parent_headers: list[OENodeHeader] = [] # Populated by outer scope getHeaders
+        self.children_nodes: list[OENodeHeader] = [] # Populated by outer scope getHeaders
 
 #%% Global functions
 
@@ -180,29 +182,40 @@ def getIndicators(node: Element) -> list[str]:
     else:
         return list() # Return an empty set for indicators otherwise
 
-def getTitle(xml_file: Union[str, bytes, os.PathLike]) -> str:
+def getTitleAndID(page_xml: ElementTree.ElementTree) -> tuple[str, str]:
     """
     Returns string of title of page being parsed 
     """
-    xml_content = ElementTree.parse(xml_file)
-    if xml_content.find("one:Title/one:OE/one:T", NAMESPACES) != None:
-        xml_title = xml_content.find("one:Title/one:OE/one:T", NAMESPACES).text
+    page_id = page_xml.getroot().get("ID")
+    print(f"Page ID: {page_id}")
+    if page_xml.find("one:Title/one:OE/one:T", NAMESPACES) != None:
+        page_title = page_xml.find("one:Title/one:OE/one:T", NAMESPACES).text
     else: 
-        xml_title = "Untitled"
-    return xml_title
+        page_title = "Untitled"
+    return (page_title, page_id)
 
-def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
+def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTree) -> list[OENodeHeader]:
     """
     Returns list of XML items of non-empty headers from XML and populates their parent trackers
     xml_file: path to XML file from OneNote output
     """
-    xml_content = ElementTree.parse(xml_file)
-    xml_title = getTitle(xml_file)
-    list_outlines = xml_content.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
+    page_title, page_id = getTitleAndID(page_xml)
+    outline_pages = outline.findall(R".//one:Page", NAMESPACES)
+    current_page = outline.find(fR".//one:Page[@ID='{page_id}']", NAMESPACES)
+    index = outline_pages.index(current_page)
+    parent_pages: list[str] = [] 
+    current_page_level = current_page.get("pageLevel")
+    for i in range(index, 0, -1): # Is a repeat of process for determining header hierarchy done below
+        if outline_pages[i-1].get("pageLevel") < current_page_level:
+            current_page_level = outline_pages[i-1].get("pageLevel") # Set new higher page level
+            parent_pages.append(outline_pages[i-1].get("name")) # Only append string title of page
+            
+    
+    list_page_boxes = page_xml.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
     # Note that each outline (page box) only has a SINGLE one:Children
     styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
     iterable_headers: list[OENodeHeader] = []
-    for header_node in (header for list_headers in list_outlines for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
+    for header_node in (header for list_headers in list_page_boxes for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
         if getNodeText(header_node): # Only parse non-empty nodes
             header_node = OENodeHeader(header_node)
             if header_node.xml.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
@@ -213,7 +226,8 @@ def getHeaders(xml_file: Union[str, bytes, os.PathLike]) -> list[OENodeHeader]:
     styled_header_ids = [s_header.id for s_header in styled_headers] 
     
     for header in iterable_headers: # POPULATE PLACEHOLDER ATTRIBUTES (.page_title, .parent_headers, .children_nodes)
-        header.page_title = xml_title # Populate title property of instantiated OENodeHeader
+        header.page_title = page_title # Populate title property of instantiated OENodeHeader
+        header.parent_pages = parent_pages
         if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
             index = styled_header_ids.index(header.id) # Index used for identifying parent headers in flattened header list 
         else:

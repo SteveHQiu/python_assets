@@ -1,4 +1,5 @@
 # Built-in
+import os
 from typing import Union
 from collections.abc import Iterable
 from xml.etree import ElementTree
@@ -16,8 +17,10 @@ from renderer_std import StandardRenderer
 #%% Classes
 class CardArbiter:
     
-    def __init__(self, xml_path):
-        self.header_list: list[OENodeHeader] = getHeaders(xml_path) # Input header list, should be able to access rest of nodes through this point
+    def __init__(self, xml_path: Union[str, bytes, os.PathLike], outline_path: Union[str, bytes, os.PathLike]):
+        self.outline: ElementTree = ElementTree.parse(outline_path)
+        self.page: ElementTree = ElementTree.parse(xml_path)
+        self.header_list: list[OENodeHeader] = getHeaders(self.page, self.outline) # Input header list, should be able to access rest of nodes through this point
         self.cards: list[tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
 
     def genCards(self):

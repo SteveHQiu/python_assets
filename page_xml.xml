@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E19490985827016706128520183617228579888024661}" name="High yield" dateTime="2022-01-28T03:15:00.000Z" lastModifiedTime="2022-07-17T19:55:29.000Z" pageLevel="2" isCurrentlyViewed="true" lang="en-CA">
+  <one:QuickStyleDef index="0" name="PageTitle" fontColor="automatic" highlightColor="automatic" font="Calibri Light" fontSize="20.0" spaceBefore="0.0" spaceAfter="0.0" />
+  <one:QuickStyleDef index="1" name="h1" fontColor="#1E4E79" highlightColor="automatic" font="Calibri" fontSize="16.0" spaceBefore="0.0" spaceAfter="0.0" />
+  <one:QuickStyleDef index="2" name="p" fontColor="automatic" highlightColor="automatic" font="Calibri" fontSize="11.0" spaceBefore="0.0" spaceAfter="0.0" />
+  <one:PageSettings RTL="false" color="automatic">
+    <one:PageSize>
+      <one:Automatic />
+    </one:PageSize>
+    <one:RuleLines visible="false" />
+  </one:PageSettings>
+  <one:Title lang="en-CA">
+    <one:OE author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" creationTime="2022-01-28T04:50:00.000Z" lastModifiedTime="2022-01-28T05:04:51.000Z" objectID="{C6CAD049-56CE-422C-939D-B1699554CF8D}{17}{B0}" alignment="left" quickStyleIndex="0">
+      <one:T><![CDATA[High yield]]></one:T>
+    </one:OE>
+  </one:Title>
+  <one:Outline author="Stevem Qiu" authorInitials="SQ" lastModifiedBy="Stevem Qiu" lastModifiedByInitials="SQ" lastModifiedTime="2022-07-17T19:55:28.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{10}{B0}">
+    <one:Position x="36.0" y="86.4000015258789" z="0" />
+    <one:Size width="407.4600219726562" height="645.0553588867187" />
+    <one:OEChildren>
+      <one:OE creationTime="2022-01-28T05:05:03.000Z" lastModifiedTime="2022-01-28T05:05:04.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{125}{B0}" alignment="left" quickStyleIndex="1">
+        <one:T><![CDATA[Diagnoses ]]></one:T>
+        <one:OEChildren>
+          <one:OE creationTime="2022-01-28T05:05:25.000Z" lastModifiedTime="2022-01-28T05:05:29.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{132}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="1." />
+            </one:List>
+            <one:T><![CDATA[Acute coronary syndrome ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T05:05:35.000Z" lastModifiedTime="2022-01-28T05:05:35.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{141}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="2." />
+            </one:List>
+            <one:T><![CDATA[PE]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T05:05:37.000Z" lastModifiedTime="2022-01-28T05:05:38.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{145}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="3." />
+            </one:List>
+            <one:T><![CDATA[Pneumonia ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T05:22:39.000Z" lastModifiedTime="2022-01-28T05:22:50.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{179}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="4." />
+            </one:List>
+            <one:T><![CDATA[Aortic Aneurysm dissection ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T05:22:52.000Z" lastModifiedTime="2022-01-28T05:23:05.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{183}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="5." />
+            </one:List>
+            <one:T><![CDATA[Pericardial tamponade ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T05:23:11.000Z" lastModifiedTime="2022-01-28T05:23:13.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{187}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="6." />
+            </one:List>
+            <one:T><![CDATA[Pericarditis ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T16:37:39.000Z" lastModifiedTime="2022-01-28T16:37:40.000Z" objectID="{A1A20924-BA79-4E5F-8D75-3EFB46EA06BB}{16}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="7." />
+            </one:List>
+            <one:T><![CDATA[Toxicoloy]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T16:37:43.000Z" lastModifiedTime="2022-01-28T16:37:43.000Z" objectID="{A1A20924-BA79-4E5F-8D75-3EFB46EA06BB}{20}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="8." />
+            </one:List>
+            <one:T><![CDATA[MI]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T16:37:45.000Z" lastModifiedTime="2022-01-28T16:37:55.000Z" objectID="{A1A20924-BA79-4E5F-8D75-3EFB46EA06BB}{24}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="9." />
+            </one:List>
+            <one:T><![CDATA[Stroke anaphylaxis ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T16:37:55.000Z" lastModifiedTime="2022-01-28T16:38:01.000Z" objectID="{A1A20924-BA79-4E5F-8D75-3EFB46EA06BB}{28}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="10." />
+            </one:List>
+            <one:T><![CDATA[Scales and rules]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T16:38:02.000Z" lastModifiedTime="2022-01-28T16:38:03.000Z" objectID="{A1A20924-BA79-4E5F-8D75-3EFB46EA06BB}{32}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="11." />
+            </one:List>
+            <one:T><![CDATA[CTAS]]></one:T>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:06:14.000Z" lastModifiedTime="2022-01-28T05:06:14.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{161}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:06:14.000Z" lastModifiedTime="2022-01-28T05:06:14.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{164}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:06:14.000Z" lastModifiedTime="2022-01-28T05:06:14.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{167}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:06:14.000Z" lastModifiedTime="2022-01-28T05:06:14.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{170}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:06:14.000Z" lastModifiedTime="2022-01-28T05:06:14.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{157}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+        <one:OEChildren>
+          <one:OE creationTime="2022-01-28T05:05:52.000Z" lastModifiedTime="2022-01-28T05:05:54.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{149}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="1." />
+            </one:List>
+            <one:T><![CDATA[Atrial flutter ]]></one:T>
+          </one:OE>
+          <one:OE creationTime="2022-01-28T05:05:54.000Z" lastModifiedTime="2022-01-28T05:05:57.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{153}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Number numberSequence="0" numberFormat="##." fontSize="11.0" font="Calibri" language="4105" text="2." />
+            </one:List>
+            <one:T><![CDATA[Atrial fibrillation ]]></one:T>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:05:23.000Z" lastModifiedTime="2022-01-28T05:05:23.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{135}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:05:05.000Z" lastModifiedTime="2022-01-28T05:05:05.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{129}{B0}" alignment="left" quickStyleIndex="2">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE creationTime="2022-01-28T05:04:58.000Z" lastModifiedTime="2022-01-28T05:05:00.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{121}{B0}" alignment="left" quickStyleIndex="1">
+        <one:T><![CDATA[Scales and rules ]]></one:T>
+        <one:OEChildren>
+          <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-01-28T04:50:12.000Z" lastModifiedTime="2022-07-17T19:55:25.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{16}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T style="font-family:Calibri;font-size:11.0pt"><![CDATA[<span
+style='text-decoration:underline'>PE </span>]]></one:T>
+            <one:OEChildren>
+              <one:OE creationTime="2022-01-28T04:50:05.000Z" lastModifiedTime="2022-01-28T05:03:37.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{11}{B0}" alignment="left" quickStyleIndex="2">
+                <one:List>
+                  <one:Bullet bullet="3" fontSize="11.0" />
+                </one:List>
+                <one:T><![CDATA[<span
+style='font-weight:bold'>PERC rule</span>: Rules for identifying patients who are low risk for PE ]]></one:T>
+                <one:OEChildren>
+                  <one:OE creationTime="2022-01-28T04:52:48.000Z" lastModifiedTime="2022-01-28T04:54:46.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{70}{B0}" alignment="left" quickStyleIndex="2">
+                    <one:List>
+                      <one:Bullet bullet="13" fontSize="11.0" />
+                    </one:List>
+                    <one:T><![CDATA[<span
+style='text-decoration:underline'>M | Criteria</span>: Patients without any positive findings below don't need any diagnostic imaging or D-Dimer]]></one:T>
+                    <one:OEChildren>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{46}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="1)" />
+                        </one:List>
+                        <one:T><![CDATA[Age &gt; 50 years]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{48}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="2)" />
+                        </one:List>
+                        <one:T><![CDATA[Sp02 &lt; 95% ]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{50}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="3)" />
+                        </one:List>
+                        <one:T><![CDATA[HR &gt; 100]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{52}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="4)" />
+                        </one:List>
+                        <one:T><![CDATA[Unilateral leg swelling ]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{54}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="5)" />
+                        </one:List>
+                        <one:T><![CDATA[Hemoptysis ]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{56}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="6)" />
+                        </one:List>
+                        <one:T><![CDATA[Prior DVT or PE]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{58}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="7)" />
+                        </one:List>
+                        <one:T><![CDATA[Recent surgery or trauma]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T04:52:11.000Z" lastModifiedTime="2022-01-28T04:52:11.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{60}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="8)" />
+                        </one:List>
+                        <one:T><![CDATA[Hormone use]]></one:T>
+                      </one:OE>
+                    </one:OEChildren>
+                  </one:OE>
+                </one:OEChildren>
+              </one:OE>
+              <one:OE creationTime="2022-01-28T05:06:30.000Z" lastModifiedTime="2022-01-28T05:06:34.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{173}{B0}" alignment="left" quickStyleIndex="2">
+                <one:List>
+                  <one:Bullet bullet="3" fontSize="11.0" />
+                </one:List>
+                <one:T><![CDATA[<span
+style='font-weight:bold'>Well's score</span>: ]]></one:T>
+              </one:OE>
+            </one:OEChildren>
+          </one:OE>
+          <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-01-28T04:50:19.000Z" lastModifiedTime="2022-07-17T19:55:27.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{21}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T style="font-family:Calibri;font-size:11.0pt"><![CDATA[<span
+style='text-decoration:underline'>Head injury </span>]]></one:T>
+            <one:OEChildren>
+              <one:OE creationTime="2022-01-28T04:50:24.000Z" lastModifiedTime="2022-01-28T04:50:25.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{26}{B0}" alignment="left" quickStyleIndex="2">
+                <one:List>
+                  <one:Bullet bullet="3" fontSize="11.0" />
+                </one:List>
+                <one:T><![CDATA[PECARN ]]></one:T>
+              </one:OE>
+              <one:OE creationTime="2022-01-28T04:50:28.000Z" lastModifiedTime="2022-01-28T04:50:31.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{31}{B0}" alignment="left" quickStyleIndex="2">
+                <one:List>
+                  <one:Bullet bullet="3" fontSize="11.0" />
+                </one:List>
+                <one:T><![CDATA[CT head rules]]></one:T>
+              </one:OE>
+            </one:OEChildren>
+          </one:OE>
+          <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;None&quot; hash=&quot;hdRvaI1XibX6hPsz02q1Tg==&quot;&gt;&lt;localId name=&quot;Stevem Qiu&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-01-28T05:02:32.000Z" lastModifiedTime="2022-07-17T19:55:28.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{84}{B0}" alignment="left" quickStyleIndex="2">
+            <one:List>
+              <one:Bullet bullet="2" fontSize="11.0" />
+            </one:List>
+            <one:T style="font-family:Calibri;font-size:11.0pt"><![CDATA[<span
+style='text-decoration:underline'>Pneumonia </span>]]></one:T>
+            <one:OEChildren>
+              <one:OE creationTime="2022-01-28T05:02:36.000Z" lastModifiedTime="2022-01-28T05:03:49.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{89}{B0}" alignment="left" quickStyleIndex="2">
+                <one:List>
+                  <one:Bullet bullet="3" fontSize="11.0" />
+                </one:List>
+                <one:T><![CDATA[<span
+style='font-weight:bold'>CURB 65</span>: Rules for grading the severity of pneumonia ]]></one:T>
+                <one:OEChildren>
+                  <one:OE creationTime="2022-01-28T05:04:05.000Z" lastModifiedTime="2022-01-28T05:04:15.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{95}{B0}" alignment="left" quickStyleIndex="2">
+                    <one:List>
+                      <one:Bullet bullet="13" fontSize="11.0" />
+                    </one:List>
+                    <one:T><![CDATA[<span
+style='text-decoration:underline'>M | Criteria</span>: One point for each ]]></one:T>
+                    <one:OEChildren>
+                      <one:OE creationTime="2022-01-28T05:04:10.000Z" lastModifiedTime="2022-01-28T05:04:20.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{106}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="1)" />
+                        </one:List>
+                        <one:T><![CDATA[C = Confusion]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T05:04:10.000Z" lastModifiedTime="2022-01-28T05:04:20.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{108}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="2)" />
+                        </one:List>
+                        <one:T><![CDATA[U = Uremia (&gt; 7 mmol)]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T05:04:10.000Z" lastModifiedTime="2022-01-28T05:04:20.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{110}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="3)" />
+                        </one:List>
+                        <one:T><![CDATA[R = RR &gt; 30]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T05:04:10.000Z" lastModifiedTime="2022-01-28T05:04:20.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{112}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="4)" />
+                        </one:List>
+                        <one:T><![CDATA[B = BP &lt; 90/65]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T05:04:10.000Z" lastModifiedTime="2022-01-28T05:04:20.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{114}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:List>
+                          <one:Number numberSequence="0" numberFormat="##)" fontSize="11.0" font="Calibri" language="4105" text="5)" />
+                        </one:List>
+                        <one:T><![CDATA[65 = Age &gt; 65]]></one:T>
+                      </one:OE>
+                      <one:OE creationTime="2022-01-28T05:04:09.000Z" lastModifiedTime="2022-01-28T05:04:09.000Z" objectID="{2CA7DC0E-4384-038D-2B67-C4E97E21F97C}{100}{B0}" alignment="left" quickStyleIndex="2">
+                        <one:T><![CDATA[]]></one:T>
+                      </one:OE>
+                    </one:OEChildren>
+                  </one:OE>
+                </one:OEChildren>
+              </one:OE>
+            </one:OEChildren>
+          </one:OE>
+        </one:OEChildren>
+      </one:OE>
+    </one:OEChildren>
+  </one:Outline>
+</one:Page>

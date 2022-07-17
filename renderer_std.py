@@ -110,14 +110,18 @@ class StandardRenderer:
 
         # Parent header rendering
         header = self.node.parent_headers[0] # Retrieve immediate header of the entry point
-        header_html = genHtmlElement(header.page_title, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
-        header_html += genHtmlElement(f"[{header.text}]", ["underline"], GRAY) # Add itself as the immediate header
-        for pheader in header.parent_headers: # Add headers and links to respective element
-            header_html += f" - [{pheader.text}]"
-        header_html = genHtmlElement(header_html, [], GRAY) + "<br><br>\n" # Wrapped HTML with gray styling span 
+        parents_html = header.page_title
+        for page in header.parent_pages: # Container of strings for parent pages
+            parents_html += f" - {page}"
+        parents_html = genHtmlElement(parents_html, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
         
-        self.fronthtml = header_html + self.fronthtml # Add header rendering to front of HTML
-        self.backhtml = header_html + self.backhtml
+        parents_html += genHtmlElement(f"[{header.text}]", ["underline"], GRAY) # Add itself as the immediate header
+        for pheader in header.parent_headers: # Add headers and links to respective element
+            parents_html += f" - [{pheader.text}]"
+        parents_html = genHtmlElement(parents_html, [], GRAY) + "<br><br>\n" # Wrapped HTML with gray styling span 
+        
+        self.fronthtml = parents_html + self.fronthtml # Add header rendering to front of HTML
+        self.backhtml = parents_html + self.backhtml
         
         return self
     
