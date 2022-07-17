@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{74965f7d-58bd-43b8-8397-d545505251eb}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>cardarbiter.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="data\test.html" />
+    <Content Include="data\testimage.png" />
+    <Content Include="displayCards_output.html" />
+    <Content Include="requirements.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="archive\example.py" />
+    <Compile Include="cardarbiter.py" />
+    <Compile Include="internal_globals.py" />
+    <Compile Include="main.py" />
+    <Compile Include="manual_versioning\prototype1.0.py" />
+    <Compile Include="manual_versioning\prototype1.1.py" />
+    <Compile Include="manual_versioning\prototype1.2.py" />
+    <Compile Include="manual_versioning\prototype1.3.py" />
+    <Compile Include="manual_versioning\prototype1.4.py" />
+    <Compile Include="manual_versioning\prototype1.5.py" />
+    <Compile Include="manual_versioning\prototype1.6.py" />
+    <Compile Include="manual_versioning\prototype1.7.py" />
+    <Compile Include="manual_versioning\version 1.0.py" />
+    <Compile Include="manual_versioning\version 1.1.py" />
+    <Compile Include="manual_versioning\version 2.0.py" />
+    <Compile Include="manual_versioning\version 2.1.py" />
+    <Compile Include="manual_versioning\version 2.2.py" />
+    <Compile Include="manual_versioning\version 2.3.py" />
+    <Compile Include="manual_versioning\version 2.4.py" />
+    <Compile Include="renderer_std.py" />
+    <Compile Include="test.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="archive" />
+    <Folder Include="data" />
+    <Folder Include="manual_versioning" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

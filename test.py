@@ -1,5 +1,5 @@
 #%% Imports
-
+import sys, os
 from anki.storage import Collection
 import inspect
 

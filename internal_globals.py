@@ -129,7 +129,7 @@ def getNodeTypeAndData(node: Element) -> tuple[str, str]:
         tuple[str, str]: 1st str contains the node type, 2nd contains the corresponding data in string format. Otherwise returns tuple of None
     """
     
-    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None : # Must have text
+    if node.find("one:T", NAMESPACES) != None and node.find("one:T", NAMESPACES).text != None: # Must have text
         text = node.find("one:T", NAMESPACES).text # Remember that text is stored under text property, the object itself is an instance of Element (XML)
         soup = BeautifulSoup(text, features="html.parser")
         if soup.text.strip() != "": # Only assign text type if rendering text is not just whitespace
