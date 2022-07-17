@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from uuid import getnode
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
+from urllib.parse import quote
 
 # General
 from bs4 import BeautifulSoup
@@ -199,7 +200,9 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
     Returns list of XML items of non-empty headers from XML and populates their parent trackers
     xml_file: path to XML file from OneNote output
     """
+    # Title processing
     page_title, page_id = getTitleAndID(page_xml)
+    parent_page_map = {child: parent for parent in outline.iter() for child in parent} # Create child-parent map (no convenient way to find parents otherwise)
     outline_pages = outline.findall(R".//one:Page", NAMESPACES)
     current_page = outline.find(fR".//one:Page[@ID='{page_id}']", NAMESPACES)
     index = outline_pages.index(current_page)
@@ -210,7 +213,18 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
             current_page_level = outline_pages[i-1].get("pageLevel") # Set new higher page level
             parent_pages.append(outline_pages[i-1].get("name")) # Only append string title of page
             
+    # URL processing
+    current_section = parent_page_map[current_page]
+    full_section_url = current_section.get("path") # E.g., raw = https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/Physiology.one
+    onenote_dir = R"Documents/OneNote/"
+    urls = full_section_url.split(onenote_dir)
+    account_url = urls[0] + onenote_dir # E.g., raw = https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/
+    section_url = "".join(urls[1:]) # Join rest of results in case onenote_dir occurs later on in path
+    section_url = quote(section_url) # The previous portion of URL needs to be encoded E.g., raw = 1 Resp _ Cardio/1 Respirology/Physiology.one
+    page_sec_ext = f"#{quote(page_title)}&section-id={current_section.get('ID')}&page-id={page_id}" # Page title needs encoding but ID includes "{}" which shouldn't be encoded E.g., raw = #Respiratory reflexes&section-id={3609411B-5EDC-483B-A4F2-A60FE8A914A4}
+    base_url = "onenote:" + account_url + section_url + page_sec_ext
     
+    # Header instantiation
     list_page_boxes = page_xml.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
     # Note that each outline (page box) only has a SINGLE one:Children
     styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
@@ -225,9 +239,11 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
                 print("Found non-empty header: " + header_node.text)
     styled_header_ids = [s_header.id for s_header in styled_headers] 
     
-    for header in iterable_headers: # POPULATE PLACEHOLDER ATTRIBUTES (.page_title, .parent_headers, .children_nodes)
+    # POPULATE PLACEHOLDER ATTRIBUTES (.page_title, .parent_headers, .children_nodes)
+    for header in iterable_headers: 
         header.page_title = page_title # Populate title property of instantiated OENodeHeader
         header.parent_pages = parent_pages
+        header.link = base_url + f"&object-id={header.id}"
         if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
             index = styled_header_ids.index(header.id) # Index used for identifying parent headers in flattened header list 
         else:

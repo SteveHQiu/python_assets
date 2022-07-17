@@ -115,7 +115,8 @@ class StandardRenderer:
             parents_html += f" - {page}"
         parents_html = genHtmlElement(parents_html, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
         
-        parents_html += genHtmlElement(f"[{header.text}]", ["underline"], GRAY) # Add itself as the immediate header
+        first_header =  f"<a href='{header.link}' style='color:{GRAY}'>" + header.text + "</a>" # Hyperlink first header
+        parents_html += genHtmlElement(f"[{first_header}]", ["underline"], GRAY) # Add itself as the immediate header
         for pheader in header.parent_headers: # Add headers and links to respective element
             parents_html += f" - [{pheader.text}]"
         parents_html = genHtmlElement(parents_html, [], GRAY) + "<br><br>\n" # Wrapped HTML with gray styling span 

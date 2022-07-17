@@ -271,7 +271,7 @@
       </one:Section>
     </one:SectionGroup>
   </one:Notebook>
-  <one:Notebook name="Applied Sciences" nickname="Applied Sciences" ID="{D0C4CCB5-88B0-45B3-9B79-DAC7CD081557}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Applied Sciences/" lastModifiedTime="2022-07-17T03:06:42.000Z" color="#9BBBD2" isCurrentlyViewed="true">
+  <one:Notebook name="Applied Sciences" nickname="Applied Sciences" ID="{D0C4CCB5-88B0-45B3-9B79-DAC7CD081557}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Applied Sciences/" lastModifiedTime="2022-07-17T03:06:42.000Z" color="#9BBBD2">
     <one:Section name="Linguistics" ID="{B3C6F9A7-5C19-02A9-3438-528CDAA72CB2}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Applied Sciences/Linguistics.one" lastModifiedTime="2021-11-08T20:40:32.000Z" color="#FFD869">
       <one:Page ID="{B3C6F9A7-5C19-02A9-3438-528CDAA72CB2}{1}{E19102711393643229553120104366893495312829991}" name="Grammar overview" dateTime="2021-07-27T20:43:12.000Z" lastModifiedTime="2021-10-19T05:35:22.000Z" pageLevel="1" />
       <one:Page ID="{B3C6F9A7-5C19-02A9-3438-528CDAA72CB2}{1}{E181709462895524275151962297008644533243121}" name="Parts of speech" dateTime="2021-07-27T21:41:14.000Z" lastModifiedTime="2021-07-28T01:37:12.000Z" pageLevel="1" />
@@ -409,9 +409,9 @@
       <one:Page ID="{86BC4D8E-C462-0C7A-22BD-854F9DB923E0}{1}{E181782914948416430201913726212302295421761}" name="Lab exam " dateTime="2018-11-18T21:44:58.000Z" lastModifiedTime="2018-11-19T04:33:13.000Z" pageLevel="1" />
       <one:Page ID="{86BC4D8E-C462-0C7A-22BD-854F9DB923E0}{1}{E1888290534234721348220183897865170145838241}" name="Final" dateTime="2018-11-09T06:21:26.000Z" lastModifiedTime="2018-12-15T20:13:47.000Z" pageLevel="1" />
     </one:Section>
-    <one:Section name="Math" ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Applied Sciences/Math.one" lastModifiedTime="2022-07-15T07:04:43.000Z" color="#AB9CB7" isCurrentlyViewed="true">
+    <one:Section name="Math" ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Applied Sciences/Math.one" lastModifiedTime="2022-07-15T07:04:43.000Z" color="#AB9CB7">
       <one:Page ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{E19489643548282386654520111232929682010307861}" name="Overview" dateTime="2021-11-07T08:02:42.000Z" lastModifiedTime="2021-11-07T08:32:30.000Z" pageLevel="1" />
-      <one:Page ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{E19555493774519565135220167124266474026815141}" name="Notation" dateTime="2022-05-18T21:50:23.000Z" lastModifiedTime="2022-07-15T07:04:43.000Z" pageLevel="1" isCurrentlyViewed="true" />
+      <one:Page ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{E19555493774519565135220167124266474026815141}" name="Notation" dateTime="2022-05-18T21:50:23.000Z" lastModifiedTime="2022-07-15T07:04:43.000Z" pageLevel="1" />
       <one:Page ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{E186904352128166782801929944572688960391871}" name="Sets and inequalities" dateTime="2020-09-06T20:35:31.000Z" lastModifiedTime="2021-11-08T19:40:39.000Z" pageLevel="1" />
       <one:Page ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{E1839342283813484589220146106440562534118941}" name="Functions" dateTime="2020-09-06T20:50:48.000Z" lastModifiedTime="2020-09-06T22:00:47.000Z" pageLevel="1" />
       <one:Page ID="{92927CC6-C6AA-0573-23E3-54DF714533AD}{1}{E17790460709423720061952326088630111490591}" name="Trig identities + values " dateTime="2020-09-06T21:03:46.000Z" lastModifiedTime="2020-09-06T21:07:20.000Z" pageLevel="2" />
@@ -437,7 +437,7 @@
       </one:Section>
     </one:SectionGroup>
   </one:Notebook>
-  <one:Notebook name="Medical Competencies" nickname="Medical Competencies" ID="{AD5A1F91-A536-48B9-ACD0-588315748675}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Medical Competencies/" lastModifiedTime="2022-07-09T02:54:02.000Z" color="#F6B078">
+  <one:Notebook name="Medical Competencies" nickname="Medical Competencies" ID="{AD5A1F91-A536-48B9-ACD0-588315748675}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Medical Competencies/" lastModifiedTime="2022-07-17T19:55:28.000Z" color="#F6B078">
     <one:Section name="Workspace (Curricular)" ID="{7FE3BB3E-B970-0151-0C30-553655706030}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Medical Competencies/Workspace (Curricular).one" lastModifiedTime="2022-06-29T01:58:47.000Z" color="#9595AA">
       <one:Page ID="{7FE3BB3E-B970-0151-0C30-553655706030}{1}{E1825881391132197282020113570015985642043491}" name="Workspace (Curricular)" dateTime="2020-08-17T21:06:15.000Z" lastModifiedTime="2022-06-29T01:58:47.000Z" pageLevel="1" />
       <one:Page ID="{7FE3BB3E-B970-0151-0C30-553655706030}{1}{E1887663907693772586420160556634803282629531}" name="Self evaluation/reflections " dateTime="2020-12-15T15:30:42.000Z" lastModifiedTime="2022-03-20T06:32:11.000Z" pageLevel="1" />
@@ -484,7 +484,7 @@
       <one:Page ID="{C2AAF2F2-854C-438E-BF95-C6C0740CAC49}{1}{E1952008633779832966521981914207505550214501}" name="Sedation" dateTime="2022-06-30T22:42:07.000Z" lastModifiedTime="2022-06-30T22:42:09.000Z" pageLevel="1" />
       <one:Page ID="{C2AAF2F2-854C-438E-BF95-C6C0740CAC49}{1}{E1948135527792682237241952778982674242146691}" name="Pain management" dateTime="2022-06-30T22:42:13.000Z" lastModifiedTime="2022-06-30T22:42:16.000Z" pageLevel="1" />
     </one:Section>
-    <one:Section name="Specialty Clinical Knowledge" ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Medical Competencies/Specialty Clinical Knowledge.one" lastModifiedTime="2022-07-01T03:03:44.000Z" color="#F5F96F">
+    <one:Section name="Specialty Clinical Knowledge" ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Medical Competencies/Specialty Clinical Knowledge.one" lastModifiedTime="2022-07-17T19:55:28.000Z" color="#F5F96F">
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E1952541801219007873351934040737244417043771}" name="General" dateTime="2021-07-30T14:24:32.000Z" lastModifiedTime="2022-06-30T22:43:14.000Z" pageLevel="1" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E183930997506454163011959362196634031892931}" name="Internal" dateTime="2021-11-02T22:36:18.000Z" lastModifiedTime="2022-06-29T21:04:10.000Z" pageLevel="1" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E1910194277481044724311914637555974161162241}" name="Neurosurgery" dateTime="2021-10-14T02:22:46.000Z" lastModifiedTime="2021-12-19T03:11:35.000Z" pageLevel="1" />
@@ -509,7 +509,7 @@
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E1953808918524017705141950773777834347788041}" name="Groupings by Mechanism/Condition" dateTime="2022-06-30T22:23:23.000Z" lastModifiedTime="2022-07-01T03:01:28.000Z" pageLevel="2" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E1954141482510058582901965056512934947828831}" name="Groupings by Management" dateTime="2022-06-30T22:24:06.000Z" lastModifiedTime="2022-07-01T02:56:19.000Z" pageLevel="2" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E18391793226111187865185419961217574469731}" name="Emergency Medicine" dateTime="2022-01-03T14:15:41.000Z" lastModifiedTime="2022-01-28T18:10:36.000Z" pageLevel="1" />
-      <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E19490985827016706128520183617228579888024661}" name="High yield" dateTime="2022-01-28T03:15:00.000Z" lastModifiedTime="2022-01-28T16:38:02.000Z" pageLevel="2" />
+      <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E19490985827016706128520183617228579888024661}" name="High yield" dateTime="2022-01-28T03:15:00.000Z" lastModifiedTime="2022-07-17T19:55:28.000Z" pageLevel="2" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E19564081887446418952220121624969861282320931}" name="Notes" dateTime="2022-01-17T04:02:33.000Z" lastModifiedTime="2022-01-28T18:32:12.000Z" pageLevel="2" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E187051025157152754421988690540173840169411}" name="ACLS and trauma " dateTime="2022-01-05T02:48:24.000Z" lastModifiedTime="2022-01-05T03:25:39.000Z" pageLevel="2" />
       <one:Page ID="{B19AB60C-9B5C-0D44-27B0-6C5B5A65E56F}{1}{E1858497742987930633420118780570798883361311}" name="Agitation" dateTime="2022-01-05T04:14:17.000Z" lastModifiedTime="2022-01-05T04:39:57.000Z" pageLevel="2" />
@@ -829,9 +829,9 @@
       <one:Section name="Deleted Pages" ID="{7669FFB8-5530-090E-284A-D0070263B916}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Medical Sciences/OneNote_RecycleBin/OneNote_DeletedPages.one" lastModifiedTime="2022-01-25T06:14:31.000Z" color="#E1E1E1" isInRecycleBin="true" isDeletedPages="true" />
     </one:SectionGroup>
   </one:Notebook>
-  <one:Notebook name="1 Resp _ Cardio" nickname="1 Resp _ Cardio" ID="{0C6A4D9F-4A65-45C3-AC6A-9709DB62E07B}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/" lastModifiedTime="2022-04-01T21:16:35.000Z" color="#91BAAE">
-    <one:SectionGroup name="1 Respirology" ID="{26C1C350-207F-4450-8F50-3457599C1D9C}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/" lastModifiedTime="2021-11-25T05:07:19.000Z">
-      <one:Section name="Physiology" ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/Physiology.one" lastModifiedTime="2021-02-10T21:03:40.000Z" color="#B7C997">
+  <one:Notebook name="1 Resp _ Cardio" nickname="1 Resp _ Cardio" ID="{0C6A4D9F-4A65-45C3-AC6A-9709DB62E07B}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/" lastModifiedTime="2022-07-17T21:59:57.000Z" color="#91BAAE" isCurrentlyViewed="true">
+    <one:SectionGroup name="1 Respirology" ID="{26C1C350-207F-4450-8F50-3457599C1D9C}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/" lastModifiedTime="2022-07-17T21:59:57.000Z" isCurrentlyViewed="true">
+      <one:Section name="Physiology" ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/Physiology.one" lastModifiedTime="2022-07-17T21:59:57.000Z" color="#B7C997" isCurrentlyViewed="true">
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E174181212042643180320140135676801038146951}" name="General" dateTime="2020-08-31T17:57:31.000Z" lastModifiedTime="2020-10-04T04:21:20.000Z" pageLevel="1" />
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E1853285478714807247720105800626387236487701}" name="1. Anatomy " dateTime="2020-09-13T20:59:57.000Z" lastModifiedTime="2021-02-10T21:03:40.000Z" pageLevel="1" />
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E1840815638971459054020149500202485479557691}" name="2. Principles &amp; Mechanics →" dateTime="2020-10-04T07:06:22.000Z" lastModifiedTime="2020-10-27T01:12:17.000Z" pageLevel="1" />
@@ -840,7 +840,7 @@
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E1716965817141497861186391284557926548871}" name="Hb + Gas transport" dateTime="2020-08-24T05:05:55.000Z" lastModifiedTime="2020-12-05T21:57:51.000Z" pageLevel="2" />
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E1910953977067717121541967404598828406861191}" name="3. Regulation" dateTime="2020-09-13T21:14:16.000Z" lastModifiedTime="2020-10-27T01:11:33.000Z" pageLevel="1" />
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E19108215897375385718320176509051947336194891}" name="Respiratory reflexes" dateTime="2020-09-23T02:26:59.000Z" lastModifiedTime="2021-01-11T02:35:59.000Z" pageLevel="2" />
-        <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E187753188366825460861998170156213659852831}" name="Respiratory mechanoreceptor reflexes" dateTime="2020-09-13T22:23:55.000Z" lastModifiedTime="2020-09-13T22:23:57.000Z" pageLevel="2" />
+        <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E187753188366825460861998170156213659852831}" name="Respiratory mechanoreceptor reflexes " dateTime="2020-09-13T22:23:55.000Z" lastModifiedTime="2022-07-17T21:46:19.000Z" pageLevel="2" isCurrentlyViewed="true" />
         <one:Page ID="{C48A7352-DD46-0C28-3632-832D14AC1DE4}{1}{E19109582979926736836820181812554853921956041}" name="High altitude respirology" dateTime="2020-09-24T08:22:53.000Z" lastModifiedTime="2020-09-24T08:23:09.000Z" pageLevel="1" />
       </one:Section>
       <one:Section name="Patho" ID="{4F1B8155-7490-0B3F-0251-41D84B6627AD}{1}{B0}" path="https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/Patho.one" lastModifiedTime="2021-11-25T05:07:19.000Z" color="#EE9597">

@@ -7,10 +7,11 @@ from cardarbiter import CardArbiter
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py
 
 
-DEV = True
+DEV = False
 
 HTML = False # Display HTML output 
 ADD = False # Actually add cards to Anki
+ADD = True # Actually add cards to Anki
 
 
 ROOT_PATH = os.path.abspath(__file__)

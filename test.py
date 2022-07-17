@@ -3,6 +3,22 @@ import sys, os, re
 from anki.storage import Collection
 import inspect
 
+#%% HTML URL encoding
+import urllib.parse
+print(urllib.parse.quote("1 Resp _ Cardio/1 Respirology/Physiology.one"))
+print(urllib.parse.quote("#General&section-id={3609411B-5EDC-483B-A4F2-A60FE8A914A4}"))
+
+#%%
+a = R"https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/Physiology.one#General&section-id={3609411B-5EDC-483B-A4F2-A60FE8A914A4}"
+
+onenote_dir = R"Documents/OneNote/"
+b = a.split(onenote_dir)
+base_url = b[0] + onenote_dir
+section_url = "".join(b[1:]) # Join rest of results in case onenote_dir occurs later on in path
+section_url = urllib.parse.quote(section_url) # Encode second part as a URL
+print(base_url+section_url)
+
+
 #%% MathML processing
 import lxml.etree as ET
 import re
