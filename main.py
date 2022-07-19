@@ -23,9 +23,12 @@ if len(sys.argv) > 1: # If arguments are passed via CMD:
     # Command line arguments come in list, 0 = name of script, 1 = 1rst argument passed, 2 = 2nd argument passed
     if "html" in sys.argv:
         HTML = True
+    else:
+        HTML = False
     if "add" in sys.argv:
         ADD = True
-
+    else:
+        ADD = False
 if DEV: # Dev mode - will only generate HTML
     HTML = True
     ADD = False

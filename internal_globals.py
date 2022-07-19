@@ -143,6 +143,7 @@ def getNodeTypeAndData(node: Element) -> tuple[str, str]:
                 return ("grouping", text)
             else: 
                 return ("standard", text)
+        # soup.text should return empty for math-only nodes, hence subsequent processing will be for math-only nodes, all other text-type nodes will have inline math support
         elif "http://www.w3.org/1998/Math/MathML" in text and "mathML" in text: # bs4 output for equations are blank
             return ("equation", text)
         

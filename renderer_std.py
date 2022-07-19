@@ -132,6 +132,40 @@ import inspect
 def getFxName(): # Function that will return name of currently calling function, for debug
     return inspect.stack()[1].function
 
+def convertMath(math_str: str, color: str = "", inline: bool = False) -> str:
+    """
+    Takes a string and converts any OneNote MathML elements into Tex formatting
+    Modified from: https://dev.to/furkan_kalkan1/quick-hack-converting-mathml-to-latex-159c
+    """
+    # Formatting specific to OneNote MathML output
+    math_objects: list[str] = re.findall(R"<!\-\-\[if mathML\]>.*?<!\[endif\]\-\->", math_str)
+    for original_math in math_objects:
+        math_mml = original_math.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Extract mathmml component but leave original 
+        html_tags: list[str] = re.findall("<.*?>", math_mml) # Finds all HTML tags
+        for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
+            new_tag = tag.replace("mml:", "")
+            new_tag = new_tag.replace(":mml", "") # Still need xmlns attribute to use XSLT to parse
+            math_mml = math_mml.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
+    
+        # Exception parsing: For errors due to undefined symbols, can probably find a reference here http://zvon.org/comp/r/ref-MathML_2.html#intro
+        math_mml = math_mml.replace("&nbsp;", "&#x02004;") # nbsp not in XSLT entities, replace with code for 1/3emspace http://zvon.org/comp/r/ref-MathML_2.html#Entities~emsp
+    
+        math_xml = ET.fromstring(math_mml)
+        xslt_table = ET.parse("mml2tex/mmltex.xsl") # This XSL file links to the other other XSL files in the folder
+        transformer = ET.XSLT(xslt_table)
+        math_tex = str(transformer(math_xml)) # Convert transformed output to string
+        c = bool(color) # Variable for branchless string modification
+        if inline: # Format for inline rendering - https://docs.ankiweb.net/math.html
+            # Inline math tends to be replaced with $ signs at beginning and end, will replace these with anki inline rendering indicators
+            math_tex = re.sub(R"^\$ ?", R"\\(" + c*R"{\\color{"+color+c*"}", math_tex) # Branchless adding of beginning tag for color 
+            math_tex = re.sub(R" ?\$$", c*"}" + R"\\)", math_tex) # Branchless adding of closing tag for color 
+        else: # Branchless processing of square brackets for regular inline display
+            math_tex = math_tex.replace("\n\\[", "\n\\[" + c*R"{\color{"+color+c*"}") # Branchless adding of beginning tag for color 
+            math_tex = math_tex.replace("\n\\]", c*"}" + "\n\\]") # Branchless adding of closing tag for color             
+        math_str = math_str.replace(original_math, math_tex) # Replace original found math object with converted tex object
+
+    return math_str
+
 
 def genHtmlElement(content: str, 
                 style: list[str] = [],
@@ -172,6 +206,7 @@ def genHtmlElement(content: str,
         
     if style or color: # If style or color arguments not empty, add all applicable options below:
         html_item += "<span style='" # Open style attribute and span tag
+        html_item += "font-family:Calibri;" # Default Calibri font
         if "bold" in style:
             html_item += "font-weight:bold;"
         if "underline" in style:
@@ -184,11 +219,11 @@ def genHtmlElement(content: str,
             html_item += f"color:#000000;"
         html_item += "'>" # Close style attribute and span tag
     else: # Assume no styling and color black (so that it won't be affected by bullet color)
-        html_item += "<span style='color:#000000;'>" # Open style attribute and span tag
+        html_item += "<span style='font-family:Calibri;color:#000000;'>" # Default Calibri and black font
         
         
         
-    html_item += content # CONTENT ADDED HERE
+    html_item += convertMath(content, color=color, inline=True) # CONTENT ADDED HERE, add math conversion to all text elements that use genHtmlElement (could also add it durin instantiation but would have less control over it)
     
     if style or color: # Have to close styling span 
         html_item += "</span>"
@@ -308,7 +343,7 @@ def renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standard
 
     else: # Functions for rendering backside
         if level == "entry":
-            return genHtmlElement("【" + node.data + ":】", li=True, bullet=node.bullet_data) # Convert to list item but keep raw data
+            return genHtmlElement("【" + node.data + "】", li=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
             text_styled = genHtmlElement(node.stem, ["bold"], "") + genHtmlElement(node.body, [], GRAY) # Style stem and body differently
             return genHtmlElement(text_styled, [], "", li=True, bullet=node.bullet_data) # Wrap styled text in list tags
@@ -331,7 +366,7 @@ def renderGrouping(node: OENodePoint, front: bool, level: str, renderer: Standar
 
     else: # Functions for rendering backside
         if level == "entry":
-            return genHtmlElement("【" + node.data + ":】", li=True, bullet=node.bullet_data) # Convert to list item but keep raw data
+            return genHtmlElement("【" + node.data + "】", li=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
             return genHtmlElement(text, [], GRAY, li=True, bullet=node.bullet_data) 
@@ -398,32 +433,7 @@ def renderImage(node: OENodePoint, front: bool, level: str, renderer: StandardRe
 
 
 def renderEquation(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
-    def processMath(math_str: str) -> str:
-        """
-        Modified from: https://dev.to/furkan_kalkan1/quick-hack-converting-mathml-to-latex-159c
-        """
-        math_str = re.sub(r"(\$\$.*?\$\$)", " ", math_str) # Remove tex codes in text 
-        # Formatting specific to OneNote MathML output
-        math_str = math_str.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
-        html_tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
-        for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
-            new_tag = tag.replace("mml:", "")
-            new_tag = new_tag.replace(":mml", "") # Still need xmlns attribute to use XSLT to parse
-            math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
-        
-        # Exception parsing: For errors due to undefined symbols, can probably find a reference here http://zvon.org/comp/r/ref-MathML_2.html#intro
-        math_str = math_str.replace("&nbsp;", "&#x02004;") # nbsp not in XSLT entities, replace with code for 1/3emspace http://zvon.org/comp/r/ref-MathML_2.html#Entities~emsp
-        math_mml_list = re.findall(R"(<math.*?<\/math>)", math_str) # Only retain information inside math tags (FIXME can probably expand to iterate)
-        for math_mml in math_mml_list: # XSLT transformation
-            math_xml = ET.fromstring(math_mml)
-            xslt_table = ET.parse("mml2tex/mmltex.xsl") # This XSL file links to the other other XSL files in the folder
-            transformer = ET.XSLT(xslt_table)
-            math_tex = str(transformer(math_xml)) # Convert transformed output to string
-            # math_tex = math_tex.replace(R"\[", R"\(") # Can replace square brackets with regular for inline display https://docs.ankiweb.net/math.html
-            # math_tex = math_tex.replace(R"\]", R"\)")
-            math_str = math_str.replace(math_mml, math_tex)
 
-        return math_str 
     if front:
         if level == "entry":
             return "" # Shouldn't have equation as entry point
@@ -436,10 +446,10 @@ def renderEquation(node: OENodePoint, front: bool, level: str, renderer: Standar
         if level == "entry":
             return "" # Shouldn't have equation as entry point
         elif level == "direct_child":
-            math_tex = processMath(node.data)
+            math_tex = convertMath(node.data, color="", inline=False)
             return genHtmlElement(math_tex, [], li=True, bullet=node.bullet_data)
         elif level == "sibling":
-            math_tex = processMath(node.data)
+            math_tex = convertMath(node.data, color="", inline=False)
             return genHtmlElement(math_tex, [], li=True, bullet=node.bullet_data)
         
         

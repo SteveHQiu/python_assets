@@ -23,39 +23,48 @@ print(base_url+section_url)
 import lxml.etree as ET
 import re
 
-def processMath(math_str: str) -> str:
+def convertMath(math_str: str, inline: bool = False) -> str:
     """
+    Takes a string with 
     Modified from: https://dev.to/furkan_kalkan1/quick-hack-converting-mathml-to-latex-159c
     """
-    math_str = re.sub(r"(\$\$.*?\$\$)", " ", math_str) # Remove tex codes in text 
     # Formatting specific to OneNote MathML output
-    math_str = math_str.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Replace end tags
-    html_tags: list[str] = re.findall("<.*?>", math_str) # Finds all HTML tags
-    for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
-        new_tag = tag.replace("mml:", "")
-        new_tag = new_tag.replace(":mml", "") # Still need xmlns attribute to use XSLT to parse
-        math_str = math_str.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
+    math_objects: list[str] = re.findall(R"<!\-\-\[if mathML\]>.*?<!\[endif\]\-\->", math_str)
+    for original_math in math_objects:
+        math_mml = original_math.replace("<!--[if mathML]>", "").replace("<![endif]-->", "") # Extract mathmml component but leave original 
+        html_tags: list[str] = re.findall("<.*?>", math_mml) # Finds all HTML tags
+        for tag in html_tags: # Iterate through matches to replace namespace component (no easy regex way to do it)
+            new_tag = tag.replace("mml:", "")
+            new_tag = new_tag.replace(":mml", "") # Still need xmlns attribute to use XSLT to parse
+            math_mml = math_mml.replace(tag, new_tag, 1) # Replace first instance of the match with new tag
     
-    # Exception parsing: For errors due to undefined symbols, can probably find a reference here http://zvon.org/comp/r/ref-MathML_2.html#intro
-    math_str = math_str.replace("&nbsp;", "&#x2003;") # nbsp not in XSLT, replace with code for emspace http://zvon.org/comp/r/ref-MathML_2.html#Entities~emsp
+        # Exception parsing: For errors due to undefined symbols, can probably find a reference here http://zvon.org/comp/r/ref-MathML_2.html#intro
+        math_mml = math_mml.replace("&nbsp;", "&#x02004;") # nbsp not in XSLT entities, replace with code for 1/3emspace http://zvon.org/comp/r/ref-MathML_2.html#Entities~emsp
     
-    math_mml_list = re.findall(R"(<math.*?<\/math>)", math_str) # Only retain information inside math tags (FIXME can probably expand to iterate)
-    for math_mml in math_mml_list: # XSLT transformation
-        mml_ns = math_mml.replace('<math>', '<math xmlns="http://www.w3.org/1998/Math/MathML">') #Required.
-        math_xml = ET.fromstring(mml_ns)
+        print(math_mml)
+        math_xml = ET.fromstring(math_mml)
         xslt_table = ET.parse("mml2tex/mmltex.xsl") # This XSL file links to the other other XSL files in the folder
         transformer = ET.XSLT(xslt_table)
         math_tex = str(transformer(math_xml)) # Convert transformed output to string
-        math_tex = re.sub(R"(^\$)|(\$$)", "", math_tex).strip() # Remove $ at start and end (due to transformation) and strip whitespace
-        math_str = math_str.replace(math_mml, math_tex)
+        if inline: # Format for inline rendering:
+            math_tex = math_tex.replace("\n\\[", "\\(") # Can replace square brackets with regular for inline display https://docs.ankiweb.net/math.html
+            math_tex = math_tex.replace("\n\\]", "\\)")
+            math_tex = re.sub(R"^\$ ?", R"\(", math_tex) # Inline tends to replace with $ signs at beginning and end, will replace these with inline rendering indicators
+            math_tex = re.sub(R" ?\$$", R"\)", math_tex)
+        print(math_tex)
+        math_str = math_str.replace(original_math, math_tex) # Replace original found math object with converted tex object
 
-    return "<anki-mathjax>" + math_str + "</anki-mathjax>" 
+
+    return math_str
+
 math_str = '<math><munderover><mo stretchy="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><mrow><mi>s</mi><mi>t</mi><mi>o</mi><mi>p</mi></mrow></munderover><mrow><mo fence="false">(</mo><mi>expression</mi><mo>&nbsp;</mo><mi>involving</mi><mo>&nbsp;</mo><mi>i</mi><mo fence="false">)</mo></mrow></math>'
 math_str = '<math><munderover><mo stretchy="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><mrow><mi>s</mi><mi>t</mi><mi>o</mi><mi>p</mi></mrow></munderover><mrow><mo fence="false">(</mo><mi>expression</mi><mo>&#x2003;</mo><mi>involving</mi><mo>&#x2003;</mo><mi>i</mi><mo fence="false">)</mo></mrow></math>'
-math_str = '<!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math><![endif]-->'
 math_str = '<mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math>'
+math_str = '<!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="block"><mml:mi>x</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mo>−</mml:mo><mml:mi>b</mml:mi><mml:mo>±</mml:mo><mml:msqrt><mml:mrow><mml:msup><mml:mi>b</mml:mi><mml:mn>2</mml:mn></mml:msup><mml:mo>−</mml:mo><mml:mn>4</mml:mn><mml:mi>a</mml:mi><mml:mi>c</mml:mi></mml:mrow></mml:msqrt></mml:mrow><mml:mrow><mml:mn>2</mml:mn><mml:mi>a</mml:mi></mml:mrow></mml:mfrac></mml:math><![endif]-->'
+math_str = """<span style='font-weight:bold;font-family:Calibri' lang=en-CA>Level 1 node</span><span style='font-family:Calibri' lang=en-CA>: description with </span><!--[if mathML]><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mi>E</mml:mi><mml:mi>q</mml:mi><mml:mi>u</mml:mi><mml:mi>a</mml:mi><mml:mi>t</mml:mi><mml:mi>i</mml:mi><mml:mi>o</mml:mi><mml:mi>n</mml:mi><mml:mo>&nbsp;</mml:mo><mml:mn>1</mml:mn><mml:mo>=</mml:mo><mml:mi>a</mml:mi><mml:mo>+</mml:mo><mml:mi>b</mml:mi></mml:math><![endif]--><span style='font-family:Calibri' lang=en-CA> rest of description</span>"""
+
 # print(processMath(math_str))
-processMath(math_str)
+convertMath(math_str, inline=True)
 #%% MathML Processing 2
 import re
 import lxml.etree as ET
