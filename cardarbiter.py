@@ -10,6 +10,7 @@ from xml.etree.ElementTree import Element
 from anki.storage import Collection
 
 # Internal modules
+from . import internal_globals, renderer_std
 from internal_globals import OENodeHeader, OENodePoint, getHeaders
 from internal_globals import CPATH
 from renderer_std import StandardRenderer

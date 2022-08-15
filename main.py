@@ -1,7 +1,7 @@
 #%% Imports
 import sys, os
-from tkinter import FALSE
 # Internal modules
+from . import cardarbiter
 from cardarbiter import CardArbiter
 
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py
