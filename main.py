@@ -9,9 +9,8 @@ from cardarbiter import CardArbiter
 
 DEV = False
 
-HTML = False # Display HTML output 
+HTML = True # Display HTML output 
 ADD = False # Actually add cards to Anki
-ADD = True # Actually add cards to Anki
 
 
 ROOT_PATH = os.path.abspath(__file__)
@@ -39,7 +38,7 @@ if __name__ == "__main__":
     crawler.genCards()
     if HTML:
         crawler.displayCards()
-    if ADD:
-        crawler.addCards()
+    # if ADD:
+    #     crawler.addCards()
 
 
