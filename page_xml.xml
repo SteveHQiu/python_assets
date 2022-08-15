@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{CDDE01F5-33C5-064D-294B-813B737F56AF}{1}{E187988000742963739261964080698427272596981}" name="Atomic theory" dateTime="2021-09-24T01:37:28.000Z" lastModifiedTime="2022-08-15T19:34:40.000Z" pageLevel="2" isCurrentlyViewed="true" lang="en-US">
+<one:Page xmlns:one="http://schemas.microsoft.com/office/onenote/2013/onenote" ID="{CDDE01F5-33C5-064D-294B-813B737F56AF}{1}{E187988000742963739261964080698427272596981}" name="Atomic theory" dateTime="2021-09-24T01:37:28.000Z" lastModifiedTime="2022-08-15T20:45:14.000Z" pageLevel="2" isCurrentlyViewed="true" lang="en-US">
   <one:QuickStyleDef index="0" name="PageTitle" fontColor="automatic" highlightColor="automatic" font="Calibri Light" fontSize="20.0" spaceBefore="0.0" spaceAfter="0.0" />
   <one:QuickStyleDef index="1" name="h1" fontColor="#1E4E79" highlightColor="automatic" font="Calibri" fontSize="16.0" spaceBefore="0.0" spaceAfter="0.0" />
   <one:QuickStyleDef index="2" name="p" fontColor="automatic" font="Calibri" fontSize="11.0" spaceBefore="0.0" spaceAfter="0.0" />
@@ -14,9 +14,9 @@
       <one:T><![CDATA[Atomic theory]]></one:T>
     </one:OE>
   </one:Title>
-  <one:Outline author="Seabore Q" authorInitials="SQ" lastModifiedBy="Seabore Q" lastModifiedByInitials="SQ" lastModifiedTime="2022-08-03T23:00:00.000Z" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{33}{B0}">
+  <one:Outline author="Seabore Q" authorInitials="SQ" lastModifiedBy="Seabore Q" lastModifiedByInitials="SQ" lastModifiedTime="2022-08-15T20:45:14.000Z" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{33}{B0}">
     <one:Position x="36.0" y="86.4000015258789" z="0" />
-    <one:Size width="540.0" height="903.3192138671874" />
+    <one:Size width="540.0" height="989.9890747070312" />
     <one:OEChildren>
       <one:OE creationTime="2021-09-24T04:33:29.000Z" lastModifiedTime="2021-09-24T04:33:45.000Z" objectID="{6C2B881F-92B9-0072-2DA2-CE43346D9A8C}{14}{B0}" alignment="left" quickStyleIndex="1">
         <one:T><![CDATA[Atoms]]></one:T>
@@ -28,7 +28,7 @@
             <one:T style="font-family:Calibri;font-size:11.0pt"><![CDATA[<span
 style='font-weight:bold'>Atoms</span>: one of the smallest known forms of matter that are made up of protons, neutrons, and electrons; they make up everything in the world and there are many types called elements]]></one:T>
             <one:OEChildren>
-              <one:OE creationTime="2020-12-10T17:43:15.000Z" lastModifiedTime="2021-09-24T04:55:56.000Z" collapsed="1" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{43}{B0}" alignment="left" quickStyleIndex="2">
+              <one:OE creationTime="2020-12-10T17:43:15.000Z" lastModifiedTime="2021-09-24T04:55:56.000Z" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{43}{B0}" alignment="left" quickStyleIndex="2">
                 <one:List>
                   <one:Number numberSequence="4" numberFormat="##." fontSize="11.0" font="Calibri" bold="true" text="a." />
                 </one:List>
@@ -113,12 +113,12 @@ style='font-weight:bold'>Electrons</span>: definition ]]></one:T>
                   </one:OE>
                 </one:OEChildren>
               </one:OE>
-              <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2021-09-24T04:45:36.000Z" lastModifiedTime="2022-08-03T23:00:00.000Z" objectID="{49001714-7B45-09DB-22AF-7B47AFD433BB}{53}{B0}" alignment="left" quickStyleIndex="2" style="font-family:Calibri;font-size:11.0pt">
+              <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2021-09-24T04:45:36.000Z" lastModifiedTime="2022-08-15T20:45:14.000Z" objectID="{49001714-7B45-09DB-22AF-7B47AFD433BB}{53}{B0}" alignment="left" quickStyleIndex="2" style="font-family:Calibri;font-size:11.0pt">
                 <one:List>
                   <one:Bullet bullet="3" fontSize="11.0" />
                 </one:List>
                 <one:T><![CDATA[<span
-style='text-decoration:underline'>NC | origin of the name</span>: the word atom comes from the Greek word for indivisible ]]></one:T>
+style='text-decoration:underline'>NE | origin of the name</span>: the word atom comes from the Greek word for indivisible ]]></one:T>
               </one:OE>
               <one:OE creationTime="2021-09-25T21:37:10.000Z" lastModifiedTime="2021-09-25T21:37:10.000Z" objectID="{55FEA0DD-A7C1-04FF-283C-E5AAFC45882F}{66}{B0}" alignment="left" quickStyleIndex="2" style="font-family:Calibri;font-size:11.0pt">
                 <one:List>
@@ -259,7 +259,7 @@ style='font-weight:bold'>Elements</span>: atoms with a specific amount of proton
           </one:OE>
         </one:OEChildren>
       </one:OE>
-      <one:OE creationTime="2021-01-19T22:31:39.000Z" lastModifiedTime="2021-09-24T04:34:26.000Z" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{82}{B0}" alignment="left" quickStyleIndex="1" lang="en-CA">
+      <one:OE lastModifiedByResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2021-01-19T22:31:39.000Z" lastModifiedTime="2022-08-15T19:48:20.000Z" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{82}{B0}" alignment="left" quickStyleIndex="1" lang="en-CA">
         <one:T><![CDATA[Bonds:]]></one:T>
         <one:OEChildren>
           <one:OE creationTime="2021-01-20T01:03:01.000Z" lastModifiedTime="2021-09-24T01:38:13.000Z" objectID="{BB48DA0E-3C27-0F1E-3BCA-9925EAE3322F}{85}{B0}" alignment="left" quickStyleIndex="2">
@@ -430,6 +430,12 @@ style='font-family:Calibri' lang=en-CA> Iron(III) Oxide</span>]]></one:T>
             <one:T><![CDATA[CHO are elements for glucose which could also make Carbon dioxide and water]]></one:T>
           </one:OE>
         </one:OEChildren>
+      </one:OE>
+      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-08-15T19:44:29.000Z" lastModifiedTime="2022-08-15T19:44:29.000Z" objectID="{C8AC1413-B3D8-42F8-B21B-A5E472F3A42A}{14}{B0}" alignment="left" quickStyleIndex="2" style="font-family:Calibri;font-size:11.0pt" lang="en-CA">
+        <one:T><![CDATA[]]></one:T>
+      </one:OE>
+      <one:OE authorResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" lastModifiedByResolutionID="&lt;resolutionId provider=&quot;Windows Live&quot; hash=&quot;6i5APBR8mGraJ851ojxudw==&quot;&gt;&lt;localId cid=&quot;6dd382f15a5dc6c8&quot;/&gt;&lt;/resolutionId&gt;" creationTime="2022-08-15T19:44:32.000Z" lastModifiedTime="2022-08-15T19:44:33.000Z" objectID="{C8AC1413-B3D8-42F8-B21B-A5E472F3A42A}{10}{B0}" alignment="left" quickStyleIndex="1" lang="en-CA">
+        <one:T><![CDATA[Header]]></one:T>
       </one:OE>
     </one:OEChildren>
   </one:Outline>

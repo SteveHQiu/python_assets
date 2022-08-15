@@ -290,6 +290,24 @@ def renderCloze(node: OENodePoint, front: bool, level: str, renderer: StandardRe
         elif level == "sibling":
             return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
 
+def renderColor(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
+    if front:
+        if level == "entry":
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
+        elif level == "direct_child":
+            indicators = "".join(node.indicators)            
+            return genHtmlElement(f"{indicators} |____:", ["underline"], color="blue", li=True, bullet=node.bullet_data) # Add colon for prompting
+        elif level == "sibling":
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
+
+    else: # Functions for rendering backside
+        if level == "entry":
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
+        elif level == "direct_child":
+            return genHtmlElement(node.data, [], "#FF5A37", li=True, bullet=node.bullet_data) # Create a greyed list item using styled text
+        elif level == "sibling":
+            return renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
+
 
 def renderListed(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
     if front:
@@ -312,11 +330,13 @@ def renderListed(node: OENodePoint, front: bool, level: str, renderer: StandardR
 
 
 def renderOptions(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer) -> str:
-    if {"C", "L"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
+    if {"C", "L", "E"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
         if "C" in node.indicators:
             return renderCloze(node, front, level, renderer)
         if "L" in node.indicators:
             return renderListed(node, front, level, renderer)
+        if "E" in node.indicators:
+            return renderColor(node, front, level, renderer)
     else:
         return ""
 
