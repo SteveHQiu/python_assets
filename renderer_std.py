@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 import lxml.etree as ET
 
 # Internal modules
-from . import internal_globals
+# from . import internal_globals
 from internal_globals import MPATH, OENodeHeader, OENodePoint, insertSubstring
 
 #%% Constants

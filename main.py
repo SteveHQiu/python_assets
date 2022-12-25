@@ -1,7 +1,7 @@
 #%% Imports
 import sys, os
 # Internal modules
-from . import cardarbiter
+# from . import cardarbiter
 from cardarbiter import CardArbiter
 
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     crawler.genCards()
     if HTML:
         crawler.displayCards()
-    # if ADD:
-    #     crawler.addCards()
+    if ADD:
+        crawler.addCards()
 
 
