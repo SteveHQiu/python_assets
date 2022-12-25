@@ -48,6 +48,8 @@ class StandardRenderer:
 
         """
         # Add parent node rendering here or in a separate function
+        sibling_nodes_imgs: list[OENodePoint] = []
+        
         front = "<ul>\n" # Open list for sibling nodes
         back = "<ul>\n" # Open list for sibling nodes
         for node in self.node.sibling_nodes:
@@ -67,10 +69,18 @@ class StandardRenderer:
                     front = insertSubstring(front, "</li>", child_front) 
                     back = insertSubstring(back, "</li>", child_back)
                 # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
-            else: # Assume it is an sibling/adjacent node
+            elif node.type != "image": # Render non-image nodes in order
                 front += func(node=node, front=True, level="sibling", renderer=self) 
                 back += func(node=node, front=False, level="sibling", renderer=self)
-                # No need for children parsing for sibling nodes 
+                # No need for children parsing for sibling nodes
+            elif node.type == "image": # Store image nodes to be rendered last
+                sibling_nodes_imgs.append(node) 
+                
+        for node in sibling_nodes_imgs: # Render images at end 
+            func = FUNCMAP[node.type]
+            front += func(node=node, front=True, level="sibling", renderer=self) 
+            back += func(node=node, front=False, level="sibling", renderer=self)         
+        
         front += "</ul>\n" # Close list for sibling nodes
         back += "</ul>\n" # Close list for sibling nodes
         
@@ -356,7 +366,7 @@ def renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standard
         return renderOptions(node, front, level, renderer) # Use output from renderOptions() instead if applicable, otherwise go through default
     elif front:
         if level == "entry":
-            return genHtmlElement("【" + node.stem + ":】", ["bold"], li=True, bullet=node.bullet_data) # Add unformatted colon for prompting
+            return genHtmlElement("【" + node.stem + "】", ["bold"], li=True, bullet=node.bullet_data) # Add unformatted colon for prompting
         elif level == "direct_child":
             return genHtmlElement("____:", ["bold"], li=True, bullet=node.bullet_data) # Add unformatted colon for prompting
         elif level == "sibling":
