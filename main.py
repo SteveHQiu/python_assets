@@ -7,19 +7,19 @@ from cardarbiter import CardArbiter
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py
 
 
-DEV = False
 
-HTML = True # Display HTML output 
-ADD = False # Actually add cards to Anki
 
 
 ROOT_PATH = os.path.abspath(__file__)
 os.chdir(os.path.dirname(ROOT_PATH)) # cd to directory of main.py file
 XML_PAGE_PATH = R"page_xml.xml"
 XML_OUTL_PATH = R"outline_xml.xml"
+DEV = True
     
 if len(sys.argv) > 1: # If arguments are passed via CMD:
     # Command line arguments come in list, 0 = name of script, 1 = 1rst argument passed, 2 = 2nd argument passed
+    DEV = False # If CMD arguments, will turn Dev false
+    
     if "html" in sys.argv:
         HTML = True
     else:
@@ -28,9 +28,10 @@ if len(sys.argv) > 1: # If arguments are passed via CMD:
         ADD = True
     else:
         ADD = False
+        
 if DEV: # Dev mode - will only generate HTML
-    HTML = True
-    ADD = False
+    HTML = True # Display HTML output 
+    ADD = False # Actually add cards to Anki
 
 #%% 
 if __name__ == "__main__":
