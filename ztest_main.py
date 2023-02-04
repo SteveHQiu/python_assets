@@ -1,6 +1,5 @@
 import os
 
-
 from anki.collection import Collection
 from anki.decks import DeckManager
 
