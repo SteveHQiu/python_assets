@@ -6,6 +6,7 @@ from anki.decks import DeckManager
 
 PROFILE_HOME = os.path.expanduser(R"~\AppData\Roaming\Anki2\User 1")
 CPATH = os.path.join(PROFILE_HOME, "collection.anki2")
+
 col = Collection(CPATH, log=True) # NOTE that this changes the directory
 
 a = DeckManager(col)

@@ -37,7 +37,7 @@ if DEV: # Dev mode - will only generate HTML
 #%% 
 if __name__ == "__main__":
     crawler = CardArbiter(XML_PAGE_PATH, XML_OUTL_PATH)
-    crawler.genCards()
+    crawler.genNotes()
     if HTML:
         crawler.displayCards(HTML_PREVIEW_PATH)
     if ADD:

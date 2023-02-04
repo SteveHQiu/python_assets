@@ -24,7 +24,7 @@ class CardArbiter:
         self.header_list: list[OENodeHeader] = getHeaders(self.page, self.outline) # Input header list, should be able to access rest of nodes through this point
         self.cards: list[tuple[str, str]] = [] # Container for generated cards, format of Tuple[front, back]
 
-    def genCards(self):
+    def genNotes(self):
         """
         Note that this will still copy media into anki media directory if there are images
         """
@@ -34,8 +34,8 @@ class CardArbiter:
 
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
-                    renderer.renderHtmlMain()
-                    renderer.renderHtmlParents()
+                    renderer._renderHtmlMain()
+                    renderer._renderHtmlParents()
                     front = renderer.fronthtml 
                     back = renderer.backhtml
                     self.cards.append((front, back)) # Append rendered HTMLs

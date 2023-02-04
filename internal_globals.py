@@ -40,11 +40,11 @@ class OENodePoint:
     def __init__(self, oenode: Element):
         self.id: str | None = oenode.get("objectID") # ID is an attribute of the XML node
         self.xml: Element = oenode # Store original XML node in case needed
-        self.bullet_data: str = getBulletData(oenode)
+        self.bullet_data: str = _getBulletData(oenode)
         
-        self.type, self.data = getNodeTypeAndData(oenode) # Unpack tuple into type and data
-        self.stem, self.body = getStemAndBody(oenode) # Unpack tuple into stem and body
-        self.indicators: list[str] = getIndicators(oenode)
+        self.type, self.data = _getNodeTypeAndData(oenode) # Unpack tuple into type and data
+        self.stem, self.body = _getStemAndBody(oenode) # Unpack tuple into stem and body
+        self.indicators: list[str] = _getIndicators(oenode)
         
         # Attributes below are populated recursively in getChildren()
         self.page_title: str = ""
@@ -61,7 +61,7 @@ class OENodeHeader:
         # Should only be instantiated on non-empty headers with children
         self.id: str | None = header_node.get("objectID") # ID is an attribute of the XML node
         self.xml: Element = header_node
-        self.text: str = getNodeText(header_node)
+        self.text: str = _getNodeText(header_node)
         self.level: int = int(header_node.get("quickStyleIndex"))
         
         self.page_title: str = "" # Populated by outer scope getHeaders
@@ -99,7 +99,7 @@ def insertSubstring(text: str, substr: str, ins: str, end = True, before = True)
     else: # Otherwise, text is an empty string, should return substring instead
         return substr
 
-def getBulletData(node: Element) -> str:
+def _getBulletData(node: Element) -> str:
     """
     
     """
@@ -114,7 +114,7 @@ def getBulletData(node: Element) -> str:
     # Styling can be modified in-line with HTML styling attribute which supports CSS styling directly inside: https://www.w3schools.com/tags/att_style.asp
 
 
-def getNodeText(node: Element) -> str:
+def _getNodeText(node: Element) -> str:
     node_content = node.find("one:T", NAMESPACES)
     if node_content != None and node_content.text != None:
         # The .text attribute of one:T elements contains the raw text (Without CDATA wrapper)
@@ -122,7 +122,7 @@ def getNodeText(node: Element) -> str:
     else:
         return "" # Returns empty string which will evaluate as False when passed as a logical argument
 
-def getNodeTypeAndData(node: Element) -> tuple[str, str]: 
+def _getNodeTypeAndData(node: Element) -> tuple[str, str]: 
     """Gets node type and corresponding data from an XML node element
 
     Args:
@@ -158,8 +158,8 @@ def getNodeTypeAndData(node: Element) -> tuple[str, str]:
     
     return ("", "") # Returns two empty strings which evaluate as false when passed as logical arguments
 
-def getStemAndBody(node: Element) -> tuple[str, str]:
-    node_type, node_data = getNodeTypeAndData(node)
+def _getStemAndBody(node: Element) -> tuple[str, str]:
+    node_type, node_data = _getNodeTypeAndData(node)
     if node_type == "concept":
         soup = BeautifulSoup(node_data, features="html.parser")
         stem_tag = soup.select_one('span[style*="font-weight:bold"]') # Returns first tag that matches selector which searches for tags with attributes containing "font-weight:bold"
@@ -177,14 +177,14 @@ def getStemAndBody(node: Element) -> tuple[str, str]:
     else:
         return ("", "")
 
-def getIndicators(node: Element) -> list[str]:
-    if getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
-        indicator_str = re.match(R"(\w+) ?\|", getStemAndBody(node)[0]).group(1)
+def _getIndicators(node: Element) -> list[str]:
+    if _getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", _getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
+        indicator_str = re.match(R"(\w+) ?\|", _getStemAndBody(node)[0]).group(1)
         return list(indicator_str) # Convert indicators into set of characters
     else:
         return list() # Return an empty set for indicators otherwise
 
-def getTitleAndID(page_xml: ElementTree.ElementTree) -> tuple[str, str]:
+def _getTitleAndID(page_xml: ElementTree.ElementTree) -> tuple[str, str]:
     """
     Returns string of title of page being parsed 
     """
@@ -202,7 +202,7 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
     xml_file: path to XML file from OneNote output
     """
     # Title processing
-    page_title, page_id = getTitleAndID(page_xml)
+    page_title, page_id = _getTitleAndID(page_xml)
     parent_page_map = {child: parent for parent in outline.iter() for child in parent} # Create child-parent map (no convenient way to find parents otherwise)
     outline_pages = outline.findall(R".//one:Page", NAMESPACES)
     current_page = outline.find(fR".//one:Page[@ID='{page_id}']", NAMESPACES)
@@ -231,7 +231,7 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
     styled_headers: list[OENodeHeader] = [] # Is not always a superset of iterable headers (e.g., in the case of unstyled headers which are still iterable if they contain child nodes)
     iterable_headers: list[OENodeHeader] = []
     for header_node in (header for list_headers in list_page_boxes for header in list_headers): # First variable is assignment statement, then starts outer loops going to inner loops: https://www.geeksforgeeks.org/nested-list-comprehensions-in-python/
-        if getNodeText(header_node): # Only parse non-empty nodes
+        if _getNodeText(header_node): # Only parse non-empty nodes
             header_node = OENodeHeader(header_node)
             if header_node.xml.get("quickStyleIndex") not in [2, None]: # Quick styles #2 is normal text, 1st order is #1, 2nd order is #3 (skips over #2) and so on 
                 styled_headers.append(header_node) 
@@ -257,11 +257,11 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
                 header.parent_headers.append(styled_headers[i-1]) # Add the above header as a parent header
         
         # Children populated last since it requires previous fields to be populated first (in order to pull from them)
-        header.children_nodes = getChildren(header) # Recursively instantiates children as OENodePoints
+        header.children_nodes = _getChildren(header) # Recursively instantiates children as OENodePoints
     return iterable_headers # Return processed iterable_headers
 
 
-def getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
+def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
     """Gets children of the given node if it exist, otherwise returns False
     IS THE ENTRY POINT FOR INITIALIZATION OF ALL OENodePoint instances as this function is recursively called during OENodePoint instantiation from iterating over headers
     Outer function starts with header node while inner recursive function handles both headers and points 
@@ -275,7 +275,7 @@ def getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
     
     parent_node_tracker: list[OENodePoint] =  [] # For use by inner function
     
-    def iterChildren(node: OENodeHeader | OENodePoint) -> list[OENodePoint]:
+    def _iterChildren(node: OENodeHeader | OENodePoint) -> list[OENodePoint]:
         # Only assign children if they exist
         if node.xml.find("one:OEChildren", NAMESPACES):
             if type(node) == OENodePoint: # Only add node to parent tracker if current node is a point (rather than a header)
@@ -290,7 +290,7 @@ def getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
                 child_node.page_title = node.page_title # Inherit from parent
                 child_node.sibling_nodes = child_nodes # Assign current node's children container, list doesn't get modified so don't need to copy (each cycle creates new list)
                 child_node.parent_nodes = copy.copy(parent_node_tracker) # Copy tracker nodes using shallow copy since tracker gets modified by outer scope
-                child_node.children_nodes = iterChildren(child_node) # Recursively call function, will rebound from recursion at nodes without children
+                child_node.children_nodes = _iterChildren(child_node) # Recursively call function, will rebound from recursion at nodes without children
                 
             if type(node) == OENodePoint: # Mirror entry conditions
                 parent_node_tracker.pop(0)
@@ -300,4 +300,4 @@ def getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
         else: 
             return [] # Empty list which will evaluate as False when passed as a logical argument
     
-    return iterChildren(header_node)
+    return _iterChildren(header_node)
