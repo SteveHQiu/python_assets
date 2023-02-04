@@ -12,8 +12,9 @@ from cardarbiter import CardArbiter
 
 ROOT_PATH = os.path.abspath(__file__)
 os.chdir(os.path.dirname(ROOT_PATH)) # cd to directory of main.py file
-XML_PAGE_PATH = R"page_xml.xml"
-XML_OUTL_PATH = R"outline_xml.xml"
+XML_PAGE_PATH = R"data\page_xml.xml"
+XML_OUTL_PATH = R"data\outline_xml.xml"
+HTML_PREVIEW_PATH = R"data\displayCards_output.html"
 DEV = True
     
 if len(sys.argv) > 1: # If arguments are passed via CMD:
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     crawler = CardArbiter(XML_PAGE_PATH, XML_OUTL_PATH)
     crawler.genCards()
     if HTML:
-        crawler.displayCards()
+        crawler.displayCards(HTML_PREVIEW_PATH)
     if ADD:
         crawler.addCards()
 
