@@ -32,7 +32,9 @@ if len(sys.argv) > 1: # If arguments are passed via CMD:
         
 if DEV: # Dev mode - will only generate HTML
     HTML = True # Display HTML output 
-    ADD = False # Actually add cards to Anki
+    ADD = True # Actually add cards to Anki
+    
+    
 
 #%% 
 if __name__ == "__main__":
@@ -42,5 +44,18 @@ if __name__ == "__main__":
         crawler.displayCards(HTML_PREVIEW_PATH)
     if ADD:
         crawler.addCards()
+
+    if DEV: # Report deck information after adding cards
+        from anki.collection import Collection
+        
+        PROFILE_HOME = os.path.expanduser(R"~\AppData\Roaming\Anki2\User 1")
+        CPATH = os.path.join(PROFILE_HOME, "collection.anki2")
+        col = Collection(CPATH)
+        
+        print(F"Notes: {col.note_count()} | Cards: {col.card_count()}")
+        for deck_cont in col.decks.all_names_and_ids():
+            print(F"{deck_cont.name}: {col.decks.card_count(deck_cont.id, include_subdecks=False)}")
+            
+        col.close()
 
 

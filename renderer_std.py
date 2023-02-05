@@ -35,6 +35,9 @@ class StandardRenderer:
         self.backhtml = ""
         self.img_count_child = 0 # Image counter for each card to assign each image a unique identifier 
         self.img_count_sibling = 0 # Separate image counter for sibling to avoid interference with direct child images
+        self.flags = [] # Flags/options for note
+        self.tags = [] # Tags to add to final cards
+        
     
     
     def renderHtml(self):

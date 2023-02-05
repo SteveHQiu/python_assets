@@ -1,7 +1,39 @@
-#%% Imports
-import sys, os, re
-from anki.storage import Collection
-import inspect
+#%% Collection manipulation
+import os
+from anki.collection import Collection
+from anki.notes import Note
+
+from anki.decks import DeckManager
+from anki.models import ModelManager
+from anki.tags import TagManager
+
+
+PROFILE_HOME = os.path.expanduser(R"~\AppData\Roaming\Anki2\User 1")
+CPATH = os.path.join(PROFILE_HOME, "collection.anki2")
+col = Collection(CPATH)
+
+
+#%%
+model = col.models.by_name("Basic") # Returns a NoteType dict which is needed to specify new note
+note = col.new_note(model) # Create new note instance **Doesn't add note to collection
+
+note.fields[note._field_index("Front")] = "TEst" # Note fields are stored in list of strings, need method to find index of labeled field
+note.fields[note._field_index("Back")] = "TEST"
+note.add_tag("test3") # Tag strings with spaces will be treated as separate tags 
+
+
+deck = col.decks.add_normal_deck_with_name("TestDeck::Test2") # Returns a container with the deck id
+col.add_note(note, deck.id) # Adds note to database
+col.save() # Save DB, mostly redundant but added just in case 
+#%%
+print(F"Notes: {col.note_count()} | Cards: {col.card_count()}")
+for deck_cont in col.decks.all_names_and_ids():
+    print(F"{deck_cont.name}: {col.decks.card_count(deck_cont.id, include_subdecks=False)}")
+    
+
+#%%
+
+col.close()
 
 #%% HTML URL encoding
 import urllib.parse
@@ -330,6 +362,7 @@ print(soup.find('mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display
 print(soup.select_one('span[style*="font-weight:bold"]'))
 
 #%% System arguments
+import sys
 output = sys.argv[1]
 print(output)
 
@@ -377,6 +410,7 @@ def test():
 test()
 
 #%% Anki list cards
+import os
 PROFILE_HOME = os.path.expanduser(r"~\AppData\Roaming\Anki2\User 1")
 cpath = os.path.join(PROFILE_HOME, "collection.anki2")
 
