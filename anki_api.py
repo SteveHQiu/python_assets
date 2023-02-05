@@ -1,6 +1,6 @@
 #%% Imports
 # Built-in
-import os, sys
+import os, sys, re
 
 # Anki
 from anki.storage import Collection
@@ -16,12 +16,12 @@ from internal_globals import CPATH
 #%% Classes
 class ProtoNote:
     
-    def __init__(self, front, back, tags = None) -> None:
+    def __init__(self, front, back, deck = "Default", model = "Basic", tags = None) -> None:
         self.front: str = front
         self.back: str = back
         self.tags: list[str] = tags
-        self.deck = "Default" # Onenote notebook, pages, section path
-        self.model = "Basic" 
+        self.deck = deck 
+        self.model = model 
 
 #%%
 
@@ -55,7 +55,7 @@ def addCardsFromNotes(notes: list[ProtoNote], deck_name: str = None, card_type: 
     finally: # Should have this always run, otherwise, anki will get stuck        
         col.close() # Need this function, otherwise instance stays open
 
-def reportCollection(col_open = None):
+def reportCollection(col_open: Collection | bool = False ):
     try:
         if not col_open: # Instantiate collection if not already open
             col = Collection(CPATH)
@@ -64,8 +64,7 @@ def reportCollection(col_open = None):
 
         print(F"Notes: {col.note_count()} | Cards: {col.card_count()}")
         for deck_cont in col.decks.all_names_and_ids():
-            print(F"{deck_cont.name}: {col.decks.card_count(deck_cont.id, include_subdecks=False)}")
-        
+            print(F"{deck_cont.name}: {col.decks.card_count(deck_cont.id, include_subdecks=False)}".encode("ascii", "replace"))
         
     finally:
         if col_open:
@@ -74,7 +73,7 @@ def reportCollection(col_open = None):
     
 
      
-def remCards(filter: str = "tag:Auto", col_open = False):
+def remCards(filter: str = "tag:Auto", col_open: Collection | bool = False):
     # Remove cards according to a filter
     try:
         if not col_open: # Instantiate collection if not already open

@@ -157,18 +157,18 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline_xml: ElementTree.Eleme
     Returns list of XML items of non-empty headers from XML and populates their parent trackers
     xml_file: path to XML file from OneNote output
     """
-    # Title processing
+    # Page title processing
     page_title, page_id = _getTitleAndID(page_xml)
     parent_page_map = {child: parent for parent in outline_xml.iter() for child in parent} # Create child-parent map to get a page's parent section (no convenient way to find parents otherwise)
     outline_pages = outline_xml.findall(R".//one:Page", NAMESPACES)
     current_page = outline_xml.find(fR".//one:Page[@ID='{page_id}']", NAMESPACES)
     index = outline_pages.index(current_page)
-    parent_pages: list[str] = [] 
+    parent_pages: list[Element] = [] 
     current_page_level = current_page.get("pageLevel")
     for i in range(index, 0, -1): # Is a repeat of process for determining header hierarchy done below
         if outline_pages[i-1].get("pageLevel") < current_page_level:
             current_page_level = outline_pages[i-1].get("pageLevel") # Set new higher page level
-            parent_pages.append(outline_pages[i-1].get("name")) # Only append string title of page
+            parent_pages.append(outline_pages[i-1]) # Append entire Element, will have to retrieve later 
             
     
     # Header instantiation
@@ -259,13 +259,29 @@ def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
     
     return _iterChildren(header_node)
 
+def getParentNames(page_xml: ElementTree.ElementTree, outline_xml: ElementTree.ElementTree):
+    page_title, page_id = _getTitleAndID(page_xml)
+    parent_page_map = {child: parent for parent in outline_xml.iter() for child in parent} # Create child-parent map to get a page's parent section (no convenient way to find parents otherwise)
+    node_page = outline_xml.find(F".//one:Section/one:Page[@ID='{page_id}']", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
+    
+    parent_sections: list[Element] = []
+    node_focused = node_page  
+      
+    while "Notebook" not in node_focused.tag: # Look up until reaching notebook level # E.g., '{http://schemas.microsoft.com/office/onenote/2013/onenote}Notebook'
+        print(node_focused.tag) 
+        node_focused = parent_page_map[node_focused] # Get parent node
+        parent_sections.insert(0, node_focused) # Append parent node to front of container
+    
+    parent_names = [n.get("name") if not n.get("nickname") else n.get("nickname")
+           for n in parent_sections] # Get nickname if available
+    
+    return parent_names
+
 #%% Testing:
 if __name__ == "__main__":
-    outline_path = R"data\outline_xml.xml"
-    outline_xml: ElementTree.ElementTree = ElementTree.parse(outline_path)
-    print(outline_xml)
+    page_xml: ElementTree.ElementTree = ElementTree.parse(R"data\page_xml.xml")
+    outline_xml: ElementTree.ElementTree = ElementTree.parse(R"data\outline_xml.xml")
     
-    p = "https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Non-Academic/Archive/Misc.one"
-    print(os.path.splitext(p)[0])
+    print(getParentNames(page_xml, outline_xml))
     
 #%%

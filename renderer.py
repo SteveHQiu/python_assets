@@ -123,20 +123,25 @@ class StandardRenderer:
             self.fronthtml = _insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
             self.backhtml = _insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
 
-        # Parent header rendering
+        # Instantiate parent addon HTML
         header = self.node.parent_headers[0] # Retrieve immediate header of the entry point
         parents_html = header.page_title
-        for page in header.parent_pages: # Container of strings for parent pages
-            parents_html += f" - {page}"
+        
+        # Parent page rendering - Added first to addon HTML
+        for page in header.parent_pages: # Container of XML Elements for parent pages
+            parents_html += f" - {page.get('name')}"
         parents_html = _genHtmlElement(parents_html, ["italic"], GRAY) + "<br>\n" # Initialize HTML with title and newline 
         
+        
+        # Parent header rendering
         first_header =  f"<a href='{header.link}' style='color:{GRAY}'>" + header.text + "</a>" # Hyperlink first header
         parents_html += _genHtmlElement(f"[{first_header}]", ["underline"], GRAY) # Add itself as the immediate header
         for pheader in header.parent_headers: # Add headers and links to respective element
             parents_html += f" - [{pheader.text}]"
         parents_html = _genHtmlElement(parents_html, [], GRAY) + "<br><br>\n" # Wrapped HTML with gray styling span 
         
-        self.fronthtml = parents_html + self.fronthtml # Add header rendering to front of HTML
+        # Add header rendering to front of HTML
+        self.fronthtml = parents_html + self.fronthtml 
         self.backhtml = parents_html + self.backhtml
         
         return self
