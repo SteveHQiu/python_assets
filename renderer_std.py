@@ -16,7 +16,8 @@ import lxml.etree as ET
 
 # Internal modules
 # from . import internal_globals
-from internal_globals import MPATH, OENodeHeader, OENodePoint, insertSubstring
+from internal_globals import MPATH
+from onenote import OENodeHeader, OENodePoint
 
 #%% Constants
 GRAY = "#e8e8e8" # Can set to empty string to insert nothing
@@ -69,8 +70,8 @@ class StandardRenderer:
                         child_back += cfunc(node=child_node, front=False, level="direct_child", renderer=self)
                     child_front += "</ul>\n" # Close list for direct children nodes
                     child_back += "</ul>\n" # Close list for direct children nodes
-                    front = insertSubstring(front, "</li>", child_front) 
-                    back = insertSubstring(back, "</li>", child_back)
+                    front = _insertSubstring(front, "</li>", child_front) 
+                    back = _insertSubstring(back, "</li>", child_back)
                 # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
             elif node.type != "image": # Render non-image nodes in order
                 front += func(node=node, front=True, level="sibling", renderer=self) 
@@ -119,8 +120,8 @@ class StandardRenderer:
             pfront += "</ul>\n" # Close list for parent node (should only have 1 item), next level will have its own list
             pback += "</ul>\n"
             
-            self.fronthtml = insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
-            self.backhtml = insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
+            self.fronthtml = _insertSubstring(pfront, "</li>", "\n" + self.fronthtml) # Wrap new HTML around previous HTML by inserting old into new
+            self.backhtml = _insertSubstring(pback, "</li>", "\n" + self.backhtml) # Most generated HTML elements will have \n at end so won't need to add one
 
         # Parent header rendering
         header = self.node.parent_headers[0] # Retrieve immediate header of the entry point
@@ -148,6 +149,34 @@ class StandardRenderer:
 import inspect
 def _getFxName(): # Function that will return name of currently calling function, for debug
     return inspect.stack()[1].function
+
+def _insertSubstring(text: str, substr: str, ins: str, end = True, before = True) -> str:
+    """Inserts string into another string in front of a specified substring if it is found
+    Otherwise returns original string. If text to search is empty, it will return the substring instead
+
+    Args:
+        text (str): String to insert into
+        substr (str): Substring to search
+        ins (str): String to insert
+        end (bool, optional): Search from end. Defaults to True. Otherwise search from beginning
+        before: Inserts string at beginning of substring. Otherwise inserts at end
+
+    Returns:
+        str: New modified string or original string if search substring not found
+    """
+    if end:
+        ind = text.rfind(substr) # Finds highest index of substring
+    else:
+        ind = text.find(substr) # Finds lowest index of substring
+    if ind >= 0: # If match is found
+        if not before: 
+            ind += len(ins) # Increase index by length of insert string so that text is inserted at end of substring
+        return text[:ind] + ins + text[ind:] 
+    elif text: # If text is non-empty, return text
+        return text
+    else: # Otherwise, text is an empty string, should return substring instead
+        return substr
+
 
 def _convertMath(math_str: str, color: str = "", inline: bool = False) -> str:
     """
@@ -210,14 +239,14 @@ def _genHtmlElement(content: str,
         html_item += f"<li {bullet}>"
         if color: # Change color of bullet if there is a color argument passed
             if "style" in html_item: # If there is a styling element already
-                html_item = insertSubstring(html_item, "'", f"; color:{color}") # Insert color property in styling element
+                html_item = _insertSubstring(html_item, "'", f"; color:{color}") # Insert color property in styling element
             else:
-                html_item = insertSubstring(html_item, ">", f"style='color:{color}'") # Create and insert new styling element with color
+                html_item = _insertSubstring(html_item, ">", f"style='color:{color}'") # Create and insert new styling element with color
         else: # Assume color is black
             if "style" in html_item: # If there is a styling element already
-                html_item = insertSubstring(html_item, "'", "; color:#000000") # Insert color property in styling element
+                html_item = _insertSubstring(html_item, "'", "; color:#000000") # Insert color property in styling element
             else:
-                html_item = insertSubstring(html_item, ">", "style='color:#000000'") # Create and insert new styling element with color
+                html_item = _insertSubstring(html_item, ">", "style='color:#000000'") # Create and insert new styling element with color
             
                 
         
@@ -283,7 +312,7 @@ def _genHtmlRecursively(node: OENodePoint,
             for child_node in children_nodes:
                 html_children += _genHtmlRecursively(child_node, fx_genHtml, **kwargs) # Use same func and arguments as root since same type and same context 
             html_children += "</ul>\n" # Close list
-            html_item = insertSubstring(html_item, "</li>", html_children) # Insert children into last item 
+            html_item = _insertSubstring(html_item, "</li>", html_children) # Insert children into last item 
     return html_item
 
 ## Special rendering functions

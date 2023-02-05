@@ -17,8 +17,8 @@ col = Collection(CPATH)
 model = col.models.by_name("Basic") # Returns a NoteType dict which is needed to specify new note
 note = col.new_note(model) # Create new note instance **Doesn't add note to collection
 
-note.fields[note._field_index("Front")] = "TEst" # Note fields are stored in list of strings, need method to find index of labeled field
-note.fields[note._field_index("Back")] = "TEST"
+note.fields[note._field_index("Front")] = "TEST FRONT" # Note fields are stored in list of strings, need method to find index of labeled field
+note.fields[note._field_index("Back")] = "TEST BACK"
 note.add_tag("test3") # Tag strings with spaces will be treated as separate tags 
 
 
