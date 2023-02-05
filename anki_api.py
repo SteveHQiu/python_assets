@@ -1,6 +1,6 @@
 #%% Imports
 # Built-in
-import os
+import os, sys
 
 # Anki
 from anki.storage import Collection
@@ -54,3 +54,55 @@ def addCardsFromNotes(notes: list[ProtoNote], deck_name: str = None, card_type: 
         col.save() # Save DB, mostly redundant but added just in case 
     finally: # Should have this always run, otherwise, anki will get stuck        
         col.close() # Need this function, otherwise instance stays open
+
+def reportCollection(col_open = None):
+    try:
+        if not col_open: # Instantiate collection if not already open
+            col = Collection(CPATH)
+        else:
+            col = col_open
+
+        print(F"Notes: {col.note_count()} | Cards: {col.card_count()}")
+        for deck_cont in col.decks.all_names_and_ids():
+            print(F"{deck_cont.name}: {col.decks.card_count(deck_cont.id, include_subdecks=False)}")
+        
+        
+    finally:
+        if col_open:
+            return
+        col.close()
+    
+
+     
+def remCards(filter: str = "tag:Auto", col_open = False):
+    # Remove cards according to a filter
+    try:
+        if not col_open: # Instantiate collection if not already open
+            col = Collection(CPATH)
+        else:
+            col = col_open
+            
+        print(F"Before removal")
+        reportCollection(col)
+        
+        card_ids = col.find_cards(filter)
+        col.remove_notes_by_card(card_ids)
+        
+        print(F"After removal")
+        reportCollection(col)
+        
+
+    finally:
+        if col_open:
+            return
+        col.close()
+
+#%%
+if __name__ == "__main__":
+    if len(sys.argv) > 1: # If arguments passed in and running as main module
+            
+        if "report" in sys.argv:
+            reportCollection()
+        
+        if "remove" in sys.argv:
+            remCards("tag:Auto")
