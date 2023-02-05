@@ -2,7 +2,7 @@
 import sys, os
 # Internal modules
 # from . import cardarbiter
-from cardarbiter import CardArbiter
+from cardgenerator import CardGenerator
 
 #### RUNTIME CONSTANTS AND OTHER SETTINGS stored in globals.py
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         
         
     
-    crawler = CardArbiter(XML_PAGE_PATH, XML_OUTL_PATH)
+    crawler = CardGenerator(XML_PAGE_PATH, XML_OUTL_PATH)
     crawler.genNotes()
     if HTML:
         crawler.displayCards(HTML_PREVIEW_PATH)

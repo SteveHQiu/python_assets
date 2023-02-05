@@ -12,7 +12,7 @@ from anki.storage import Collection
 # Internal modules
 # from . import internal_globals, renderer_std
 from internal_globals import CPATH
-from renderer_std import StandardRenderer
+from renderer import StandardRenderer
 from onenote import OENodeHeader, OENodePoint, getHeaders
 
 #%% Classes
@@ -24,7 +24,7 @@ class Note:
         self.tags: list[str] = tags
         self.path = "" # Onenote notebook, pages, section path
 
-class CardArbiter:
+class CardGenerator:
     
     def __init__(self, xml_path: Union[str, bytes, os.PathLike], outline_path: Union[str, bytes, os.PathLike]):
         self.outline: ElementTree.ElementTree = ElementTree.parse(outline_path)
