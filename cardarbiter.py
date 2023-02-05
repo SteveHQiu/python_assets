@@ -27,8 +27,8 @@ class Note:
 class CardArbiter:
     
     def __init__(self, xml_path: Union[str, bytes, os.PathLike], outline_path: Union[str, bytes, os.PathLike]):
-        self.outline: ElementTree = ElementTree.parse(outline_path)
-        self.page: ElementTree = ElementTree.parse(xml_path)
+        self.outline: ElementTree.ElementTree = ElementTree.parse(outline_path)
+        self.page: ElementTree.ElementTree = ElementTree.parse(xml_path)
         self.header_list: list[OENodeHeader] = getHeaders(self.page, self.outline) # Input header list, should be able to access rest of nodes through this point
         self.notes: list[Note] = [] # Container for generated cards, format of Tuple[front, back]
 

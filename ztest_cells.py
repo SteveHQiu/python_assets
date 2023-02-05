@@ -1,3 +1,4 @@
+
 #%% Collection manipulation
 import os
 from anki.collection import Collection
@@ -11,7 +12,6 @@ from anki.tags import TagManager
 PROFILE_HOME = os.path.expanduser(R"~\AppData\Roaming\Anki2\User 1")
 CPATH = os.path.join(PROFILE_HOME, "collection.anki2")
 col = Collection(CPATH)
-
 
 #%%
 model = col.models.by_name("Basic") # Returns a NoteType dict which is needed to specify new note
@@ -30,9 +30,7 @@ print(F"Notes: {col.note_count()} | Cards: {col.card_count()}")
 for deck_cont in col.decks.all_names_and_ids():
     print(F"{deck_cont.name}: {col.decks.card_count(deck_cont.id, include_subdecks=False)}")
     
-
 #%%
-
 col.close()
 
 #%% HTML URL encoding

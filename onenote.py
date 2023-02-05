@@ -59,10 +59,10 @@ class OENodeHeader:
         self.xml: Element = header_node
         self.text: str = _getNodeText(header_node)
         self.level: int = int(header_node.get("quickStyleIndex"))
+        self.link: str = header_node.get("objectLink") # Is generated via C# interop API and embedded into XML export
         
         self.page_title: str = "" # Populated by outer scope getHeaders
         self.parent_pages: list[Element] = [] # Populated by outer scope getHeaders
-        self.link: str = "" # Populated by outer scope getHeaders
         self.parent_headers: list[OENodeHeader] = [] # Populated by outer scope getHeaders
         self.children_nodes: list[OENodeHeader] = [] # Populated by outer scope getHeaders
 
@@ -151,28 +151,17 @@ def _getIndicators(node: Element) -> list[str]:
     else:
         return list() # Return an empty set for indicators otherwise
 
-def _getTitleAndID(page_xml: ElementTree.ElementTree) -> tuple[str, str]:
-    """
-    Returns string of title of page being parsed 
-    """
-    page_id = page_xml.getroot().get("ID")
-    print(f"Page ID: {page_id}")
-    if page_xml.find("one:Title/one:OE/one:T", NAMESPACES) != None:
-        page_title = page_xml.find("one:Title/one:OE/one:T", NAMESPACES).text
-    else: 
-        page_title = "Untitled"
-    return (page_title, page_id)
 
-def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTree) -> list[OENodeHeader]:
+def getHeaders(page_xml: ElementTree.ElementTree, outline_xml: ElementTree.ElementTree) -> list[OENodeHeader]:
     """
     Returns list of XML items of non-empty headers from XML and populates their parent trackers
     xml_file: path to XML file from OneNote output
     """
     # Title processing
     page_title, page_id = _getTitleAndID(page_xml)
-    parent_page_map = {child: parent for parent in outline.iter() for child in parent} # Create child-parent map (no convenient way to find parents otherwise)
-    outline_pages = outline.findall(R".//one:Page", NAMESPACES)
-    current_page = outline.find(fR".//one:Page[@ID='{page_id}']", NAMESPACES)
+    parent_page_map = {child: parent for parent in outline_xml.iter() for child in parent} # Create child-parent map to get a page's parent section (no convenient way to find parents otherwise)
+    outline_pages = outline_xml.findall(R".//one:Page", NAMESPACES)
+    current_page = outline_xml.find(fR".//one:Page[@ID='{page_id}']", NAMESPACES)
     index = outline_pages.index(current_page)
     parent_pages: list[str] = [] 
     current_page_level = current_page.get("pageLevel")
@@ -181,16 +170,6 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
             current_page_level = outline_pages[i-1].get("pageLevel") # Set new higher page level
             parent_pages.append(outline_pages[i-1].get("name")) # Only append string title of page
             
-    # URL processing
-    current_section = parent_page_map[current_page]
-    full_section_url = current_section.get("path") # E.g., raw = https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/1 Resp _ Cardio/1 Respirology/Physiology.one
-    onenote_dir = R"Documents/OneNote/"
-    urls = full_section_url.split(onenote_dir)
-    account_url = urls[0] + onenote_dir # E.g., raw = https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/
-    section_url = "".join(urls[1:]) # Join rest of results in case onenote_dir occurs later on in path
-    section_url = quote(section_url) # The previous portion of URL needs to be encoded E.g., raw = 1 Resp _ Cardio/1 Respirology/Physiology.one
-    page_sec_ext = f"#{quote(page_title)}&section-id={current_section.get('ID')}&page-id={page_id}" # Page title needs encoding but ID includes "{}" which shouldn't be encoded E.g., raw = #Respiratory reflexes&section-id={3609411B-5EDC-483B-A4F2-A60FE8A914A4}
-    base_url = "onenote:" + account_url + section_url + page_sec_ext
     
     # Header instantiation
     list_page_boxes = page_xml.findall("one:Outline/one:OEChildren", NAMESPACES) # Returns OEChildren Element containing an OE for each header 
@@ -205,13 +184,13 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
             if header_node.xml.find("one:OEChildren", NAMESPACES): # Is iterable if there are children, can't use getChildren here, otherwise will enter recursion before all fields are populated
                 iterable_headers.append(header_node) # Convert to OENodeHeader before appending
                 print("Found non-empty header: " + header_node.text)
+            
     styled_header_ids = [s_header.id for s_header in styled_headers] 
     
     # POPULATE PLACEHOLDER ATTRIBUTES (.page_title, .parent_headers, .children_nodes)
     for header in iterable_headers: 
         header.page_title = page_title # Populate title property of instantiated OENodeHeader
         header.parent_pages = parent_pages
-        header.link = base_url + f"&object-id={header.id}"
         if header.id in styled_header_ids: # Search for iterable header in styled header list using IDs (since objects are not equal even if they have the same values)
             index = styled_header_ids.index(header.id) # Index used for identifying parent headers in flattened header list 
         else:
@@ -227,6 +206,17 @@ def getHeaders(page_xml: ElementTree.ElementTree, outline: ElementTree.ElementTr
         header.children_nodes = _getChildren(header) # Recursively instantiates children as OENodePoints
     return iterable_headers # Return processed iterable_headers
 
+def _getTitleAndID(page_xml: ElementTree.ElementTree) -> tuple[str, str]:
+    """
+    Returns string of title of page being parsed 
+    """
+    page_id = page_xml.getroot().get("ID")
+    print(f"Page ID: {page_id}")
+    if page_xml.find("one:Title/one:OE/one:T", NAMESPACES) != None:
+        page_title = page_xml.find("one:Title/one:OE/one:T", NAMESPACES).text
+    else: 
+        page_title = "Untitled"
+    return (page_title, page_id)
 
 def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
     """Gets children of the given node if it exist, otherwise returns False
@@ -268,3 +258,14 @@ def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
             return [] # Empty list which will evaluate as False when passed as a logical argument
     
     return _iterChildren(header_node)
+
+#%% Testing:
+if __name__ == "__main__":
+    outline_path = R"data\outline_xml.xml"
+    outline_xml: ElementTree.ElementTree = ElementTree.parse(outline_path)
+    print(outline_xml)
+    
+    p = "https://ualbertaca-my.sharepoint.com/personal/hqiu1_ualberta_ca/Documents/OneNote/Non-Academic/Archive/Misc.one"
+    print(os.path.splitext(p)[0])
+    
+#%%
