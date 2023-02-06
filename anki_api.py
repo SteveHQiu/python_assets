@@ -25,9 +25,22 @@ class ProtoNote:
 
 #%%
 
-def addCardsFromNotes(notes: list[ProtoNote], deck_name: str = None, card_type: str = None):
+def addCardsFromNotes(notes: list[ProtoNote],
+                      deck_name: str = None,
+                      card_type: str = None,
+                      replace = False):
     try: # Open Anki DB using try statement so that any errors during the process will not interrupt Python from closing DB
         col = Collection(CPATH) # Open collection
+        
+        if replace: # Remove all auto cards from target decks
+            target_decks: set[str] = {n.deck for n in notes}
+            if deck_name:
+                target_decks.add(deck_name)
+            
+            for targ_deck in target_decks:
+                remCards(F'tag:Auto "deck:{targ_deck}"', col) # Remove auto cards from target deck
+            
+                
         
         card_num = 1
         for note in notes:
@@ -105,3 +118,5 @@ if __name__ == "__main__":
         
         if "remove" in sys.argv:
             remCards("tag:Auto")
+    else:
+        reportCollection()

@@ -77,8 +77,9 @@ class CardGenerator:
             file.write(html)
         return self
         
-    def addCards(self):
-        addCardsFromNotes(self.notes)
+    def addCards(self, replace = False):
+        # Replace argument to replace Automatically-generated cards in the respective decks
+        addCardsFromNotes(self.notes, replace=replace)
         
 
         

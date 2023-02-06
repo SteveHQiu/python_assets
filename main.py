@@ -14,7 +14,7 @@ XML_PAGE_PATH = R"data\page_xml.xml"
 XML_OUTL_PATH = R"data\outline_xml.xml"
 HTML_PREVIEW_PATH = R"data\displayCards_output.html"
 
-DEV = True
+DEV = 1
     
 if len(sys.argv) > 1: # If arguments are passed via CMD:
     # Command line arguments come in list, 0 = name of script, 1 = 1rst argument passed, 2 = 2nd argument passed
@@ -28,11 +28,15 @@ if len(sys.argv) > 1: # If arguments are passed via CMD:
         ADD = True
     else:
         ADD = False
+    if "replace" in sys.argv:
+        REPLACE = True
+    else:
+        REPLACE = False
         
-if DEV: # Dev mode - will only generate HTML
+if DEV: # Dev mode for running directly from Python
     HTML = True # Display HTML output 
     ADD = True # Actually add cards to Anki
-    
+    REPLACE = True
     
 
 #%% 
@@ -43,7 +47,7 @@ if __name__ == "__main__":
     if HTML:
         crawler.displayCards(HTML_PREVIEW_PATH)
     if ADD:
-        crawler.addCards()
+        crawler.addCards(replace=REPLACE)
         
         
 
