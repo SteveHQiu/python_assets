@@ -59,6 +59,8 @@ def addCardsFromNotes(notes: list[ProtoNote],
             anki_note.fields[anki_note._field_index("Front")] = note.front # Note fields are stored in list of strings, need method to find index of labeled field
             anki_note.fields[anki_note._field_index("Back")] = note.back
             anki_note.add_tag("Auto") # Tag strings with spaces will be treated as separate tags 
+            for tag in note.tags: # Add each str in tags container as a tag
+                anki_note.add_tag(tag)
             col.add_note(anki_note, deck.id) # Adds note to DB
 
             print(f"Added card #{card_num}")
@@ -118,5 +120,3 @@ if __name__ == "__main__":
         
         if "remove" in sys.argv:
             remCards("tag:Auto")
-    else:
-        reportCollection()

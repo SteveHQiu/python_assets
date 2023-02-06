@@ -36,7 +36,6 @@ class StandardRenderer:
         self.backhtml = ""
         self.img_count_child = 0 # Image counter for each card to assign each image a unique identifier 
         self.img_count_sibling = 0 # Separate image counter for sibling to avoid interference with direct child images
-        self.flags = [] # Flags/options for note
         self.tags = [] # Tags to add to final cards
         
     
@@ -58,9 +57,13 @@ class StandardRenderer:
         back = "<ul>\n" # Open list for sibling nodes
         for node in self.node.sibling_nodes:
             func = FUNCMAP[node.type] # Retrieve relevant function based on node type
-            if self.node.id == node.id: # Node reponsible for entrypoint and called StandardRenderer
-                front += func(node=node, front=True, level="entry", renderer=self) 
-                back += func(node=node, front=False, level="entry", renderer=self) 
+            if self.node.id == node.id: # Node reponsible for entrypoint and caller of StandardRenderer
+                front += func(node=node, front=True, level="entry", renderer=self)
+                back += func(node=node, front=False, level="entry", renderer=self)
+                
+                if not re.search(R"\w", node.body): # If body (data minus stem) doesn't contain any alphanumeric
+                    self.tags.append("EmptyMain")
+                
                 if node.children_nodes: # Render direct children nodes
                     child_front = "\n<ul>\n" # Open list for direct children nodes
                     child_back = "\n<ul>\n" # Open list for direct children nodes

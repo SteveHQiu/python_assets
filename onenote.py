@@ -41,6 +41,7 @@ class OENodePoint:
         self.type, self.data = _getNodeTypeAndData(oenode) # Unpack tuple into type and data
         self.stem, self.body = _getStemAndBody(oenode) # Unpack tuple into stem and body
         self.indicators: list[str] = _getIndicators(oenode)
+        self.task: Element | None = self.xml.find("one:OutlookTask", NAMESPACES) # Will have an Element if it is tasked with a tag
         
         # Attributes below are populated recursively in getChildren()
         self.page_title: str = ""
@@ -268,7 +269,6 @@ def getParentNames(page_xml: ElementTree.ElementTree, outline_xml: ElementTree.E
     node_focused = node_page  
       
     while "Notebook" not in node_focused.tag: # Look up until reaching notebook level # E.g., '{http://schemas.microsoft.com/office/onenote/2013/onenote}Notebook'
-        print(node_focused.tag) 
         node_focused = parent_page_map[node_focused] # Get parent node
         parent_sections.insert(0, node_focused) # Append parent node to front of container
     
@@ -282,6 +282,22 @@ if __name__ == "__main__":
     page_xml: ElementTree.ElementTree = ElementTree.parse(R"data\page_xml.xml")
     outline_xml: ElementTree.ElementTree = ElementTree.parse(R"data\outline_xml.xml")
     
-    print(getParentNames(page_xml, outline_xml))
+    object_id = "{F49D168A-B67C-4FB7-868B-19AA7983CBC4}{30}{B0}"
+    targ_node = page_xml.find(fR".//one:OE[@objectID='{object_id}']", NAMESPACES)
+    print(targ_node.find("one:OutlookTask", NAMESPACES))
+    
+    object_id = "{F49D168A-B67C-4FB7-868B-19AA7983CBC4}{34}{B0}"
+    targ_node = page_xml.find(fR".//one:OE[@objectID='{object_id}']", NAMESPACES)
+    print(targ_node.find("one:OutlookTask", NAMESPACES))
+    
+    object_id = "{F49D168A-B67C-4FB7-868B-19AA7983CBC4}{75}{B0}"
+    targ_node = page_xml.find(fR".//one:OE[@objectID='{object_id}']", NAMESPACES)
+    print(targ_node.find("one:OutlookTask", NAMESPACES))
+    
+    object_id = "{F49D168A-B67C-4FB7-868B-19AA7983CBC4}{88}{B0}"
+    targ_node = page_xml.find(fR".//one:OE[@objectID='{object_id}']", NAMESPACES)
+    print(targ_node.find("one:OutlookTask", NAMESPACES))
+    
+    print(not re.search(R"\w", "[];\[';][;]]"))
     
 #%%
