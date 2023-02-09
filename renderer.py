@@ -16,7 +16,7 @@ import lxml.etree as ET
 
 # Internal modules
 # from . import internal_globals
-from internal_globals import MPATH
+from internal_globals import MPATH, FLAG_EMPTY, FLAG_PIORITY1
 from onenote import OENodeHeader, OENodePoint
 
 #%% Constants
@@ -340,24 +340,6 @@ def _renderCloze(node: OENodePoint, front: bool, level: str, renderer: StandardR
         elif level == "sibling":
             return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
 
-def _renderColor(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
-    if front:
-        if level == "entry":
-            return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
-        elif level == "direct_child":
-            indicators = "".join(node.indicators)            
-            return _genHtmlElement(f"{indicators} |____:", ["underline"], color="blue", li=True, bullet=node.bullet_data) # Add colon for prompting
-        elif level == "sibling":
-            return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
-
-    else: # Functions for rendering backside
-        if level == "entry":
-            return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
-        elif level == "direct_child":
-            return _genHtmlElement(node.data, [], "#FF5A37", li=True, bullet=node.bullet_data) # Create a greyed list item using styled text
-        elif level == "sibling":
-            return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
-
 
 def _renderListed(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
     if front:
@@ -380,13 +362,11 @@ def _renderListed(node: OENodePoint, front: bool, level: str, renderer: Standard
 
 
 def _renderOptions(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer) -> str:
-    if {"C", "L", "E"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
+    if {"C", "L"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
         if "C" in node.indicators:
             return _renderCloze(node, front, level, renderer)
         if "L" in node.indicators:
             return _renderListed(node, front, level, renderer)
-        if "E" in node.indicators:
-            return _renderColor(node, front, level, renderer)
     else:
         return ""
 
@@ -407,17 +387,25 @@ def _renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standar
         if level == "entry":
             return _genHtmlElement("【" + node.stem + "】", ["bold"], li=True, bullet=node.bullet_data) # Add unformatted colon for prompting
         elif level == "direct_child":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             return _genHtmlElement("____:", ["bold"], li=True, bullet=node.bullet_data) # Add unformatted colon for prompting
         elif level == "sibling":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             return _genHtmlElement(node.stem, ["bold"], GRAY, li=True, bullet=node.bullet_data) 
 
     else: # Functions for rendering backside
         if level == "entry":
             return _genHtmlElement("【" + node.data + "】", li=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             text_styled = _genHtmlElement(node.stem, ["bold"], "") + _genHtmlElement(node.body, [], GRAY) # Style stem and body differently
             return _genHtmlElement(text_styled, [], "", li=True, bullet=node.bullet_data) # Wrap styled text in list tags
         elif level == "sibling":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
             return _genHtmlElement(text, [], GRAY, li=True, bullet=node.bullet_data) 
 
@@ -432,15 +420,21 @@ def _renderGrouping(node: OENodePoint, front: bool, level: str, renderer: Standa
         elif level == "direct_child":
             return "" # Ignore regular Grouping-type nodes
         elif level == "sibling":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             return _genHtmlElement(node.stem, ["underline"], GRAY, li=True, bullet=node.bullet_data) 
 
     else: # Functions for rendering backside
         if level == "entry":
             return _genHtmlElement("【" + node.data + "】", li=True, bullet=node.bullet_data) # Convert to list item but keep raw data
         elif level == "direct_child":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
             return _genHtmlElement(text, [], GRAY, li=True, bullet=node.bullet_data) 
         elif level == "sibling":
+            if node.isEmptyChildless(): # If empty and has no children, do not render
+                return ""
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
             return _genHtmlElement(text, [], GRAY, li=True, bullet=node.bullet_data) 
 

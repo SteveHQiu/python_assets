@@ -14,6 +14,9 @@ from bs4 import BeautifulSoup
 # Anki
 from anki.storage import Collection
 
+# Internal 
+from internal_globals import FLAG_EMPTY, FLAG_PIORITY1
+
 #%% Constants
 NAMESPACES = {"one": R"http://schemas.microsoft.com/office/onenote/2013/onenote"} # Namespace to prefix tags, may change if API changes
 
@@ -42,6 +45,12 @@ class OENode:
         self.flags = _genFlags(self) # Are translated directly to tags
         
         self.children_nodes: list[OENodePoint] = [] # Populated recursively in getChildren()
+
+    def isEmptyChildless(self): # Checks if the node is empty and childless
+        if FLAG_EMPTY not in self.flags or any(not n.isEmptyChildless() for n in self.children_nodes): # Not empty or has some non-empty children down the line (recursively check if there's non-empty children)
+            return False
+        else:
+            return True
 
 class OENodePoint(OENode):
     """
@@ -161,9 +170,13 @@ def _getIndicators(node: Element) -> list[str]:
 def _genFlags(node: OENode) -> set[str]:
     flags = set()
     if node.xml.find("one:OutlookTask", NAMESPACES) != None: # Will have an Element node has a task attached, need to manually evaluate != None as Element does not automatically evaluate True
-        flags.add("Priority1") # Flag is propagated to subsequent children
-    if not re.search(R"\w", node.body): # If body (data minus stem) doesn't contain any alphanumeric
-        flags.add("EmptyMain")
+        flags.add(FLAG_PIORITY1) # Flag is propagated to subsequent children
+    if node.type in ["concept", "grouping"]:
+        if not re.search(R"\w", node.body): # If body (data minus stem) doesn't contain any alphanumeric
+            flags.add(FLAG_EMPTY)
+    else: # Search the entire data Element 
+        if not re.search(R"\w", node.data): # If body (data minus stem) doesn't contain any alphanumeric
+            flags.add(FLAG_EMPTY)
     return flags
 
 
@@ -260,8 +273,8 @@ def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
                 elif type(node) == OENodePoint:
                     child_node.parent_headers = node.parent_headers # Inherit from parent node which will have inherited it from immediate header
                     
-                if "Priority1" in node.flags: # Propagate priority flag
-                    child_node.flags.add("Priority1")
+                if FLAG_PIORITY1 in node.flags: # Propagate priority flag
+                    child_node.flags.add(FLAG_PIORITY1)
                     
                 child_node.page_title = node.page_title # Inherit from parent
                 child_node.sibling_nodes = child_nodes # Assign current node's children container, list doesn't get modified so don't need to copy (each cycle creates new list)
