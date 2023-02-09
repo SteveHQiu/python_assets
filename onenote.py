@@ -29,35 +29,42 @@ Test
 
 #%% Classes
 
-class OENodePoint:
-    """
-    Parses an XML OE item from the OneNote export
-    """
-    def __init__(self, oenode: Element):
+class OENode:
+    # Base class for OENode 
+    def __init__(self, oenode: Element) -> None:
         self.id: str | None = oenode.get("objectID") # ID is an attribute of the XML node
-        self.xml: Element = oenode # Store original XML node in case needed
+        self.xml: Element = oenode # Storage of original node 
         self.bullet_data: str = _getBulletData(oenode)
         
         self.type, self.data = _getNodeTypeAndData(oenode) # Unpack tuple into type and data
         self.stem, self.body = _getStemAndBody(oenode) # Unpack tuple into stem and body
         self.indicators: list[str] = _getIndicators(oenode)
-        self.task: Element | None = self.xml.find("one:OutlookTask", NAMESPACES) # Will have an Element if it is tasked with a tag
+        self.flags = _genFlags(self) # Are translated directly to tags
+        
+        self.children_nodes: list[OENodePoint] = [] # Populated recursively in getChildren()
+
+class OENodePoint(OENode):
+    """
+    Parses an XML OE item from the OneNote export
+    """
+    def __init__(self, oenode: Element):
+        super().__init__(oenode)
         
         # Attributes below are populated recursively in getChildren()
         self.page_title: str = ""
         self.parent_headers: list[OENodeHeader] = [] # For use in inner scope (i.e., naming images), passed from genCards in cardarbiter
         self.sibling_nodes: list[OENodePoint] = [] # Contains all nodes at same level - .children_nodes of parent node gets passed here
         self.parent_nodes: list[OENodePoint] = [] # For parent context rendering
-        self.children_nodes: list[OENodePoint] = [] # 
+        
 
-class OENodeHeader:
+class OENodeHeader(OENode):
     """
     Separate class for OE nodes for headers 
     """
     def __init__(self, header_node: Element):
+        super().__init__(header_node)
+        
         # Should only be instantiated on non-empty headers with children
-        self.id: str | None = header_node.get("objectID") # ID is an attribute of the XML node
-        self.xml: Element = header_node
         self.text: str = _getNodeText(header_node)
         self.level: int = int(header_node.get("quickStyleIndex"))
         self.link: str = header_node.get("objectLink") # Is generated via C# interop API and embedded into XML export
@@ -65,7 +72,6 @@ class OENodeHeader:
         self.page_title: str = "" # Populated by outer scope getHeaders
         self.parent_pages: list[Element] = [] # Populated by outer scope getHeaders
         self.parent_headers: list[OENodeHeader] = [] # Populated by outer scope getHeaders
-        self.children_nodes: list[OENodeHeader] = [] # Populated by outer scope getHeaders
 
 def _getBulletData(node: Element) -> str:
     """
@@ -151,6 +157,14 @@ def _getIndicators(node: Element) -> list[str]:
         return list(indicator_str) # Convert indicators into set of characters
     else:
         return list() # Return an empty set for indicators otherwise
+
+def _genFlags(node: OENode) -> set[str]:
+    flags = set()
+    if node.xml.find("one:OutlookTask", NAMESPACES) != None: # Will have an Element node has a task attached, need to manually evaluate != None as Element does not automatically evaluate True
+        flags.add("Priority1") # Flag is propagated to subsequent children
+    if not re.search(R"\w", node.body): # If body (data minus stem) doesn't contain any alphanumeric
+        flags.add("EmptyMain")
+    return flags
 
 
 def getHeaders(page_xml: ElementTree.ElementTree, outline_xml: ElementTree.ElementTree) -> list[OENodeHeader]:
@@ -245,10 +259,15 @@ def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
                     child_node.parent_headers = [node] # Inherit directly from header since its .parents_headers may be empty if it's a top-level header
                 elif type(node) == OENodePoint:
                     child_node.parent_headers = node.parent_headers # Inherit from parent node which will have inherited it from immediate header
+                    
+                if "Priority1" in node.flags: # Propagate priority flag
+                    child_node.flags.add("Priority1")
+                    
                 child_node.page_title = node.page_title # Inherit from parent
                 child_node.sibling_nodes = child_nodes # Assign current node's children container, list doesn't get modified so don't need to copy (each cycle creates new list)
                 child_node.parent_nodes = copy.copy(parent_node_tracker) # Copy tracker nodes using shallow copy since tracker gets modified by outer scope
                 child_node.children_nodes = _iterChildren(child_node) # Recursively call function, will rebound from recursion at nodes without children
+                
                 
             if type(node) == OENodePoint: # Mirror entry conditions
                 parent_node_tracker.pop(0)

@@ -45,18 +45,13 @@ class CardGenerator:
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
                     renderer.renderHtml()
-                    
-                    # Find tags
-                    tags = renderer.tags # Retrieve tags from renderer
-                    if child_node.task != None: # Element does not evaluate to True, have to manually check that it's not none
-                        tags.append("Priority1")
                         
                     
                     note = ProtoNote(front=renderer.fronthtml,
                                      back=renderer.backhtml,
                                      deck=deck_path,
                                      model="Basic",
-                                     tags=tags,) 
+                                     tags=child_node.flags,) # Convert flags to tags
                                        
                     self.notes.append(note) # Append rendered HTMLs
 
