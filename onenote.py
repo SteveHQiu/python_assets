@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 from anki.storage import Collection
 
 # Internal 
-from internal_globals import FLAG_EMPTY, FLAG_PIORITY1
+from internal_globals import FLAG_EMPTY, FLAG_PIORITY1, FLAG_IGNORE
 
 #%% Constants
 NAMESPACES = {"one": R"http://schemas.microsoft.com/office/onenote/2013/onenote"} # Namespace to prefix tags, may change if API changes
@@ -161,8 +161,9 @@ def _getStemAndBody(node: Element) -> tuple[str, str]:
         return ("", "")
 
 def _getIndicators(node: Element) -> list[str]:
-    if _getStemAndBody(node)[0] and re.match(R"(\w+) ?\|", _getStemAndBody(node)[0]) != None: # Generalized for any stems in case of additional expansions
-        indicator_str = re.match(R"(\w+) ?\|", _getStemAndBody(node)[0]).group(1)
+    stem = _getStemAndBody(node)[0]
+    if stem and re.match(R"(.+)\|", stem) != None: # Generalized for any stems in case of additional expansions
+        indicator_str = re.match(R"(.+)\|", stem).group(1)
         return list(indicator_str) # Convert indicators into set of characters
     else:
         return list() # Return an empty set for indicators otherwise
@@ -174,6 +175,8 @@ def _genFlags(node: OENode) -> set[str]:
     if node.type in ["concept", "grouping"]:
         if not re.search(R"\w", node.body): # If body (data minus stem) doesn't contain any alphanumeric
             flags.add(FLAG_EMPTY)
+        if "H" in node.indicators:
+            flags.add(FLAG_IGNORE)
     else: # Search the entire data Element 
         if not re.search(R"\w", node.data): # If body (data minus stem) doesn't contain any alphanumeric
             flags.add(FLAG_EMPTY)

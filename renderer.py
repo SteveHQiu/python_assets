@@ -362,13 +362,15 @@ def _renderListed(node: OENodePoint, front: bool, level: str, renderer: Standard
 
 
 def _renderOptions(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer) -> str:
+    if "H" in node.indicators: # Top priority render option
+        return _ignoreNode(node, front, level, renderer)
     if {"C", "L"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 
         if "C" in node.indicators:
             return _renderCloze(node, front, level, renderer)
         if "L" in node.indicators:
             return _renderListed(node, front, level, renderer)
     else:
-        return ""
+        return False
 
 ## Standard rendering functions
 
@@ -379,7 +381,7 @@ def _renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standar
     to default options from a special rendering option (i.e., reuse a standard rendering function when certain 
     criteria are met)
     """
-    if root and _renderOptions(node, front, level, renderer): # Will only return true if node.indicators contain rendering options and has not previously called renderOptions
+    if root and _renderOptions(node, front, level, renderer) != False: # Will only return true if node.indicators contain rendering options and has not previously called renderOptions, explicitly check if False
         # Note that root must be evaluated first, otherwise will try to evaluate function and enter infinite recursion
         # Not actually implemented in Concept-type nodes yet
         return _renderOptions(node, front, level, renderer) # Use output from renderOptions() instead if applicable, otherwise go through default
@@ -411,7 +413,7 @@ def _renderConcept(node: OENodePoint, front: bool, level: str, renderer: Standar
 
 
 def _renderGrouping(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer, root: bool = True) -> str:
-    if root and _renderOptions(node, front, level, renderer): # Will only return true if node.indicators contain rendering options
+    if root and _renderOptions(node, front, level, renderer) != False: # Will only return true if node.indicators contain rendering options, explicitly check False
         # Note that root must be evaluated first, otherwise will try to evaluate function and enter infinite recursion
         return _renderOptions(node, front, level, renderer) # Use output from renderOptions() instead if applicable, otherwise go through default
     if front:
