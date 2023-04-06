@@ -11,7 +11,7 @@ from xml.etree.ElementTree import Element
 
 # Internal modules
 # from . import internal_globals, renderer_std
-from internal_globals import FLAG_EMPTY, FLAG_PIORITY1, FLAG_IGNORE
+from internal_globals import FLAG_EMPTY, FLAG_PIORITY1, FLAG_IGNORE, FLAG_RECIGNORE
 from renderer import StandardRenderer
 from onenote import OENodeHeader, OENodePoint, getHeaders, getParentNames
 from anki_api import ProtoNote, addCardsFromNotes
@@ -46,8 +46,10 @@ class CardGenerator:
                     # Fill front and back 
                     renderer = StandardRenderer(child_node) # New instance for each entry point
                     renderer.renderHtml()
+                    
+                    ignore_flags = list({FLAG_IGNORE, FLAG_RECIGNORE} & child_node.flags)
                         
-                    if not child_node.isEmptyChildless() and FLAG_IGNORE not in child_node.flags: # Only create card if not empty + childless
+                    if not ignore_flags and not child_node.isEmptyChildless(): # Only create card if not empty/ignored + childless
                         note = ProtoNote(front=renderer.fronthtml,
                                         back=renderer.backhtml,
                                         deck=deck_path,

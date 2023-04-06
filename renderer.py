@@ -69,7 +69,7 @@ class StandardRenderer:
                         child_back += cfunc(node=child_node, front=False, level="direct_child", renderer=self)
                     child_front += "</ul>\n" # Close list for direct children nodes
                     child_back += "</ul>\n" # Close list for direct children nodes
-                    front = _insertSubstring(front, "</li>", child_front) 
+                    front = _insertSubstring(front, "</li>", child_front) # Insert back into started list
                     back = _insertSubstring(back, "</li>", child_back)
                 # Children rendering handled by rendering functions, CardArbiter class handles recursive card creation hence rendering can do its own thing
             elif node.type != "image": # Render non-image nodes in order
@@ -355,6 +355,19 @@ def _renderListed(node: OENodePoint, front: bool, level: str, renderer: Standard
         if level == "entry":
             return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
+            # Render like it is a entry level grouping
+            back = _renderGrouping(node, front, "entry", renderer, root=False) # root=False to avoid re-running renderOptions()
+            # Render children nodes manually
+            if node.children_nodes: # Render direct children nodes
+                child_back = "\n<ul>\n" # Open list for direct children nodes
+                for child_node in node.children_nodes: 
+                    cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
+                    child_back += cfunc(node=child_node, front=False, level="direct_child", renderer=renderer)
+                child_back += "</ul>\n" # Close list for direct children nodes
+                back = _insertSubstring(back, "</li>", child_back)
+                
+            return back
+            # Below is code for only showing "(+)" prefix to node
             text = bool(node.children_nodes)*"(+)" + node.data # Branchless adding of children prefix 
             return _genHtmlElement(text, [], "", li=True, bullet=node.bullet_data) # No formatting
         elif level == "sibling":
@@ -362,6 +375,7 @@ def _renderListed(node: OENodePoint, front: bool, level: str, renderer: Standard
 
 
 def _renderOptions(node: OENodePoint, front: bool, level: str, renderer: StandardRenderer) -> str:
+    # SHould use only flags rather than indicators (which are used to generate flags)
     if "H" in node.indicators: # Top priority render option
         return _ignoreNode(node, front, level, renderer)
     if {"C", "L"}.intersection(set(node.indicators)): # Pass arguments onto special rendering functions if there's overlap b/n indicators of interest and node indicators 

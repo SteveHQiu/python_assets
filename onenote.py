@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 from anki.storage import Collection
 
 # Internal 
-from internal_globals import FLAG_EMPTY, FLAG_PIORITY1, FLAG_IGNORE
+from internal_globals import FLAG_EMPTY, FLAG_PIORITY1, FLAG_IGNORE, FLAG_RECIGNORE
 
 #%% Constants
 NAMESPACES = {"one": R"http://schemas.microsoft.com/office/onenote/2013/onenote"} # Namespace to prefix tags, may change if API changes
@@ -176,6 +176,8 @@ def _genFlags(node: OENode) -> set[str]:
         if not re.search(R"\w", node.body): # If body (data minus stem) doesn't contain any alphanumeric
             flags.add(FLAG_EMPTY)
         if "H" in node.indicators:
+            flags.add(FLAG_RECIGNORE)
+        if "L" in node.indicators:
             flags.add(FLAG_IGNORE)
     else: # Search the entire data Element 
         if not re.search(R"\w", node.data): # If body (data minus stem) doesn't contain any alphanumeric
@@ -278,6 +280,8 @@ def _getChildren(header_node: OENodeHeader) -> list[OENodePoint]:
                     
                 if FLAG_PIORITY1 in node.flags: # Propagate priority flag
                     child_node.flags.add(FLAG_PIORITY1)
+                if FLAG_RECIGNORE in node.flags: # Propagate recursive ignore flag
+                    child_node.flags.add(FLAG_RECIGNORE)
                     
                 child_node.page_title = node.page_title # Inherit from parent
                 child_node.sibling_nodes = child_nodes # Assign current node's children container, list doesn't get modified so don't need to copy (each cycle creates new list)
