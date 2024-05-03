@@ -346,7 +346,18 @@ def _renderListed(node: OENodePoint, front: bool, level: str, renderer: Standard
         if level == "entry":
             return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
-            return _renderGrouping(node, front, "entry", renderer, root=False) # Run as if it was an entry-level node, root=False to avoid re-running renderOptions()
+            # Render like it is a entry level grouping, should probably refactor with main rendering function
+            front_render = _renderGrouping(node, front, "entry", renderer, root=False) # root=False to avoid re-running renderOptions()
+            # Render children nodes manually
+            if node.children_nodes: # Render direct children nodes
+                child_front = "\n<ul>\n" # Open list for direct children nodes
+                for child_node in node.children_nodes: 
+                    cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
+                    child_front += cfunc(node=child_node, front=front, level="direct_child", renderer=renderer)
+                child_front += "</ul>\n" # Close list for direct children nodes
+                front_render = _insertSubstring(front_render, "</li>", child_front)
+                
+            return front_render
             return _genHtmlElement(node.stem + ":", ["underline"], li=True, bullet=node.bullet_data) # Actual code from renderGrouping
         elif level == "sibling":
             return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
@@ -355,14 +366,14 @@ def _renderListed(node: OENodePoint, front: bool, level: str, renderer: Standard
         if level == "entry":
             return _renderGrouping(node, front, level, renderer, root=False) # root=False to avoid re-running renderOptions()
         elif level == "direct_child":
-            # Render like it is a entry level grouping
+            # Render like it is a entry level grouping, should probably refactor with main rendering function
             back = _renderGrouping(node, front, "entry", renderer, root=False) # root=False to avoid re-running renderOptions()
             # Render children nodes manually
             if node.children_nodes: # Render direct children nodes
                 child_back = "\n<ul>\n" # Open list for direct children nodes
                 for child_node in node.children_nodes: 
                     cfunc = FUNCMAP[child_node.type] # Refetch relevant function for child node (otherwise will use parent type)
-                    child_back += cfunc(node=child_node, front=False, level="direct_child", renderer=renderer)
+                    child_back += cfunc(node=child_node, front=front, level="direct_child", renderer=renderer)
                 child_back += "</ul>\n" # Close list for direct children nodes
                 back = _insertSubstring(back, "</li>", child_back)
                 
